@@ -17,10 +17,12 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
       
+    - run: ls
+      working-directory: ./back-end
     - name: Build with Maven
-      run: ls
       run: mvn -B package --file pom.xml
       working-directory: ./back-end
+    
       
   
   build-image:
