@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  oasip-api:
+    image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
+    ports:
+      - 8083:8080
+    restart: on-failure
+
+  osaip-db:
+    image: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - "/home/student209/datadir:/var/lib/mysql0"
+      - "/home/student209/oasip/db/script:/docker-entrypoint-initdb.d"
+    environment:
+      - MYSQL_ROOT_PASSWORD: "123"
