@@ -2,30 +2,34 @@ version: '3.4'
 
 services:
   db:
-    container_name: db
+#    container_name: db
     image: mysql
+    env_file: .env
     ports:
-      - 3360:3306
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
-      - /C/Users/USER/Desktop/datadir:/var/lib/mysql0
+      - /C/Users/USER/Desktop/datadir:/var/lib/mysql
       - /C/Users/USER/Desktop/oasip-kp1/db/:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_ROOT_PASSWORD: "123"
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
 
   back:
     container_name: back
     # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
     image: back
+    env_file: .env
     build: ./back-end
     ports:
-      - 3000:8080
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
     restart: on-failure
     depends_on:
       - db
     environment:
-      # - DB_HOSTNAME= "db"
-      # - spring.datasource.url= "jdbc:mysql://db:3306/mydb"
-
-
-  
+      SPRING_APPLICATION_JSON: '{
+              "spring.datasource.url"  : "jdbc:mysql://db:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?allowPublicKeyRetrieval=true&useSSL=false",
+              "spring.datasource.username" : "$MYSQLDB_USER",
+              "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
+              "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+              "spring.jpa.hibernate.ddl-auto" : "update"
+        }'
