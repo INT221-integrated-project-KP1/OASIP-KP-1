@@ -20,7 +20,7 @@ jobs:
     - run: ls
       working-directory: ./back-end
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B -Dmaven.test.skip package --file pom.xml
       working-directory: ./back-end
     
       

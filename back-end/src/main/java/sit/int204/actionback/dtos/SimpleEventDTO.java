@@ -12,6 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SimpleEventDTO {
+    private Integer Id;
     private Instant eventStartTime;
     private Integer eventDuration;
     private String eventCategoryName;
