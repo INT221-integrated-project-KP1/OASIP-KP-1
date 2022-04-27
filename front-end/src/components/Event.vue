@@ -18,7 +18,7 @@ console.log(props.event)
     <div>
         <div id="ListEvent">
             <div>
-                <ol>
+                <ul>
                     <li>
                         <p>Booking Name: {{ event.bookingName }}</p>
                         <p>Booking Email: {{ event.bookingEmail }}</p>
@@ -28,7 +28,7 @@ console.log(props.event)
                         <p>Event Duration: {{ event.eventDuration }}</p>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
                     </li>
-                </ol>
+                </ul>
             </div>
         </div>
     </div>
