@@ -20,42 +20,42 @@ USE `mydb` ;
 -- -----------------------------------------------------
 -- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
-student209@s642int209v133:~/oasip/db/script$
-          `event_category_id` INT NOT NULL,
-          `event_category_name` VARCHAR(100) NULL,
-          `event_category_description` VARCHAR(500) NULL,
-          `event_duration` INT NULL,
-          constraint `eventCategory` Check (event_duration <= 480),
-          PRIMARY KEY (`event_category_id`),
-          UNIQUE INDEX `eventCategoryName_UNIQUE` (`event_category_name` ASC) VISIBLE)
-        ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
+  `event_category_id` INT NOT NULL,
+  `event_category_name` VARCHAR(100) NULL,
+  `event_category_description` VARCHAR(500) NULL,
+  `event_duration` INT NULL,
+  constraint `eventCategory` Check (event_duration <= 480),
+  PRIMARY KEY (`event_category_id`),
+  UNIQUE INDEX `eventCategoryName_UNIQUE` (`event_category_name` ASC) VISIBLE)
+ENGINE = InnoDB;
 
 
-        -- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-          `booking_id` INT NOT NULL,
-          `booking_name` VARCHAR(100) NULL,
-          `booking_email` VARCHAR(255) NULL,
-          `event_notes` VARCHAR(500) NULL,
-          `event_start_time` DATETIME NULL,
-          `event_category_id` INT NOT NULL,
-          `event_duration` INT NULL,
-          PRIMARY KEY (`booking_id`),
-          INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
-          constraint `event` Check (booking_email like '%@%' and event_duration <= 480),
-          CONSTRAINT `fk_event_eventCategory`
-            FOREIGN KEY (`event_category_id`)
-            REFERENCES `mydb`.`eventCategory` (`event_category_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION)
-        ENGINE = InnoDB;
+  `booking_id` INT NOT NULL,
+  `booking_name` VARCHAR(100) NULL,
+  `booking_email` VARCHAR(255) NULL,
+  `event_notes` VARCHAR(500) NULL,
+  `event_start_time` DATETIME NULL,
+  `event_category_id` INT NOT NULL,
+  `event_duration` INT NULL,
+  PRIMARY KEY (`booking_id`),
+  INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
+  constraint `event` Check (booking_email like '%@%' and event_duration <= 480),
+  CONSTRAINT `fk_event_eventCategory`
+    FOREIGN KEY (`event_category_id`)
+    REFERENCES `mydb`.`eventCategory` (`event_category_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
-        SET SQL_MODE=@OLD_SQL_MODE;
-        SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-        SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 use mydb;
 insert into eventCategory values(1,"software","about software in sit web",30);

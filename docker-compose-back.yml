@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  back:
+    # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
+    build: ./back-end
+    ports:
+      - 3000:8080
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      DB_HOSTNAME: "db"
+
+  
