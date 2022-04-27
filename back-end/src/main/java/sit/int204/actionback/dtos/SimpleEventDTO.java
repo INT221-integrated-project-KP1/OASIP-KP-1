@@ -17,5 +17,6 @@ public class SimpleEventDTO {
     private Integer eventDuration;
     private String eventCategoryName;
     private String bookingName;
+    private Integer id;
 
 }

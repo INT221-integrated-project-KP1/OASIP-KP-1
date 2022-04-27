@@ -1,10 +1,8 @@
 package sit.int204.actionback.controller;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.EventCategory;
@@ -15,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
     public String home() {

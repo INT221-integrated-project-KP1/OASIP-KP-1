@@ -1,5 +1,5 @@
 {
-  "name": "hello-github-action",
+  "name": "vite-project",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,8 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "http-server": "^14.1.0",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
