@@ -44,12 +44,12 @@ onBeforeMount(async () => {
     await getEvents()
 })
 
+const a = ref('none');
 function showModal() {
-    let modal = document.getElementById('myModal')
-    if (modal.style.display == "block") {
-        modal.style.display = "none";
+    if (a == "block") {
+        a = "none";
     } else {
-        modal.style.display = "block"
+        a = "block"
     }
 }
 </script>
@@ -58,7 +58,7 @@ function showModal() {
     <div>
         <div>
             <!-- The Modal -->
-            <div id="myModal" class="modal">
+            <div id="myModal" :style="a" class="modal">
                 <!-- Modal content -->
                 <div class="modal-content">
                     <span @click="showModal()" class="close">&times;</span>
