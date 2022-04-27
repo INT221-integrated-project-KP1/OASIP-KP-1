@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
@@ -11,6 +12,7 @@ import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -38,5 +40,14 @@ public class EventService {
                 ));
         return modelMapper.map(event, EventDetailsBaseDTO.class);
 }
+    public Event createEvent(Event newEvent) {
+        return repository.saveAndFlush(newEvent);
+    }
 
+    public void createEvent(int i, String s, String s1, String s2, Instant instant, int i1, int i2) {
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
