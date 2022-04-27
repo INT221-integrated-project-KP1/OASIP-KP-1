@@ -46,10 +46,10 @@ onBeforeMount(async () => {
 
 const a = ref('none');
 function showModal() {
-    if (a == "block") {
-        a = "none";
+    if (a.value == "block") {
+        a.value = "none";
     } else {
-        a = "block"
+        a.value = "block"
     }
 }
 </script>
