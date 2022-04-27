@@ -14,9 +14,11 @@ import java.time.Instant;
 public class EventDetailsBaseDTO {
     private Instant eventStartTime;
     private Integer eventDuration;
-    private EventCategoryDTO eventCategory;
+    //private EventCategoryDTO eventCategory;
     private String bookingName;
     private String bookingEmail;
-
+    private Integer id;
+    private String eventCategoryName;
+    private String eventCategoryDescription;
 
 }
