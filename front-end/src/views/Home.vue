@@ -44,12 +44,12 @@ onBeforeMount(async () => {
     await getEvents()
 })
 
-const a = ref('none');
+const a = ref('display:none');
 function showModal() {
-    if (a.value == "block") {
-        a.value = "none";
+    if (a.value == "display:block") {
+        a.value = "display:none";
     } else {
-        a.value = "block"
+        a.value = "display:block"
     }
 }
 </script>
