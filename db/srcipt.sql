@@ -69,6 +69,6 @@ insert into event values(2,"Somsri Rakdee (SJ-3)","somsri.rak@mail.kmutt.ac.th",
 insert into event values(3, "สมเกียรติ ขยันเรียน กลุ่ม TT-4", "somkiat.kay@kmutt.ac.th","", '2565-12-20 06:30:41', 3, 15);
 
 
-CREATE USER 'test'@'%' IDENTIFIED BY '123';
-GRANT ALL PRIVILEGES ON * . * TO 'test'@'%';
+CREATE USER 'dev'@'%' IDENTIFIED BY '123';
+GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
