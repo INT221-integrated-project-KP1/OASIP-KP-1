@@ -37,12 +37,13 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
+    @Autowired
+    private EventRepository eventrepository;
+    
     @PostMapping("/scheduled/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTest(){
-        eventService.createEvent(1, "Somchai Jaidee (OR-7)", "somchai.jai@mail.kmutt.ac.th", "", Instant.parse("2018-11-30T18:35:24.00Z"), 2, 30);
-        eventService.createEvent(2, "Somsri Rakdee (SJ-3)", "somsri.rak@mail.kmutt.ac.th", "ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน", Instant.parse("2565-12-02T23:00:10Z"), 1, 30);
-        eventService.createEvent(3, "สมเกียรติ ขยันเรียน กลุ่ม TT-4", "somkiat.kay@kmutt.ac.th", "", Instant.parse("2565-12-20T06:30:41Z"), 3, 15);
+    public Event createTest(@RequestBody Event newEvent){
+     return eventrepository.saveAndFlush(newEvent);
     }
 
     @DeleteMapping("/scheduled/delete")

@@ -40,12 +40,6 @@ public class EventService {
                 ));
         return modelMapper.map(event, EventDetailsBaseDTO.class);
 }
-    public Event createEvent(Event newEvent) {
-        return repository.saveAndFlush(newEvent);
-    }
-
-    public void createEvent(int i, String s, String s1, String s2, Instant instant, int i1, int i2) {
-    }
 
     public void deleteAll() {
         repository.deleteAll();
