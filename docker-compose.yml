@@ -42,8 +42,9 @@ services:
     build: ./front-end
     ports:
       - $FRONT_LOCAL_PORT:$FRONT_DOCKER_PORT
-    links:
-      - back
+  
+    environment:
+      url: "http://back:$SPRING_DOCKER_PORT/api"
 
 
 
