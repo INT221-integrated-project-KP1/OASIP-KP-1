@@ -8,10 +8,8 @@ services:
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
-      # - /C/Users/USER/Desktop/datadir:/var/lib/mysql
-      # - /C/Users/USER/Desktop/oasip-kp1/db/:/docker-entrypoint-initdb.d
-      - /D/integrated/datadir:/var/lib/mysql
-      - /D/integrated/OASIP-KP-1/db/:/docker-entrypoint-initdb.d
+      - /C/Users/USER/Desktop/oasip-kp1/datadir:/var/lib/mysql
+      - /C/Users/USER/Desktop/oasip-kp1/db/:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
@@ -39,7 +37,13 @@ services:
     container_name: front
     image: front
     env_file: .env
+    depends_on:
+      - back
     build: ./front-end
     ports:
       - $FRONT_LOCAL_PORT:$FRONT_DOCKER_PORT
+    links:
+      - back
+
+
 

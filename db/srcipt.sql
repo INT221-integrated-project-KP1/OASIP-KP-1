@@ -22,8 +22,8 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
   `event_category_id` INT NOT NULL,
-  `event_category_name` VARCHAR(100) NULL character set utf8 ,
-  `event_category_description` VARCHAR(500) NULL character set utf8,
+  `event_category_name` VARCHAR(100) NULL,
+  `event_category_description` VARCHAR(500) NULL,
   `event_duration` INT NULL,
   constraint `eventCategory` Check (event_duration <= 480),
   PRIMARY KEY (`event_category_id`),
@@ -35,13 +35,13 @@ ENGINE = InnoDB;
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-  `booking_id` INT NOT NULL ,
-  `booking_name` VARCHAR(100) NULL character set utf8 ,
-  `booking_email` VARCHAR(255) ,
-  `event_notes` VARCHAR(500) NULL character set utf8 ,
+  `booking_id` INT NOT NULL,
+  `booking_name` VARCHAR(100) NULL,
+  `booking_email` VARCHAR(255) NULL,
+  `event_notes` VARCHAR(500) NULL,
   `event_start_time` DATETIME NULL,
-  `event_category_id` INT NOT NULL ,
-  `event_duration` INT NULL ,
+  `event_category_id` INT NOT NULL,
+  `event_duration` INT NULL,
   PRIMARY KEY (`booking_id`),
   INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
   constraint `event` Check (booking_email like '%@%' and event_duration <= 480),
