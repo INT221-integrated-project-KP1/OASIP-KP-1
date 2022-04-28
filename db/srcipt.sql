@@ -71,6 +71,6 @@ insert into event values(5, "booking book", "test5@gmail.com", "testerror1", '25
 insert into event values(6, "booking book", "test6@gmail.com", "testerror2", '2565-02-28 10:00:10', 3, 400);
 insert into event values(7, "booking book", "test7@gmail.com", "testerror3", '2565-04-30 10:00:59', 3, 400);
 
-CREATE USER 'test'@'%' IDENTIFIED BY '123';
-GRANT ALL PRIVILEGES ON * . * TO 'test'@'%';
+CREATE USER 'dev'@'%' IDENTIFIED BY '123';
+GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
