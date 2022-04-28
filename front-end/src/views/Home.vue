@@ -8,8 +8,9 @@ let events = ref([]);
 // GET
 const getEvents = async () => {
     try {
-        // const res = await fetch('http://10.4.56.84:3000/api/scheduled')
-        const res = await fetch('http://localhost:3000/api/scheduled')
+        const res = await fetch('http://localhost:5000/api/scheduled')
+        // const res = await fetch('http://10.4.56.84:5000/scheduled')
+// const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/scheduled`)
 
         console.log(res.status)
         if (res.status === 200) {
@@ -19,14 +20,17 @@ const getEvents = async () => {
             console.log('error, cannot get data')
         }
     }
-    catch (err) { console.log(err) }
+    catch (err) { console.log(err) 
+    }
 }
 
 let event = ref();
 const getEventById = async (id) => {
     try {
-        const res = await fetch(`http://localhost:3000/api/scheduled/${id}`)
+        const res = await fetch(`http://localhost:5000/api/scheduled/${id}`)
+
         // const res = await fetch(`http://10.4.56.84:3000/api/scheduled/${id}`)
+        // const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/scheduled/${id}`)
 
         console.log(res.status)
         if (res.status === 200) {
@@ -37,7 +41,7 @@ const getEventById = async (id) => {
             console.log('error, cannot get data')
         }
     }
-    catch (err) { console.log(err) }
+    catch (err) { console.log('Error: ', err.message) }
 }
 
 onBeforeMount(async () => {
