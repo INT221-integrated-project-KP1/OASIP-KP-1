@@ -8,7 +8,7 @@ let events = ref([]);
 // GET
 const getEvents = async () => {
     try {
-        // const res = await fetch('http://localhost:5000/api/scheduled')
+        // const res = await fetch('http://localhost:3000/api/scheduled')
         // const res = await fetch('http://10.4.56.84:5000/scheduled')
 const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/scheduled`)
 
@@ -27,7 +27,7 @@ const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/scheduled`)
 let event = ref();
 const getEventById = async (id) => {
     try {
-        // const res = await fetch(`http://localhost:5000/api/scheduled/${id}`)
+        // const res = await fetch(`http://localhost:3000/api/scheduled/${id}`)
 
         // const res = await fetch(`http://10.4.56.84:3000/api/scheduled/${id}`)
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/scheduled/${id}`)

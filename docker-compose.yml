@@ -44,8 +44,9 @@ services:
     build: ./front-end
     ports:
       - $FRONT_LOCAL_PORT:$FRONT_DOCKER_PORT
-    links:
-      - back
+    # environment:
+    #   - VITE_BASE_URL= "http://back:SPRING_DOCKER_PORT"
+
 
 
 
