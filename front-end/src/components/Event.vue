@@ -12,6 +12,7 @@ console.log("TEST");
 console.log(props.event)
 
 
+
 </script>
  
 <template>

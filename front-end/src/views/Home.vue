@@ -9,7 +9,7 @@ let events = ref([]);
 const getEvents = async () => {
     try {
         // const res = await fetch('http://10.4.56.84:3000/api/scheduled')
-        const res = await fetch('http://localhost:8080/api/scheduled')
+        const res = await fetch('http://localhost:3000/api/scheduled')
 
         console.log(res.status)
         if (res.status === 200) {
@@ -25,7 +25,7 @@ const getEvents = async () => {
 let event = ref();
 const getEventById = async (id) => {
     try {
-        const res = await fetch(`http://localhost:8080/api/scheduled/${id}`)
+        const res = await fetch(`http://localhost:3000/api/scheduled/${id}`)
         // const res = await fetch(`http://10.4.56.84:3000/api/scheduled/${id}`)
 
         console.log(res.status)
@@ -52,6 +52,8 @@ function showModal() {
         a.value = "display:block"
     }
 }
+
+
 </script>
 
 <template>
