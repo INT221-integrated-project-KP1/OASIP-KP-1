@@ -10,8 +10,8 @@ import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.service.EventService;
+import sit.int204.actionback.repo.EventRepository;
 
-import java.time.Instant;
 import java.util.List;
 
 @RestController
