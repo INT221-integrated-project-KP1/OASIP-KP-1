@@ -1,6 +1,22 @@
 version: '3.4'
 
 services:
+  # reverse-proxy: 
+  #   container_name: reverse-proxy
+  #   image: nginx
+  #   depends_on:
+  #     - db
+  #     - back
+  #     - front
+  #   volumes:
+  #     - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - 80:80
+  #   environment:
+  #     FRONT_HOSTNAME: front
+  #     BACK_HOSTNAME: back
+  #     DB_HOSTNAME: db
+
   db:
     container_name: db
     image: mysql
@@ -8,8 +24,8 @@ services:
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
-      - /C/Users/USER/Desktop/oasip-kp1/datadir:/var/lib/mysql
-      - /C/Users/USER/Desktop/oasip-kp1/db/:/docker-entrypoint-initdb.d
+      - ./datadir:/var/lib/mysql
+      - ./db/:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
@@ -43,8 +59,8 @@ services:
     ports:
       - $FRONT_LOCAL_PORT:$FRONT_DOCKER_PORT
   
-    environment:
-      url: "http://back:$SPRING_DOCKER_PORT/api"
+    # environment:
+    #   url: "http://back:$SPRING_DOCKER_PORT/api"
 
 
 
