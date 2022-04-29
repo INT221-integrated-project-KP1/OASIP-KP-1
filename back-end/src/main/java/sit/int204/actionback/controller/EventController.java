@@ -9,6 +9,7 @@ import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
+import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
 import sit.int204.actionback.repo.EventRepository;
 
@@ -25,7 +26,15 @@ public class EventController {
     }
 
     @Autowired
+    private EventRepository repo;
+
+    @Autowired
     private EventService eventService;
+
+    @GetMapping("test")
+    public List<Event> getGay(){
+        return repo.findAll();
+    }
 
     @GetMapping("/scheduled")
     public List<SimpleEventDTO> getEvent(){
