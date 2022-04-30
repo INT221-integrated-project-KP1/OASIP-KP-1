@@ -53,8 +53,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./dockerfile
-        working-directory: ./back-end
+        file: ./back-end/dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
       
@@ -96,10 +95,10 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./dockerfile
+        file: ./front-end/dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
-        working-directory: ./front-end
+
 
   
 
