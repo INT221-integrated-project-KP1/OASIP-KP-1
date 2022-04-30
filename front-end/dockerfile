@@ -1,5 +1,7 @@
 FROM node:18-alpine3.14 as build-stage
+RUN ls
 WORKDIR /app
+RUN ls
 COPY package*.json ./
 RUN npm install
 COPY . .
