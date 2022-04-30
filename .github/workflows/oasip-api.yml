@@ -53,8 +53,8 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        context: .
-        file: ./back-end/dockerfile
+        context: ./back-end
+        file: ./dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
       
@@ -98,8 +98,8 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        context: .
-        file: ./front-end/dockerfile
+        context: ./front-end
+        file: ./dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         
