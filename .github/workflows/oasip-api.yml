@@ -25,38 +25,38 @@ jobs:
     
       
   
-  build-back-image:
-    needs: install-back-dependencies
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - run: ls
-      working-directory: ./back-end
-    - name: Login to GHCR
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+  # build-back-image:
+  #   needs: install-back-dependencies
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - run: ls
+  #     working-directory: ./back-end
+  #   - name: Login to GHCR
+  #     uses: docker/login-action@v1
+  #     with:
+  #       registry: ghcr.io
+  #       username: ${{ github.actor }}
+  #       password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: ghcr.io/INT221-integrated-project-KP1/oasip-api
-        tags: |
-          type=sha
-        flavor: |
-          latest=${{ github.event_name == 'push' }}
+  #   - name: Extract metadata (tags, labels) for Docker
+  #     id: meta
+  #     uses: docker/metadata-action@v3
+  #     with:
+  #       images: ghcr.io/INT221-integrated-project-KP1/oasip-api
+  #       tags: |
+  #         type=sha
+  #       flavor: |
+  #         latest=${{ github.event_name == 'push' }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-      working-directory: ./back-end
+  #   - name: Build and push
+  #     uses: docker/build-push-action@v2
+  #     with:
+  #       context: .
+  #       file: ./Dockerfile
+  #       push: true
+  #       tags: ${{ steps.meta.outputs.tags }}
+  #     working-directory: ./back-end
   
   install-front-dependencies:
     runs-on: ubuntu-latest
@@ -70,35 +70,35 @@ jobs:
     - run: npm test
       working-directory: ./front-end
   
-  build-front-image:
-    needs: install-front-dependencies
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Login to GHCR
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+  # build-front-image:
+  #   needs: install-front-dependencies
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Login to GHCR
+  #     uses: docker/login-action@v1
+  #     with:
+  #       registry: ghcr.io
+  #       username: ${{ github.actor }}
+  #       password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: ghcr.io/INT221-integrated-project-KP1/oasip-page
-        tags: |
-          type=sha
-        flavor: |
-          latest=${{ github.event_name == 'push' }}
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-      working-directory: ./front-end
+  #   - name: Extract metadata (tags, labels) for Docker
+  #     id: meta
+  #     uses: docker/metadata-action@v3
+  #     with:
+  #       images: ghcr.io/INT221-integrated-project-KP1/oasip-page
+  #       tags: |
+  #         type=sha
+  #       flavor: |
+  #         latest=${{ github.event_name == 'push' }}
+  #   - name: Build and push
+  #     uses: docker/build-push-action@v2
+  #     with:
+  #       context: .
+  #       file: ./Dockerfile
+  #       push: true
+  #       tags: ${{ steps.meta.outputs.tags }}
+  #     working-directory: ./front-end
 
   
 
