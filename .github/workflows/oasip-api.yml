@@ -54,9 +54,10 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
+        working-directory: ./back-end
         push: true
         tags: ${{ steps.meta.outputs.tags }}
-      working-directory: ./back-end
+      
   
   install-front-dependencies:
     runs-on: ubuntu-latest
