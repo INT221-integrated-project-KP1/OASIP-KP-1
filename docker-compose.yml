@@ -1,21 +1,7 @@
 version: '3.4'
 
 services:
-  # reverse-proxy: 
-  #   container_name: reverse-proxy
-  #   image: nginx
-  #   depends_on:
-  #     - db
-  #     - back
-  #     - front
-  #   volumes:
-  #     - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - 80:80
-  #   environment:
-  #     FRONT_HOSTNAME: front
-  #     BACK_HOSTNAME: back
-  #     DB_HOSTNAME: db
+
 
   db:
     container_name: db
