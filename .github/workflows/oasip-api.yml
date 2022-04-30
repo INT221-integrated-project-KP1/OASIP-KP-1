@@ -31,6 +31,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: ls
+    - run: ls
       working-directory: ./back-end
     - name: Login to GHCR
       uses: docker/login-action@v1
@@ -74,6 +75,9 @@ jobs:
     needs: install-front-dependencies
     runs-on: ubuntu-latest
     steps:
+    - run: ls
+    - run: ls
+      working-directory: ./front-end
     - uses: actions/checkout@v2
     - name: Login to GHCR
       uses: docker/login-action@v1
