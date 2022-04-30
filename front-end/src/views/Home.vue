@@ -11,6 +11,7 @@ const getEvents = async () => {
         // const res = await fetch('http://10.4.56.84:5000/scheduled')
 const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled`)
 
+
         console.log(res.status)
         if (res.status === 200) {
             events.value = await res.json()

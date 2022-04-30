@@ -5,12 +5,28 @@ export default defineConfig({
     plugins: [vue()],
     // server: {
     //     proxy: {
-    //         '/api': {
-    //             target: `http://${back}:5000`,
+    //         '/foo': 'http://localhost:4567',
+    //         "^/api": {
+    //             target: "http://10.4.56.84:5000",
     //             changeOrigin: true,
     //             secure: false,
-    //             rewrite: (path) => path.replace(/^\/api/, '')
+    //             rewrite: (path) => path.replace(/^\/api/, ''),
+    //             ws: true,
     //         }
     //     }
     // }
 })
+
+// module.exports={
+//     devServer: {
+//         proxy: {
+//           "^/api/": {
+//             target: "http://api:3000",
+//             secure: false,
+//             pathRewrite: {
+//               "/api/*": "/"
+//             }
+//           }
+//         }
+//       }
+//     };
