@@ -52,12 +52,18 @@ public class EventController {
     @PostMapping("/scheduled/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Event createTest(@RequestBody Event newEvent){
-     return eventrepository.saveAndFlush(newEvent);
+        return eventService.create(newEvent);
     }
 
-    @DeleteMapping("/scheduled/delete")
-    public void deleteTest() {
-        eventService.deleteAll();
+   @GetMapping("/scheduled/all")
+   public List<Event> getEvent(){
+        return repository.findAllByOrderByEventStartTimeDesc();
+    }
+
+
+    @DeleteMapping("/scheduled/delete/{id}")
+    public void deleteTest(@PathVariable Integer id) {
+         eventService.deleteEventById(id);
     }
 
     @Autowired

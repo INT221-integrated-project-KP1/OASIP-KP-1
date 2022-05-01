@@ -74,3 +74,4 @@ update eventCategory set event_duration = 20 where event_category_id=2;
 CREATE USER 'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
+

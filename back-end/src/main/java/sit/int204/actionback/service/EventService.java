@@ -40,8 +40,16 @@ public class EventService {
                 ));
         return modelMapper.map(event, EventDetailsBaseDTO.class);
 }
+        public void create(newEvent){
+               repository.saveAndFlush(newEvent);
+        }
 
-    public void deleteAll() {
-        repository.deleteAll();
+    public void deleteEventById(Integer id) {
+        repository.findById(id)
+                .orElseThrow(()->new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, " id "+ id+
+                        "Does Not Exist !!!"
+                ));
+        repository.deleteById(id);
     }
 }
