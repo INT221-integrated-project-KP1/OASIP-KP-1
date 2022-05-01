@@ -61,7 +61,8 @@ use mydb;
 insert into eventCategory values(1,"software","about software in sit web",30);
 insert into eventCategory values(2,"hardware","about thing in sit",480);
 insert into eventCategory values(3,"other","other",400);
-insert into eventCategory values(4,"tood","about tood",100);
+insert into eventCategory values(4,"ตูด","about tood",100);
+
 
 insert into event values(1, "booking book", "test15@gmail.com", "test1", '2565-12-02 23:00:10', 3, 400);
 insert into event values(2,"booking Subject","test2@hotmail.com","test2", '2565-12-02 23:00:10', 1, 30);
@@ -74,3 +75,4 @@ insert into event values(7, "booking book", "test7@gmail.com", "testerror3", '25
 CREATE USER 'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
+
