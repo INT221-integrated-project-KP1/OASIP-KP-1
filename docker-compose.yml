@@ -37,13 +37,17 @@ services:
   front:
     container_name: front
     image: front
-    env_file: .env
+    env_file: 
+      - ./front-end/.env.production
     depends_on:
       - back
     build: ./front-end
     ports:
-      - $FRONT_LOCAL_PORT:$FRONT_DOCKER_PORT
-
-
+      - 3000:80
+    environment:
+      VITE_BASE_URL: "back:5000" 
+    # environment:
+    #   VITE_BASE_URL: back
+    #   VITE_BASE_PORT: SPRING_LOCAL_PORT
 
 

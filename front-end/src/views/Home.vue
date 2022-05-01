@@ -6,13 +6,14 @@ import Event from '../components/Event.vue'
 
 
 let events = ref([]);
-
 // GET
 const getEvents = async () => {
     try {
+        console.log(import.meta.env.URL);
+
         // const res = await fetch('http://localhost:5000/api/scheduled')
         // const res = await fetch('http://10.4.56.84:5000/api/scheduled')
-const res = await fetch(`adasdssssdf/api/scheduled`)
+const res = await fetch(`/api/scheduled`)
 
         console.log(res.status)
         if (res.status === 200) {
@@ -29,7 +30,7 @@ const res = await fetch(`adasdssssdf/api/scheduled`)
 let event = ref();
 const getEventById = async (id) => {
     try {
-        // const res = await fetch(`http://localhost:3000/api/scheduled/${id}`)
+        // const res = await fetch(`http://localhost:5000/api/scheduled/${id}`)
 
         // const res = await fetch(`http://10.4.56.84:3000/api/scheduled/${id}`)
         const res = await fetch(`/api/scheduled/${id}`)
