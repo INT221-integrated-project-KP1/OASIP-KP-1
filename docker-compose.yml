@@ -27,7 +27,6 @@ services:
 
   back:
     container_name: back
-    # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
     image: ghcr.io/int221-integrated-project-kp1/back
     env_file: .env
     build: ./back-end
