@@ -31,7 +31,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: ls
-    - run: ls
       working-directory: ./back-end
     - name: Login to GHCR
       uses: docker/login-action@v1
@@ -50,14 +49,14 @@ jobs:
         flavor: |
           latest=${{ github.event_name == 'push' }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: ./back-end
-        file: ./dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-      
+  #   - name: Build and push
+  #     uses: docker/build-push-action@v2
+  #     with:
+  #       context: .
+  #       file: ./Dockerfile
+  #       push: true
+  #       tags: ${{ steps.meta.outputs.tags }}
+  #     working-directory: ./back-end
   
   install-front-dependencies:
     runs-on: ubuntu-latest
@@ -75,9 +74,6 @@ jobs:
     needs: install-front-dependencies
     runs-on: ubuntu-latest
     steps:
-    - run: ls
-    - run: ls
-      working-directory: ./front-end
     - uses: actions/checkout@v2
     - name: Login to GHCR
       uses: docker/login-action@v1
@@ -95,15 +91,14 @@ jobs:
           type=sha
         flavor: |
           latest=${{ github.event_name == 'push' }}
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: ./front-end
-        file: ./dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        
-
+  #   - name: Build and push
+  #     uses: docker/build-push-action@v2
+  #     with:
+  #       context: .
+  #       file: ./Dockerfile
+  #       push: true
+  #       tags: ${{ steps.meta.outputs.tags }}
+  #     working-directory: ./front-end
 
   
 
