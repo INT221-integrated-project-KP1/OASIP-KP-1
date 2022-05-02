@@ -17,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-// @CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://10.0.0.1:3000")
+// @CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
     public String home() {
@@ -26,15 +26,7 @@ public class EventController {
     }
 
     @Autowired
-    private EventRepository repo;
-
-    @Autowired
     private EventService eventService;
-
-    @GetMapping("test")
-    public List<Event> getGay(){
-        return repo.findAll();
-    }
 
     @GetMapping("/scheduled")
     public List<SimpleEventDTO> getEvent(){
@@ -51,13 +43,13 @@ public class EventController {
     
     @PostMapping("/scheduled/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event createTest(@RequestBody Event newEvent){
-        return eventService.create(newEvent);
+    public void createTest(@RequestBody Event newEvent){
+         eventService.create(newEvent);
     }
 
    @GetMapping("/scheduled/all")
-   public List<Event> getEvent(){
-        return repository.findAllByOrderByEventStartTimeDesc();
+   public List<Event> getEventAll(){
+        return eventrepository.findAllByOrderByEventStartTimeDesc();
     }
 
 

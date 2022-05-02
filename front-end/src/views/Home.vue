@@ -11,7 +11,8 @@ const getEvents = async () => {
 
         // const res = await fetch('http://localhost:5000/api/scheduled')
         // const res = await fetch('http://10.4.56.84:5000/scheduled')
-const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled`)
+// const res = await fetch(`/api/scheduled`)
+const res = await fetch(`/api/events`)
 
 
         console.log(res.status)
@@ -32,7 +33,8 @@ const getEventById = async (id) => {
         // const res = await fetch(`http://localhost:5000/api/scheduled/${id}`)
 
         // const res = await fetch(`http://10.4.56.84:3000/api/scheduled/${id}`)
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`)
+        // const res = await fetch(`/api/scheduled/${id}`)
+        const res = await fetch(`/api/events/${id}`)
 
         console.log(res.status)
         if (res.status === 200) {
