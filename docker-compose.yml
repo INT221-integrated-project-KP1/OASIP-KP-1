@@ -24,10 +24,11 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
 
+
   back:
     container_name: back
     # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
-    image: back
+    image: ghcr.io/int221-integrated-project-kp1/back
     env_file: .env
     build: ./back-end
     restart: on-failure
@@ -44,7 +45,7 @@ services:
         
   front:
     container_name: front
-    image: front
+    image: ghcr.io/int221-integrated-project-kp1/front
     env_file: .env
     depends_on:
       - back
