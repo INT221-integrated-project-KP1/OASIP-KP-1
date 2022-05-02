@@ -17,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://10.0.0.1:3000")
-// @CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "http://10.0.0.1:3000")
+@CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
     public String home() {
