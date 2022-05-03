@@ -6,6 +6,15 @@ export default defineConfig({
     server: {
         proxy: {
             "^/api": {
+                target: "http://ip21pl1.sit.kmutt.ac.th:8080/api",
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path.replace(/^\/api/, ''),
+                ws: true,
+            }
+        },
+        proxy: {
+            "^/api": {
                 target: "http://10.4.84.106:8080/api",
                 changeOrigin: true,
                 secure: false,
@@ -13,7 +22,8 @@ export default defineConfig({
                 ws: true,
             }
         }
-    }
+    },
+
 })
 
 // module.exports={
