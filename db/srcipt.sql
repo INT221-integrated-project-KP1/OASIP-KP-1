@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
-  `event_category_id` INT NOT NULL,
+  `event_category_id` INT NOT NULL AUTO_INCREMENT,
   `event_category_name` VARCHAR(100) NULL,
   `event_category_description` VARCHAR(500) NULL,
   `event_duration` INT NULL,
@@ -35,7 +35,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-  `booking_id` INT NOT NULL,
+  `booking_id` INT NOT NULL AUTO_INCREMENT,
   `booking_name` VARCHAR(100) NULL,
   `booking_email` VARCHAR(255) NULL,
   `event_notes` VARCHAR(500) NULL,

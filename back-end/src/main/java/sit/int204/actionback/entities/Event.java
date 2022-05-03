@@ -7,7 +7,7 @@ import java.time.Instant;
 @Table(name = "event")
 public class Event {
     @Id
-    @GeneratedValue(strategy=GenerationType.TABLE,generator="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "booking_id", nullable = false)
     private Integer id;
 
