@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
 
-  proxy:
-    container_name: proxy
-    image: nginx
-    restart: always
-    depends_on:
-      - front
-    ports:
-      - "80:80"
-    volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+  # proxy:
+  #   container_name: proxy
+  #   image: nginx
+  #   restart: always
+  #   depends_on:
+  #     - front
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
 
   db:
     container_name: db
@@ -24,10 +24,11 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
 
+
   back:
     container_name: back
     # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
-    image: back
+    image: ghcr.io/int221-integrated-project-kp1/back
     env_file: .env
     build: ./back-end
     restart: on-failure
@@ -44,12 +45,15 @@ services:
         
   front:
     container_name: front
-    image: front
-    env_file: 
-      - ./front-end/.env.production
+    image: ghcr.io/int221-integrated-project-kp1/front
+    env_file: .env
+    ports:
+      - "80:80"
     depends_on:
       - back
     build: ./front-end
+    volumes:
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
   
 
 
