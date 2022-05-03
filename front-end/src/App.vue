@@ -9,6 +9,7 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0">
       <li><router-link :to="{ name: 'Home' }">Home </router-link></li>
+      <li><router-link :to="{ name: 'Booking' }">Add event</router-link></li>
     </ul>
   </div>
 </div>

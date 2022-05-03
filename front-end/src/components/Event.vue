@@ -25,8 +25,8 @@ console.log(props.event)
                         <p>Booking Email: {{ event.bookingEmail }}</p>
                         <p>Event Category Name: {{ event.eventCategoryName}}</p>
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
-                        <p>Event Start Time: {{ event.eventStartTime }}</p>
-                        <p>Event Duration: {{ event.eventDuration }}</p>
+                        <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
+                        <p>Event Duration: {{ event.eventDuration }} Minutes</p>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
                     </li>
                 </ul>
