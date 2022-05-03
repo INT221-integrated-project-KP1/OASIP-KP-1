@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
-import sit.int204.actionback.entities.EventCategory;
-import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
-import sit.int204.actionback.repo.EventRepository;
 
 import java.util.List;
 
