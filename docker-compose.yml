@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
 
-  proxy:
-    container_name: proxy
-    image: nginx
-    restart: always
-    depends_on:
-      - front
-    ports:
-      - "80:80"
-    volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+  # proxy:
+  #   container_name: proxy
+  #   image: nginx
+  #   restart: always
+  #   depends_on:
+  #     - front
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
 
   db:
     container_name: db
@@ -47,9 +47,13 @@ services:
     container_name: front
     image: ghcr.io/int221-integrated-project-kp1/front
     env_file: .env
+    ports:
+      - "80:80"
     depends_on:
       - back
     build: ./front-end
+    volumes:
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
   
 
 
