@@ -7,16 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
-import sit.int204.actionback.entities.EventCategory;
-import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
-import sit.int204.actionback.repo.EventRepository;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/scheduled")
 //@CrossOrigin(origins = "http://10.0.0.1:3000")
 @CrossOrigin(origins = "*")
 public class EventController {
@@ -28,41 +25,26 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("/scheduled")
+    @GetMapping("")
     public List<SimpleEventDTO> getEvent(){
         return eventService.getEvent();
     }
 
-    @GetMapping("/scheduled/{id}")
+    @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
     }
-
-    @Autowired
-    private EventRepository eventrepository;
     
-    @PostMapping("/scheduled/create")
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTest(@RequestBody Event newEvent){
          eventService.create(newEvent);
     }
 
-   @GetMapping("/scheduled/all")
-   public List<Event> getEventAll(){
-        return eventrepository.findAllByOrderByEventStartTimeDesc();
-    }
-
-
-    @DeleteMapping("/scheduled/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteTest(@PathVariable Integer id) {
          eventService.deleteEventById(id);
     }
 
-    @Autowired
-    private EventCategoryRepository EventCategoryRepository;
 
-    @GetMapping("/EventCategory")
-    public List<EventCategory> getEventCategory(){
-        return EventCategoryRepository.findAll();
-    }
 }
