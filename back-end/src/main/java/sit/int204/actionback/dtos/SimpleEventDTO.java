@@ -15,8 +15,7 @@ public class SimpleEventDTO {
     private Integer Id;
     private Instant eventStartTime;
     private Integer eventDuration;
-    private String eventCategoryName;
+    private EventCategoryDTO eventCategory;
     private String bookingName;
-    private Integer id;
 
 }
