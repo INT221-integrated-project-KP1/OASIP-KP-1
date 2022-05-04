@@ -47,6 +47,16 @@ const getEventById = async (id) => {
     catch (err) { console.log('Error: ', err.message) }
 }
 
+const removeEvent = async (deleteId) => {
+    console.log(deleteId)
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${deleteId}`, {
+        method: 'DELETE'
+    })
+    if (res.status === 200) {
+        console.log('deleted successfully')
+    } else console.log('error, cannot delete data')
+}
+
 onBeforeMount(async () => {
     await getEvents()
 })

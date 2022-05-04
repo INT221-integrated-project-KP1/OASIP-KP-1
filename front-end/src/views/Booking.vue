@@ -1,16 +1,12 @@
 <script setup>
-import { ref, onBeforeMount, computed, reactive} from 'vue'
+import { ref, onBeforeMount, computed, reactive } from 'vue'
 
 let categorys = ref([]);
 
 const getEventCategory = async () => {
     try {
         console.log(import.meta.env.URL);
-        // const res = await fetch('http://localhost:5000/api/scheduled')
-        // const res = await fetch('http://10.4.56.84:5000/api/scheduled')
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/EventCategory`)
-        // const res = await fetch('/api/scheduled')
-
         console.log(res.status)
         if (res.status === 200) {
             categorys.value = await res.json()
@@ -33,25 +29,58 @@ let newEvent = reactive({
     name: '', email: '', detail: '', startTime: '', eventCategory: { id: '', duration: '' }
 })
 
-function test() {
-    console.log(new Date(newEvent.startTime).toISOString())
+function checkProperties(obj) {
+    for (let key in obj) {
+        if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
+            if(typeof(obj[key]) == 'object'){
+                console.log('object')
+                if(checkProperties(obj[key]) == false){
+                    return false;
+                }
+            }
+        }
+        else {
+            return false
+        }
+    }
+    return true;
 }
 
+
 // POST
-const createNewEvent = async (newNote) => {
-  console.log(newNote)
-  const res = await fetch('http://localhost:5000/notes', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({ noteDetail: newNote })
-  })
-  if (res.status === 201) {
-    const addedNote = await res.json()
-    notes.value.push(addedNote)
-    console.log('added sucessfully')
-  } else console.log('error, cannot be added')
+
+// {
+//     "eventStartTime": "2022-05-23T16:30:00Z",
+//     "eventDuration": 152,
+//     "eventCategory": {
+//         "id": 1
+//     },
+//     "eventNotes": "Gayasdas",
+//     "bookingEmail": "Gay@gmail.com",
+//     "bookingName": "Gayสมเกียรติ ขยันเรียน กลุ่ม TT-4"
+// }
+const createNewEvent = async (event) => {
+    try {
+        console.log(event)
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'bookingName': event.name,
+                'bookingEmail': event.email,
+                'eventNotes': event.detail,
+                'eventStartTime': new Date(event.startTime).toISOString(),
+                'eventCategory': { id: event.eventCategory.id },
+                'eventDuration': event.eventCategory.duration
+            })
+        })
+        if (res.status === 201) {
+            console.log('added sucessfully')
+        } else console.log('error, cannot be added')
+    }
+    catch (err) { console.log(err) }
 }
 
 </script>
@@ -72,7 +101,9 @@ const createNewEvent = async (newNote) => {
                 </span>
             </p>
             <p><span>Event durations: <input type="text" disabled v-model="newEvent.eventCategory.duration"></span></p>
-            <button @click="test">Book</button>
+            <button @click="
+                checkProperties(newEvent) ? createNewEvent(newEvent) : ''
+                ">Book</button>
         </div>
     </div>
 </template>
