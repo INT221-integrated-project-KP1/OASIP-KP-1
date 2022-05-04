@@ -71,7 +71,7 @@ const createNewEvent = async (event) => {
                 'bookingName': event.name,
                 'bookingEmail': event.email,
                 'eventNotes': event.detail,
-                'eventStartTime': new Date(event.startTime).toISOString(),
+                'eventStartTime': new Date(event.startTime).toISOString().replace(".000Z", "Z"),
                 'eventCategory': { id: event.eventCategory.id },
                 'eventDuration': event.eventCategory.duration
             })

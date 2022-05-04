@@ -37,7 +37,7 @@ const removeEvent = async (deleteId) => {
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
                         <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                         <p>Event Duration: {{ event.eventDuration }} Minutes</p>
-                        <button @click="removeEvent(event.id)"></button>
+                        <button @click="removeEvent(event.id)">delete</button>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
                     </li>
                 </ul>
