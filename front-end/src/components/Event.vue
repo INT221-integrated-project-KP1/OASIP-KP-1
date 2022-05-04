@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+defineEmits(['deleteNote'])
 
 let props = defineProps({
     event: {
@@ -11,16 +12,7 @@ let props = defineProps({
 console.log("TEST");
 console.log(props.event)
 
-// DELETE
-const removeEvent = async (deleteId) => {
-    console.log(deleteId)
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${deleteId}`, {
-        method: 'DELETE'
-    })
-    if (res.status === 200) {
-        console.log('deleted successfully')
-    } else console.log('error, cannot delete data')
-}
+
 
 
 </script>
@@ -37,8 +29,8 @@ const removeEvent = async (deleteId) => {
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
                         <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                         <p>Event Duration: {{ event.eventDuration }} Minutes</p>
-                        <button @click="removeEvent(event.id)"></button>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
+
                     </li>
                 </ul>
             </div>

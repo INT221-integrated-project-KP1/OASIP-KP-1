@@ -53,6 +53,7 @@ const removeEvent = async (deleteId) => {
         method: 'DELETE'
     })
     if (res.status === 200) {
+     events.value = events.value.filter((event) => event.id !== deleteId)
         console.log('deleted successfully')
     } else console.log('error, cannot delete data')
 }
@@ -85,7 +86,7 @@ function showModal() {
                 </div>
             </div>
         </div>
-        <EventList :events="events" @selectedEventId="getEventById"></EventList>
+        <EventList :events="events" @selectedEventId="getEventById" @deleteEvent="removeEvent"></EventList>
     </div>
 
 </template>
