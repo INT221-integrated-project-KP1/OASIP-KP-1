@@ -8,7 +8,7 @@ let props = defineProps({
     }
 })
 
-defineEmits(['selectedEventId'])
+defineEmits(['selectedEventId','deleteEvent' ])
 
 
 
@@ -43,6 +43,8 @@ console.log(props.events)
                                 <p>Event Duration: {{ event.eventDuration }} Minutes</p>
                                 <p v-if="event.eventDetails !== undefined">Event Details: {{ event.eventDetails }}</p>
                                 <br><button @click="$emit('selectedEventId', event.id)">Select</button>
+                                <br><button @click="$emit('deleteEvent', event.id)">Delete</button>
+
                             </li>
                         </ol>
                         <p></p>
