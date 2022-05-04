@@ -21,10 +21,10 @@ USE `mydb` ;
 -- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
-  `event_category_id` INT NOT NULL,
-  `event_category_name` VARCHAR(100) NULL,
+  `event_category_id` INT NOT NULL AUTO_INCREMENT,
+  `event_category_name` VARCHAR(100) NOT NULL,
   `event_category_description` VARCHAR(500) NULL,
-  `event_duration` INT NULL,
+  `event_duration` INT NOT NULL,
   constraint `eventCategory` Check (event_duration <= 480),
   PRIMARY KEY (`event_category_id`),
   UNIQUE INDEX `eventCategoryName_UNIQUE` (`event_category_name` ASC) VISIBLE)
@@ -35,13 +35,13 @@ ENGINE = InnoDB;
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-  `booking_id` INT NOT NULL,
-  `booking_name` VARCHAR(100) NULL,
-  `booking_email` VARCHAR(255) NULL,
+  `booking_id` INT NOT NULL AUTO_INCREMENT,
+  `booking_name` VARCHAR(100) NOT NULL,
+  `booking_email` VARCHAR(255) NOT NULL,
   `event_notes` VARCHAR(500) NULL,
-  `event_start_time` DATETIME NULL,
+  `event_start_time` DATETIME NOT NULL,
   `event_category_id` INT NOT NULL,
-  `event_duration` INT NULL,
+  `event_duration` INT NOT NULL,
   PRIMARY KEY (`booking_id`),
   INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
   constraint `event` Check (booking_email like '%@%' and event_duration <= 480),
@@ -56,23 +56,11 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-use mydb;
-insert into eventCategory values(1,"software","about software in sit web",30);
-insert into eventCategory values(2,"hardware","about thing in sit",480);
-insert into eventCategory values(3,"other","other",400);
-insert into eventCategory values(4,"ตูด","about tood",100);
-
-
-insert into event values(1, "booking book", "test15@gmail.com", "test1", '2565-12-02 23:00:10', 3, 400);
-insert into event values(2,"booking Subject","test2@hotmail.com","test2", '2565-12-02 23:00:10', 1, 30);
-insert into event values(3, "booking book", "test3@mail.kmutt.ac.th","test3", '2565-12-20 06:30:41', 2, 480);
-insert into event values(4, "booking Subject", "test4@gmail.com", "test4", '2565-06-20 23:00:10' , 4, 100);
-insert into event values(5, "booking book", "test5@gmail.com", "testerror1", '2565-02-20 00:00:10', 2, 480);
-insert into event values(6, "booking book", "test6@gmail.com", "testerror2", '2565-02-28 10:00:10', 3, 400);
-insert into event values(7, "booking book", "test7@gmail.com", "testerror3", '2565-04-30 10:00:59', 3, 400);
+set names utf8;
 
 CREATE USER 'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
+
+
 

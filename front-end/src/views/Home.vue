@@ -7,11 +7,12 @@ const events = ref([]);
 // GET
 const getEvents = async () => {
     try {
+        console.log(import.meta.env.URL);
+
         // const res = await fetch('http://localhost:5000/api/scheduled')
         // const res = await fetch('http://10.4.56.84:5000/api/scheduled')
 const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled`)
 // const res = await fetch('/api/scheduled')
-
 
         console.log(res.status)
         if (res.status === 200) {
@@ -46,6 +47,17 @@ const getEventById = async (id) => {
     catch (err) { console.log('Error: ', err.message) }
 }
 
+const removeEvent = async (deleteId) => {
+    console.log(deleteId)
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${deleteId}`, {
+        method: 'DELETE'
+    })
+    if (res.status === 200) {
+     events.value = events.value.filter((event) => event.id !== deleteId)
+        console.log('deleted successfully')
+    } else console.log('error, cannot delete data')
+}
+
 onBeforeMount(async () => {
     await getEvents()
 })
@@ -74,7 +86,7 @@ function showModal() {
                 </div>
             </div>
         </div>
-        <EventList :events="events" @selectedEventId="getEventById"></EventList>
+        <EventList :events="events" @selectedEventId="getEventById" @deleteEvent="removeEvent"></EventList>
     </div>
 
 </template>
