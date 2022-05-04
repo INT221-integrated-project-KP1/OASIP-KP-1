@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
-  `event_category_id` INT NOT NULL,
+  `event_category_id` INT NOT NULL AUTO_INCREMENT,
   `event_category_name` VARCHAR(100) NULL,
   `event_category_description` VARCHAR(500) NULL,
   `event_duration` INT NULL,
@@ -35,7 +35,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-  `booking_id` INT NOT NULL,
+  `booking_id` INT NOT NULL AUTO_INCREMENT,
   `booking_name` VARCHAR(100) NULL,
   `booking_email` VARCHAR(255) NULL,
   `event_notes` VARCHAR(500) NULL,
@@ -58,20 +58,19 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 use mydb;
-insert into eventCategory values(1,"software","about software in sit web",30);
-insert into eventCategory values(2,"hardware","about thing in sit",480);
-insert into eventCategory values(3,"other","other",400);
-insert into eventCategory values(4,"ตูด","about tood",100);
+set names utf8;
+insert into eventCategory values (1,'Project Management Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย project management clinic ในวิชา INT221 integrated project I ให้นักศึกษาเตรียมเอกสารที่เกี่ยวข้อง เพื่อแสดงระหว่างขอคำปรึกษา',30);
+insert into eventCategory values (2,'DevOps/Infra Clinic','Use this event category for DevOps/Infra clinic.',30);
+insert into eventCategory values (3,'Database Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย database clinic ในวิชา INT221 integrated project I',15);
+insert into eventCategory values (4,'Client-side Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย client-side clinic ในวิชา INT221 integrated project I',30);
+insert into eventCategory values (5,'Server-side Clinic',null,30);
 
 
-insert into event values(1, "booking book", "test15@gmail.com", "test1", '2565-12-02 23:00:10', 3, 400);
-insert into event values(2,"booking Subject","test2@hotmail.com","test2", '2565-12-02 23:00:10', 1, 30);
-insert into event values(3, "booking book", "test3@mail.kmutt.ac.th","test3", '2565-12-20 06:30:41', 2, 480);
-insert into event values(4, "booking Subject", "test4@gmail.com", "test4", '2565-06-20 23:00:10' , 4, 100);
-insert into event values(5, "booking book", "test5@gmail.com", "testerror1", '2565-02-20 00:00:10', 2, 480);
-insert into event values(6, "booking book", "test6@gmail.com", "testerror2", '2565-02-28 10:00:10', 3, 400);
-insert into event values(7, "booking book", "test7@gmail.com", "testerror3", '2565-04-30 10:00:59', 3, 400);
+insert into event values (1,'Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
+insert into event values (2,'Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
+insert into event values (3,'สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);
 
+update eventCategory set event_duration = 20 where event_category_id=2;
 CREATE USER 'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
