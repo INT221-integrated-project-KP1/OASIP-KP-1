@@ -25,9 +25,7 @@ onBeforeMount(async () => {
 })
 
 
-let newEvent = reactive({
-    name: '', email: '', detail: '', startTime: '', eventCategory: { id: '', duration: '' }
-})
+let newEvent = reactive({ eventCategory: { id: '', duration: '' }})
 
 function checkProperties(obj) {
     for (let key in obj) {
@@ -78,6 +76,8 @@ const createNewEvent = async (event) => {
         })
         if (res.status === 201) {
             console.log('added sucessfully')
+            newEvent = { eventCategory: { id: '', duration: '' }}
+            alert("added successfully")
         } else console.log('error, cannot be added')
     }
     catch (err) { console.log(err) }

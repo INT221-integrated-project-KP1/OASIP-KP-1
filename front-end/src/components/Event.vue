@@ -29,10 +29,6 @@ console.log(props.event)
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
                         <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                         <p>Event Duration: {{ event.eventDuration }} Minutes</p>
-<<<<<<< HEAD
-                        <button @click="removeEvent(event.id)">delete</button>
-=======
->>>>>>> 9e25ba3b38ea9a86eb491fa67ad250c31dbe4ae1
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
 
                     </li>
