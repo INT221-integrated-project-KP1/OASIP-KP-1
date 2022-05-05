@@ -29,6 +29,7 @@ console.log(props.event)
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
                         <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                         <p>Event Duration: {{ event.eventDuration }} Minutes</p>
+                        <p>Event Notes: {{ event.eventNotes }}</p>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
 
                     </li>

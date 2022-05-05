@@ -19,7 +19,7 @@ services:
     env_file: .env
     volumes:
       - ./datadir:/var/lib/mysql
-      - ./db/:/docker-entrypoint-initdb.d
+      - ./db/script:/docker-entrypoint-initdb.d
     ports:
       - "3360:3306"
     environment:
