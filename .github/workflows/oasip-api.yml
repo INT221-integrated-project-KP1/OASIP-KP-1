@@ -103,7 +103,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs: [build-front-image,build-back-image]
-    step:
+    steps:
     - uses: actions/checkout@v2
     - name: Deploy to Server
       run:  docker-compose up -d front back
