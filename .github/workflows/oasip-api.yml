@@ -105,6 +105,12 @@ jobs:
     needs: [build-front-image,build-back-image]
     steps:
     - uses: actions/checkout@v2
+    - name: Login to GHCR
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Deploy to Server
       run:  docker-compose up -d front back
 
