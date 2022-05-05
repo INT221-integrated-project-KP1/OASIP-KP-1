@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
 
-  # proxy:
-  #   container_name: proxy
-  #   image: nginx
-  #   restart: always
-  #   depends_on:
-  #     - front
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+  proxy:
+    container_name: proxy
+    image: nginx
+    restart: always
+    depends_on:
+      - front
+    ports:
+      - "80:80"
+    volumes:
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
 
   db:
     container_name: db
@@ -30,9 +30,9 @@ services:
   back:
     container_name: back
     # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
-    image: ghcr.io/int221-integrated-project-kp1/back
+    image: ghcr.io/int221-integrated-project-kp1/back:latest
     env_file: .env
-    build: ./back-end
+    # build: ./back-end
     restart: on-failure
     depends_on:
       - db
@@ -47,15 +47,14 @@ services:
         
   front:
     container_name: front
-    image: ghcr.io/int221-integrated-project-kp1/front
+    image: ghcr.io/int221-integrated-project-kp1/front:latest
     env_file: .env
     ports:
       - "80:80"
     depends_on:
       - back
-    build: ./front-end
-    volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+    # build: ./front-end
+
   
 
 

@@ -20,5 +20,5 @@ public class EventDetailsBaseDTO {
     private Integer id;
     private String eventCategoryName;
     private String eventCategoryDescription;
-
+    private String eventNotes;
 }
