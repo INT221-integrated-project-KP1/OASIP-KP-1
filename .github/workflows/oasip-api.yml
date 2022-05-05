@@ -1,7 +1,7 @@
 name: oasip-api 
 on:
   push:
-    branches: [ main ]
+    branches: [ main,testAction ]
   pull_request:
     branches: [ main ]
 jobs: 
