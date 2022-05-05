@@ -42,7 +42,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: ghcr.io/INT221-integrated-project-KP1/back
+        images: ghcr.io/INT221-integrated-project-KP1/back-end
         tags: |
           type=sha
         flavor: |
@@ -86,7 +86,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: ghcr.io/INT221-integrated-project-KP1/front
+        images: ghcr.io/INT221-integrated-project-KP1/front-end
         tags: |
           type=sha
         flavor: |
