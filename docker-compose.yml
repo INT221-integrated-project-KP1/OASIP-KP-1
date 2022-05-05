@@ -19,7 +19,9 @@ services:
     env_file: .env
     volumes:
       - ./datadir:/var/lib/mysql
-      - ./db/:/docker-entrypoint-initdb.d
+      - ./db/script:/docker-entrypoint-initdb.d
+    ports:
+      - "3360:3306"
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
@@ -27,9 +29,14 @@ services:
 
   back:
     container_name: back
+<<<<<<< HEAD
     image: ghcr.io/int221-integrated-project-kp1/back
+=======
+    # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
+    image: ghcr.io/int221-integrated-project-kp1/back:latest
+>>>>>>> dev
     env_file: .env
-    build: ./back-end
+    # build: ./back-end
     restart: on-failure
     depends_on:
       - db
@@ -44,11 +51,14 @@ services:
         
   front:
     container_name: front
-    image: ghcr.io/int221-integrated-project-kp1/front
+    image: ghcr.io/int221-integrated-project-kp1/front:latest
     env_file: .env
+    ports:
+      - "80:80"
     depends_on:
       - back
-    build: ./front-end
+    # build: ./front-end
+
   
 
 

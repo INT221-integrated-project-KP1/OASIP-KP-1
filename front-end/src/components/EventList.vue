@@ -8,7 +8,7 @@ let props = defineProps({
     }
 })
 
-defineEmits(['selectedEventId'])
+defineEmits(['selectedEventId','deleteEvent' ])
 
 
 
@@ -33,15 +33,18 @@ console.log(props.events)
                 </div> -->
                 <div id="ListEvent">
                     <div>
+                        <!-- 2022-05-23T16:30:00Z -->
                         <ol>
                             <li v-for="(event, index) in events" :key="index">
                                 <p>Booking Name: {{ event.bookingName }}</p>
                                 <p v-if="event.bookingEmail !== undefined">Booking Email: {{ event.bookingEmail }}</p>
-                                <p>Event Category Name: {{ event.eventCategoryName }}</p>
-                                <p>Event Start Time: {{ event.eventStartTime }}</p>
-                                <p>Event Duration: {{ event.eventDuration }}</p>
+                                <p>Event Category Name: {{ event.eventCategory.eventCategoryName }}</p>
+                                <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
+                                <p>Event Duration: {{ event.eventDuration }} Minutes</p>
                                 <p v-if="event.eventDetails !== undefined">Event Details: {{ event.eventDetails }}</p>
                                 <br><button @click="$emit('selectedEventId', event.id)">Select</button>
+                                <br><button @click="$emit('deleteEvent', event.id)">Delete</button>
+
                             </li>
                         </ol>
                         <p></p>

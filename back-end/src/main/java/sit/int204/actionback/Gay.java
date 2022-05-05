@@ -3,12 +3,10 @@ package sit.int204.actionback;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.beans.BeanProperty;
-
 @SpringBootApplication
-public class ActionbackApplication {
+public class Gay {
     public static void main(String[] args) {
-        SpringApplication.run(ActionbackApplication.class, args);
+        SpringApplication.run(Gay.class, args);
     }
 
 

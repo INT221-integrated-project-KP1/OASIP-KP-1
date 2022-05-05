@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+defineEmits(['deleteNote'])
 
 let props = defineProps({
     event: {
@@ -13,6 +14,7 @@ console.log(props.event)
 
 
 
+
 </script>
  
 <template>
@@ -23,11 +25,13 @@ console.log(props.event)
                     <li>
                         <p>Booking Name: {{ event.bookingName }}</p>
                         <p>Booking Email: {{ event.bookingEmail }}</p>
-                        <p>Event Category Name: {{ event.eventCategoryName}}</p>
+                        <p>Event Category Name: {{ event.eventCategoryName }}</p>
                         <p>Event Category Description: {{ event.eventCategoryDescription }}</p>
-                        <p>Event Start Time: {{ event.eventStartTime }}</p>
-                        <p>Event Duration: {{ event.eventDuration }}</p>
+                        <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
+                        <p>Event Duration: {{ event.eventDuration }} Minutes</p>
+                        <p>Event Notes: {{ event.eventNotes }}</p>
                         <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
+
                     </li>
                 </ul>
             </div>
