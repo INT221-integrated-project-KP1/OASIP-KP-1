@@ -111,9 +111,8 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Deploy to Server
-      run:  docker-compose pull
-      run:  docker-compose up --build -d
+    - run:  docker-compose pull
+    - run:  docker-compose up --build -d
 
   
 
