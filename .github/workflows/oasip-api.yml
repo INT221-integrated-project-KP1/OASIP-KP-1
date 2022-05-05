@@ -1,7 +1,7 @@
 name: oasip-api 
 on:
   push:
-    branches: [ main,testAction ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs: 
@@ -98,6 +98,15 @@ jobs:
         file: ./dockerfile-front
         push: true
         tags: ${{ steps.meta.outputs.tags }}
+  
+  # DEPLOY STATE
+  deploy:
+    runs-on: self-hosted
+    needs: [build-front-image,build-back-image]
+    step:
+    - uses: actions/checkout@v2
+    - name: Deploy to Server
+      run:  docker-compose up -d front back
 
   
 
