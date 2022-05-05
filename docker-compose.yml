@@ -29,12 +29,8 @@ services:
 
   back:
     container_name: back
-<<<<<<< HEAD
-    image: ghcr.io/int221-integrated-project-kp1/back
-=======
     # image: ghcr.io/int221-integrated-project-kp1/oasip-api:latest
     image: ghcr.io/int221-integrated-project-kp1/back:latest
->>>>>>> dev
     env_file: .env
     # build: ./back-end
     restart: on-failure
