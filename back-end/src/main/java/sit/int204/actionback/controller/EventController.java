@@ -13,7 +13,7 @@ import sit.int204.actionback.service.EventService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/scheduled")
+@RequestMapping("/api/scheduled/KP1")
 //@CrossOrigin(origins = "http://10.0.0.1:3000")
 @CrossOrigin(origins = "*")
 public class EventController {

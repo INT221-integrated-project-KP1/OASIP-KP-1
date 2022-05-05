@@ -26,7 +26,7 @@ onBeforeMount(async () => {
 
 
 let newEvent = reactive({
-    name: '', email: '', detail: '', startTime: '', eventCategory: { id: '', duration: '' }
+    name: '', email: '', Notes: '', startTime: '', eventCategory: { id: '', duration: '' }
 })
 
 function checkProperties(obj) {
@@ -70,7 +70,7 @@ const createNewEvent = async (event) => {
             body: JSON.stringify({
                 'bookingName': event.name,
                 'bookingEmail': event.email,
-                'eventNotes': event.detail,
+                'eventNotes': event.Notes,
                 'eventStartTime': new Date(event.startTime).toISOString(),
                 'eventCategory': { id: event.eventCategory.id },
                 'eventDuration': event.eventCategory.duration
@@ -90,7 +90,7 @@ const createNewEvent = async (event) => {
         <div>
             <p><span>Name: <input type="text" v-model="newEvent.name"></span></p>
             <p><span>Email: <input type="text" v-model="newEvent.email"></span></p>
-            <p><span>Details: <input type="text" v-model="newEvent.detail"></span></p>
+            <p><span>Notes: <input type="text" v-model="newEvent.Notes"></span></p>
             <p><span>Start Time: <input type="datetime-local" v-model="newEvent.startTime"></span></p>
             <p><span>Event Category:
                     <select v-model="newEvent.eventCategory">

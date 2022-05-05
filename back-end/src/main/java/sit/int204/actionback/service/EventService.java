@@ -41,6 +41,8 @@ public class EventService {
         return modelMapper.map(event, EventDetailsBaseDTO.class);
 }
         public void create(Event newEvent){
+                
+
                repository.saveAndFlush(newEvent);
         }
 
