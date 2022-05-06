@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
+import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.ProductPageDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
