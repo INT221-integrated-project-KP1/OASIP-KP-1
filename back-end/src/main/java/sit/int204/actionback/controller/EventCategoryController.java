@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/EventCategory")
 //@CrossOrigin(origins = "http://10.0.0.1:3000")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class EventCategoryController {
 
     @GetMapping("/hello2")

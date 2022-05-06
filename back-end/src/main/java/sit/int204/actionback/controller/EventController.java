@@ -13,9 +13,9 @@ import sit.int204.actionback.service.EventService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/kp1/scheduled")
+@RequestMapping("/api/scheduled")
 //@CrossOrigin(origins = "http://10.0.0.1:3000")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
     public String home() {
@@ -37,12 +37,12 @@ public class EventController {
     
     @PostMapping("")
     public void createTest(@RequestBody Event newEvent){
-         eventService.create(newEvent);
+        eventService.create(newEvent);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTest(@PathVariable Integer id) {
-         eventService.deleteEventById(id);
+        eventService.deleteEventById(id);
     }
 
 
