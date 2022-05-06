@@ -1,7 +1,7 @@
 FROM maven:3.8.5-openjdk-17-slim as build
-
+RUN ls
 WORKDIR /app
-
+RUN ls
 COPY pom.xml .
 COPY src/ ./src/
 

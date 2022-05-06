@@ -11,7 +11,7 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/EventCategory")
+@RequestMapping("/api/EventCategory/KP1")
 //@CrossOrigin(origins = "http://10.0.0.1:3000")
 @CrossOrigin(origins = "*")
 public class EventCategoryController {
