@@ -32,10 +32,10 @@ public class EventService {
     @Autowired
     private ListMapper listMapper;
 
-    public ProductPageDTO getEvent(int page , int pageSize) {
+    public EventPageDTO getEvent(int page , int pageSize) {
         return modelMapper.map(repository.findAll(
                 PageRequest.of(page, pageSize , Sort.by("eventStartTime").descending())),
-                ProductPageDTO.class);
+                EventPageDTO.class);
 
     }
 

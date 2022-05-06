@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductPageDTO {
+public class EventPageDTO {
     private List<SimpleEventDTO> content;
     private int number;
     private int size;
