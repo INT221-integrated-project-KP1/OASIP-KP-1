@@ -1,4 +1,7 @@
 # DISCORD NOTIFY STATE
+name: discord-noti
+on: [push,pull_request]
+jobs: 
   notify:
     runs-on: ubuntu-latest
     needs: [deploy]
