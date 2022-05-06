@@ -5,12 +5,12 @@ import Booking from '../views/Booking.vue'
 const history = createWebHistory()
 const routes = [
     {
-        path: '/',
+        path: '/kp1',
         name: 'Home',
         component: Home
     },
     {
-        path: '/Gay',
+        path: '/kp1/Booking',
         name: 'Booking',
         component: Booking
     }
