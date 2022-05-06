@@ -13,6 +13,13 @@ export default defineConfig({
                 secure: false,
                 rewrite: (path) => path.replace(/^\/api/, ''),
                 ws: true,
+            },
+            "^/": {
+                target: 'http://intproj21.sit.kmutt.ac.th/kp1',
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path.replace(/^\//, ''),
+                ws: true,
             }
         }
     }
