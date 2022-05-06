@@ -15,13 +15,7 @@ export default defineConfig({
                 rewrite: (path) => path.replace(/^\/api/, ''),
                 ws: true,
             },
-            "^/": {
-                target: '/kp1',
-                changeOrigin: true,
-                secure: false,
-                rewrite: (path) => path.replace(/^\//, ''),
-                ws: true,
-            }
+
         }
     }
 })
