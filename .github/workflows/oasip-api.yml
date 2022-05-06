@@ -113,6 +113,21 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - run:  docker-compose pull
     - run:  docker-compose up --build -d
+  
+  # DISCORD NOTIFY STATE
+  notify:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
+    - name: Notify discord
+      uses: th0th/notify-discord@v0.4.1
+      if: ${{ always() }}
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        GITHUB_ACTOR: ${{ github.actor }}
+        GITHUB_JOB_NAME: "Build and deploy"
+        GITHUB_JOB_STATUS: ${{ job.status }}
+  
 
   
 
