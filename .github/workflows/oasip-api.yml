@@ -124,7 +124,7 @@ jobs:
     - name: Run Discord Webhook
       uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
       with:
-        webhook_url: ${{ secrets.YOUR_DISCORD_WEBHOOK_URL }}
+        webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
   
 
   
