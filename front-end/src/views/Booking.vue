@@ -25,9 +25,7 @@ onBeforeMount(async () => {
 })
 
 
-let newEvent = reactive({
-    name: '', email: '', Notes: '', startTime: '', eventCategory: { id: '', duration: '' }
-})
+let newEvent = reactive({ eventCategory: { id: '', duration: '' }})
 
 function checkProperties(obj) {
     for (let key in obj) {
@@ -70,14 +68,16 @@ const createNewEvent = async (event) => {
             body: JSON.stringify({
                 'bookingName': event.name,
                 'bookingEmail': event.email,
-                'eventNotes': event.Notes,
-                'eventStartTime': new Date(event.startTime).toISOString(),
+                'eventNotes': event.note,
+                'eventStartTime': new Date(event.startTime).toISOString().replace(".000Z", "Z"),
                 'eventCategory': { id: event.eventCategory.id },
                 'eventDuration': event.eventCategory.duration
             })
         })
         if (res.status === 201) {
             console.log('added sucessfully')
+            newEvent = { eventCategory: { id: '', duration: '' }}
+            alert("added successfully")
         } else console.log('error, cannot be added')
     }
     catch (err) { console.log(err) }
@@ -90,7 +90,7 @@ const createNewEvent = async (event) => {
         <div>
             <p><span>Name: <input type="text" v-model="newEvent.name"></span></p>
             <p><span>Email: <input type="text" v-model="newEvent.email"></span></p>
-            <p><span>Notes: <input type="text" v-model="newEvent.Notes"></span></p>
+            <p><span>Notes: <input type="text" v-model="newEvent.note"></span></p>
             <p><span>Start Time: <input type="datetime-local" v-model="newEvent.startTime"></span></p>
             <p><span>Event Category:
                     <select v-model="newEvent.eventCategory">

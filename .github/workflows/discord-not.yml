@@ -1,0 +1,15 @@
+# DISCORD NOTIFY STATE
+name: discord-noti
+on: [push,pull_request]
+jobs: 
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run Discord Webhook
+      uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
+      with:
+        webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        censor_username: false
+        hide_links: false

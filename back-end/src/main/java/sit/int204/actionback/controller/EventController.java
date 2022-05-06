@@ -2,9 +2,11 @@ package sit.int204.actionback.controller;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
+import sit.int204.actionback.dtos.ProductPageDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.repo.EventRepository;
@@ -26,8 +28,9 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("")
-    public List<SimpleEventDTO> getEvent(){
-        return eventService.getEvent();
+    public ProductPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int pageSize){
+        return eventService.getEvent(page,pageSize);
     }
 
     @GetMapping("/{id}")
@@ -36,7 +39,6 @@ public class EventController {
     }
     
     @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
     public void createTest(@RequestBody Event newEvent){
          eventService.create(newEvent);
     }
