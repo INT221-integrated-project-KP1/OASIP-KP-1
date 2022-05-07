@@ -2,6 +2,7 @@ package sit.int204.actionback.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.entities.Event;
@@ -31,9 +32,9 @@ public class EventController {
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
     }
-    
+
     @PostMapping("")
-    public void createTest(@RequestBody Event newEvent){
+    public void createTest(@RequestBody EventDTO newEvent){
          eventService.create(newEvent);
     }
 
