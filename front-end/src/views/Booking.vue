@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from 'vue'
 
-let categorys = ref([]);
+const categorys = ref([]);
 
 const getEventCategory = async () => {
     try {
@@ -25,7 +25,7 @@ onBeforeMount(async () => {
 })
 
 
-let newEvent = reactive({ eventCategory: { id: '', duration: '' }})
+const newEvent = ref({ eventCategory: { id: '', duration: '' }})
 
 function checkProperties(obj) {
     for (let key in obj) {
@@ -71,12 +71,12 @@ const createNewEvent = async (event) => {
                 'eventNotes': event.note,
                 'eventStartTime': new Date(event.startTime).toISOString().replace(".000Z", "Z"),
                 'eventCategory': { id: event.eventCategory.id },
-                'eventDuration': event.eventCategory.duration
+                // 'eventDuration': event.eventCategory.duration
             })
         })
         if (res.status === 201) {
             console.log('added sucessfully')
-            newEvent = { eventCategory: { id: '', duration: '' }}
+            newEvent.value = { eventCategory: { id: '', duration: '' }}
             alert("added successfully")
         } else console.log('error, cannot be added')
     }
@@ -88,20 +88,21 @@ const createNewEvent = async (event) => {
 <template>
     <div id="BookingForm">
         <div>
-            <p><span>Name: <input type="text" v-model="newEvent.name"></span></p>
-            <p><span>Email: <input type="text" v-model="newEvent.email"></span></p>
-            <p><span>Notes: <input type="text" v-model="newEvent.note"></span></p>
-            <p><span>Start Time: <input type="datetime-local" v-model="newEvent.startTime"></span></p>
+            
+            <p><span>Name: <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.name"/></span></p>
+            <p><span>Email: <input type="email" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.email"/></span></p>
+            <p><span>Notes: <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.note"/></span></p>
+            <p><span>Start Time: <input type="datetime-local" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.startTime"/></span></p>
             <p><span>Event Category:
-                    <select v-model="newEvent.eventCategory">
+                    <select v-model="newEvent.eventCategory" class="select select-bordered w-full max-w-xs">
                         <option v-for="(category, index) in categorys" :key="index"
                             :value="{ 'id': category.id, 'duration': category.eventDuration }">
                             {{ category.eventCategoryName }}</option>
                     </select>
                 </span>
             </p>
-            <p><span>Event durations: <input type="text" disabled v-model="newEvent.eventCategory.duration"></span></p>
-            <button @click="
+            <p><span>Event durations: <input type="text" class="input input-bordered w-full max-w-xs" disabled v-model="newEvent.eventCategory.duration"></span></p>
+            <button class="input input-bordered w-full max-w-xs" @click="
                 checkProperties(newEvent) ? createNewEvent(newEvent) : ''
                 ">Book</button>
         </div>

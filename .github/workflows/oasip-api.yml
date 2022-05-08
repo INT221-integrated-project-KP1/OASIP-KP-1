@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main,testAction ]
   pull_request:
-    branches: [ main ]
+    branches: [ main,testAction ]
 jobs: 
 # BACK STATE
   install-back-dependencies:
