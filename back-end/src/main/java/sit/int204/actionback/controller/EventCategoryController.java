@@ -11,8 +11,8 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/EventCategory")
-
+@RequestMapping("api/EventCategory")
+@CrossOrigin(origins = "*")
 public class EventCategoryController {
 
     @GetMapping("/hello2")

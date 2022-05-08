@@ -17,5 +17,6 @@ public class SimpleEventDTO {
     private Integer eventDuration;
     private EventCategoryDTO eventCategory;
     private String bookingName;
-
+    private String bookingEmail;
+    private String eventNotes;
 }
