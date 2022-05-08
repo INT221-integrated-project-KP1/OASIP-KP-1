@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/EventCategory")
+
 public class EventCategoryController {
 
     @GetMapping("/hello2")

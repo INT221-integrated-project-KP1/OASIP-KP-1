@@ -4,18 +4,19 @@ import vue from "@vitejs/plugin-vue";
 
 
 export default defineConfig({
+    base: `/kp1`,
     plugins: [vue()],
-    server: {
-        proxy: {
-            "^/api": {
-                target: 'http://localhost/api',
-                changeOrigin: true,
-                secure: false,
-                rewrite: (path) => path.replace(/^\/api/, ''),
-                ws: true,
-            }
-        }
-    }
+    // server: {
+    //     proxy: {
+    //         "^/api": {
+    //             target: 'http://intproj21.sit.kmutt.ac.th/kp1/api',
+    //             changeOrigin: true,
+    //             secure: false,
+    //             rewrite: (path) => path.replace(/^\/api/, ''),
+    //             ws: true,
+    //         },
+    //     }
+    // }
 })
 
 // module.exports={

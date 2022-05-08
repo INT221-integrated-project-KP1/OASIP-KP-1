@@ -11,6 +11,7 @@ import sit.int204.actionback.service.EventService;
 
 @RestController
 @RequestMapping("/api/scheduled")
+
 public class EventController {
     @GetMapping("/hello")
     public String home() {
@@ -32,13 +33,15 @@ public class EventController {
     }
 
     @PostMapping("")
+
     public void createTest(@RequestBody EventDTO newEvent){
          eventService.create(newEvent);
+
     }
 
     @DeleteMapping("/{id}")
     public void deleteTest(@PathVariable Integer id) {
-         eventService.deleteEventById(id);
+        eventService.deleteEventById(id);
     }
 
 
