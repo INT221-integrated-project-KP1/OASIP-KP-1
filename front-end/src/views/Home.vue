@@ -1,20 +1,22 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, reactive } from 'vue'
 import EventList from '../components/EventList.vue'
 import Event from '../components/Event.vue'
 
 const events = ref([]);
+const eventsToAdd = reactive([]);
 // GET
 const getEvents = async () => {
     try {
         console.log(import.meta.env.URL);     
-const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled`)
-
-
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/?page=${page}&pageSize=&${pageSize}`)
         console.log(res.status)
         if (res.status === 200) {
-            events.value = await res.json()
-            console.log(events.value)
+            eventsToAdd = await res.json()
+            console.log(eventsToAdd)
+            eventsToAdd.forEach((e)=>{
+                events.value.push(e);
+            })
         } else {
             console.log('error, cannot get data')
         }
@@ -62,6 +64,20 @@ function showModal() {
         a.value = "display:block"
     }
 }
+
+let page = ref('0') //page start 0
+let pageSize = ref('4') //default 4
+window.onscroll = () => {
+  let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+
+  if (bottomOfWindow) {
+    console.log("bottomOfWindow")
+    //do tood
+    page++;
+    getEvents();
+  }
+};
+
 
 
 </script>

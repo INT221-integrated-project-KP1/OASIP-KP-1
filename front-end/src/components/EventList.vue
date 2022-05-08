@@ -4,8 +4,8 @@ import DeleteButton from '../components/deleteButton.vue';
 
 let props = defineProps({
     events: {
-        default: [],
-        type: Array
+        default: {},
+        type: Object
     }
 })
 
@@ -26,7 +26,7 @@ console.log(props.events)
                 <div id="ListEvent">
                     <div>
                         <ol class="card w-96 bg-base-100 shadow-xl " >
-                            <li v-for="(event, index) in events" :key="index" class="card-body">
+                            <li v-for="(event, index) in events.content" :key="index" class="card-body">
                                 <p class="card-title">Booking Name: {{ event.bookingName }}</p>
                                 <p v-if="event.bookingEmail !== undefined">Booking Email: {{ event.bookingEmail }}</p>
                                 <p>Event Category Name: {{ event.eventCategory.eventCategoryName }}</p>

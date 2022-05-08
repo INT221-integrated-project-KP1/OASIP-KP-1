@@ -15,7 +15,7 @@ const changeTab = (currentTab) => {
 <template>
   <div class="navbar bg-base-100">
     <div class="flex-1">
-      <a class="btn btn-ghost normal-case text-xl">Gay</a>
+      <a class="btn btn-ghost normal-case text-xl">Daimodd</a>
     </div>
     <div class="tabs tabs-boxed">
       <router-link :to="{ name: 'Home' }" :class=active[0] @click="changeTab(0)">Home </router-link>

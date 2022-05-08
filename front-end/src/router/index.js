@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Booking from '../views/Booking.vue'
 
-const history = createWebHistory('/kp1/')
+const history = createWebHistory()
 const routes = [
     {
         path: '/',
@@ -10,7 +10,6 @@ const routes = [
         component: Home
     },
     {
-
         path: '/booking',
         name: 'Booking',
         component: Booking
