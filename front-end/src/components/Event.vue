@@ -19,6 +19,7 @@ console.log(props.event)
 </script>
  
 <template>
+
     <div>
         <div id="ListEvent">
             <div>
@@ -31,13 +32,14 @@ console.log(props.event)
                         <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                         <p>Event Duration: {{ event.eventDuration }} Minutes</p>
                         <p>Event Notes: {{ event.eventNotes }}</p>
-                        <!-- <p>Event Details: {{ event.eventDetails }}</p> -->
-
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+ 
+
+
 </template>
  
 <style>

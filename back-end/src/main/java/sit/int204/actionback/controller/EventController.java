@@ -10,8 +10,8 @@ import sit.int204.actionback.service.EventService;
 
 
 @RestController
-@RequestMapping("/api/scheduled")
-
+@RequestMapping("api/scheduled")
+@CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
     public String home() {
