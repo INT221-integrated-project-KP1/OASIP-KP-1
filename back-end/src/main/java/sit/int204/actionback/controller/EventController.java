@@ -10,9 +10,7 @@ import sit.int204.actionback.service.EventService;
 
 
 @RestController
-@RequestMapping("/api/scheduled/KP1")
-//@CrossOrigin(origins = "http://10.0.0.1:3000")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/scheduled")
 public class EventController {
     @GetMapping("/hello")
     public String home() {
@@ -26,7 +24,7 @@ public class EventController {
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int pageSize){
         return eventService.getEvent(page,pageSize);
-    }
+    } 
 
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
