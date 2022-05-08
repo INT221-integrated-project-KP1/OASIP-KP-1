@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue";
 
 
 export default defineConfig({
-    base: `/kp1`,
+    base: `/kp1/`,
     plugins: [vue()],
     // server: {
     //     proxy: {
