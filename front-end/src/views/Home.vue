@@ -4,7 +4,7 @@ import EventList from '../components/EventList.vue'
 import Event from '../components/Event.vue'
 
 const events = ref([]);
-const eventsToAdd = reactive([]);
+let eventsToAdd = reactive([]);
 // GET
 const getEvents = async () => {
     try {

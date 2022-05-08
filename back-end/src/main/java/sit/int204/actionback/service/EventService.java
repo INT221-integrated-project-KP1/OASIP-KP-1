@@ -38,9 +38,7 @@ public class EventService {
     private ListMapper listMapper;
 
     public EventPageDTO getEvent(int page , int pageSize) {
-        return modelMapper.map(repository.findAll(
-                PageRequest.of(page, pageSize , Sort.by("eventStartTime").descending())),
-                EventPageDTO.class);
+        return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
 
     }
 

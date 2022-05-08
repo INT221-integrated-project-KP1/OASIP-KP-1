@@ -23,7 +23,7 @@ public class EventController {
 
     @GetMapping("")
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int pageSize){
+                                 @RequestParam(defaultValue = "4") int pageSize){
         return eventService.getEvent(page,pageSize);
     } 
 
