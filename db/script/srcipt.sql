@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
-  `event_category_id` INT NOT NULL AUTO_INCREMENT,
+  `event_category_id` INT AUTO_INCREMENT,
   `event_category_name` VARCHAR(100) NOT NULL,
   `event_category_description` VARCHAR(500) NULL,
   `event_duration` INT NOT NULL,
@@ -35,7 +35,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
-  `booking_id` INT NOT NULL AUTO_INCREMENT,
+  `booking_id` INT AUTO_INCREMENT,
   `booking_name` VARCHAR(100) NOT NULL,
   `booking_email` VARCHAR(255) NOT NULL,
   `event_notes` VARCHAR(500) NULL,
@@ -56,20 +56,20 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-set names utf8;
 
+use mydb;
+set names utf8;
+insert into eventCategory values (NULL ,'Project Management Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย project management clinic ในวิชา INT221 integrated project I ให้นักศึกษาเตรียมเอกสารที่เกี่ยวข้อง เพื่อแสดงระหว่างขอคำปรึกษา',30);
+insert into eventCategory values (NULL ,'DevOps/Infra Clinic','Use this event category for DevOps/Infra clinic.',30);
+insert into eventCategory values (NULL ,'Database Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย database clinic ในวิชา INT221 integrated project I',15);
+insert into eventCategory values (NULL ,'Client-side Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย client-side clinic ในวิชา INT221 integrated project I',30);
+insert into eventCategory values (NULL ,'Server-side Clinic',null,30);
+
+insert into event values (NULL ,'Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
+insert into event values (NULL ,'Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
+insert into event values (NULL ,'สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);
+
+update eventCategory set event_duration = 20 where event_category_id=2;
 CREATE USER 'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
-
-use mydb;
-
-insert into eventCategory values (1,'Project Management Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย project management clinic ในวิชา INT221 integrated project I ให้นักศึกษาเตรียมเอกสารที่เกี่ยวข้อง เพื่อแสดงระหว่างขอคำปรึกษา',30);
-insert into eventCategory values (2,'DevOps/Infra Clinic','Use this event category for DevOps/Infra clinic.',30);
-insert into eventCategory values (3,'Database Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย database clinic ในวิชา INT221 integrated project I',15);
-insert into eventCategory values (4,'Client-side Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย client-side clinic ในวิชา INT221 integrated project I',30);
-insert into eventCategory values (5,'Server-side Clinic',null,30);
-
-
-update eventCategory set event_duration = 20 where event_category_id=2;
-
