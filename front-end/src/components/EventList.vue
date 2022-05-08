@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import DeleteButton from '../components/deleteButton.vue';
 
 let props = defineProps({
     events: {
@@ -8,7 +9,7 @@ let props = defineProps({
     }
 })
 
-defineEmits(['selectedEventId','deleteEvent' ])
+defineEmits(['selectedEventId', 'deleteEvent'])
 
 
 
@@ -22,29 +23,20 @@ console.log(props.events)
     <div>
         <div id="HaveEvent">
             <div v-if="events.length != 0">
-                <h2>Event Scheduled</h2>
-                <!-- <div id="SelectionEvent">
-                    <label>Choose a Event:</label>
-                    <select v-model="selectedEventId">
-                        <option selected disabled>Select Event !</option>
-                        <option v-for="(event, index) in events" :value="event.id">{{ event.bookingName }}</option>
-                    </select>
-                    <button @click="$emit('selectedEventId', selectedEventId)">Select</button>
-                </div> -->
                 <div id="ListEvent">
                     <div>
-                        <!-- 2022-05-23T16:30:00Z -->
-                        <ol>
-                            <li v-for="(event, index) in events" :key="index">
-                                <p>Booking Name: {{ event.bookingName }}</p>
+                        <ol class="card w-96 bg-base-100 shadow-xl " >
+                            <li v-for="(event, index) in events" :key="index" class="card-body">
+                                <p class="card-title">Booking Name: {{ event.bookingName }}</p>
                                 <p v-if="event.bookingEmail !== undefined">Booking Email: {{ event.bookingEmail }}</p>
                                 <p>Event Category Name: {{ event.eventCategory.eventCategoryName }}</p>
                                 <p>Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
                                 <p>Event Duration: {{ event.eventDuration }} Minutes</p>
                                 <p v-if="event.eventDetails !== undefined">Event Details: {{ event.eventDetails }}</p>
-                                <br><button @click="$emit('selectedEventId', event.id)">Select</button>
-                                <br><button @click="$emit('deleteEvent', event.id)">Delete</button>
-
+                                <div class="card-actions justify-end">
+                                    <br><button @click="$emit('selectedEventId', event.id)" class="btn btn-primary-focus">Select</button>
+                                    <DeleteButton @click="$emit('deleteEvent', event.id)" class="btn btn-primary"/>
+                                </div>
                             </li>
                         </ol>
                         <p></p>
@@ -60,4 +52,6 @@ console.log(props.events)
 </template>
  
 <style>
+
+
 </style>
