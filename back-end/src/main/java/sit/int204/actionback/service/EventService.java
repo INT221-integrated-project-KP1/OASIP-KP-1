@@ -2,14 +2,20 @@ package sit.int204.actionback.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
+import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
+import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
@@ -23,14 +29,17 @@ public class EventService {
     private EventRepository repository;
 
     @Autowired
+    private EventCategoryRepository rep;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private ListMapper listMapper;
 
-    public List<SimpleEventDTO> getEvent() {
-        List<Event> event = repository.findAllByOrderByEventStartTimeDesc();
-        return listMapper.mapList(event, SimpleEventDTO.class, modelMapper);
+    public EventPageDTO getEvent(int page , int pageSize) {
+        return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
+
     }
 
     public EventDetailsBaseDTO getSimpleEventById(Integer id) {
@@ -41,7 +50,12 @@ public class EventService {
                 ));
         return modelMapper.map(event, EventDetailsBaseDTO.class);
 }
-        public ResponseEntity create(Event newEvent){
+        public ResponseEntity create(EventDTO newEvent){
+            int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
+            System.out.println(setEventDuration);
+
+            newEvent.setEventDuration(setEventDuration);
+
             System.out.println("start");
             long newMillisecond = newEvent.getEventStartTime().toEpochMilli();
             long newDuration = newEvent.getEventDuration() * 60 * 1000;
@@ -69,7 +83,8 @@ public class EventService {
                 }
 
             }
-            repository.saveAndFlush(newEvent);
+            Event e = modelMapper.map(newEvent, Event.class);
+            repository.saveAndFlush(e);
             System.out.println("Created");
             return ResponseEntity.status(HttpStatus.CREATED).body("OK");
         }
