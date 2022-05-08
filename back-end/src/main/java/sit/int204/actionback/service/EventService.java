@@ -43,6 +43,7 @@ public class EventService {
 }
         public ResponseEntity create(Event newEvent){
             System.out.println("start");
+            //check overlab
             long newMillisecond = newEvent.getEventStartTime().toEpochMilli();
             long newDuration = newEvent.getEventDuration() * 60 * 1000;
             int categoryId = newEvent.getEventCategory().getId();
@@ -67,8 +68,12 @@ public class EventService {
                         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
                 }
-
             }
+            //checked overlab
+
+
+
+
             repository.saveAndFlush(newEvent);
             System.out.println("Created");
             return ResponseEntity.status(HttpStatus.CREATED).body("OK");
