@@ -74,7 +74,7 @@ const createNewEvent = async (event) => {
                 // 'eventDuration': event.eventCategory.duration
             })
         })
-        if (res.status === 200) {
+        if (res.status === 201) {
             console.log('added sucessfully')
             newEvent.value = { eventCategory: { id: '', duration: '' }}
             alert("added successfully")
