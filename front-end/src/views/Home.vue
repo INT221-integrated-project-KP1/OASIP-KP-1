@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onBeforeMount, reactive } from "vue";
 import EventList from "../components/EventList.vue";
-import Event from "../components/Event.vue";
 
 const events = ref([]);
 // GET

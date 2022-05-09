@@ -81,11 +81,14 @@ console.log(props.events);
                   </div>
                 </div>
               </li>
-
-    <!-- Modal -->
+ <!-- //ทำเงา ๆๆๆ -->
+              <div class="card w-96 bg-base-100 shadow-xl space-x-5"></div>
+              </div>
+            </ol>
+<!-- Modal -->
     <input type="checkbox" id="my-modal-6" class="modal-toggle" />
-<div class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box">
+    <div class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
     <h3 class="font-bold text-lg">Booking Name: {{ event.bookingName }}</h3>
     <p class="py-2">Booking Email: {{ event.bookingEmail }}</p>
     <p class="py-2">Event Category Name: {{ event.eventCategoryName }}</p>
@@ -98,13 +101,7 @@ console.log(props.events);
     </div>
   </div>
 </div>
-
  <!--  -->
-
-              <!-- //ทำเงา ๆๆๆ -->
-              <div class="card w-96 bg-base-100 shadow-xl space-x-5"></div>
-              </div>
-            </ol>
             <p></p>
           </div>
         </div>
