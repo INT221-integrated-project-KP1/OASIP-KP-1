@@ -45,18 +45,6 @@ function checkProperties(obj) {
 }
 
 
-// POST
-
-// {
-//     "eventStartTime": "2022-05-23T16:30:00Z",
-//     "eventDuration": 152,
-//     "eventCategory": {
-//         "id": 1
-//     },
-//     "eventNotes": "Gayasdas",
-//     "bookingEmail": "Gay@gmail.com",
-//     "bookingName": "Gayสมเกียรติ ขยันเรียน กลุ่ม TT-4"
-// }
 const createNewEvent = async (event) => {
     try {
         console.log(event)
@@ -81,11 +69,17 @@ const createNewEvent = async (event) => {
             setTimeout(() => alert.value = 0, 2000);
         } else { console.log('error, cannot be added');
                 alert.value = -1 
-                setTimeout(() => alert.value = 0, 2000);};
+
+                setTimeout(function(){console.log("gay")}, 3000);
+                alert.value = 0
+                
     }
-    catch (err) { console.log(err); alert = -1; }
+    catch (err) { console.log(err); alert = 2; }
     topFunction();
 }
+
+
+
 
 const alert = ref()
 function topFunction() {
@@ -121,7 +115,7 @@ function topFunction() {
             </div>
         </div>
 
-        <div class="alert alert-error shadow-lg" v-else-if="alert === 0">
+        <div class="alert alert-error shadow-lg" v-else-if="alert === 2">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
                     viewBox="0 0 24 24">
@@ -129,6 +123,17 @@ function topFunction() {
                         d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Error! successfully.</span>
+            </div>
+        </div>
+
+        <div class="alert alert-success shadow-lg" v-else="alert === 0">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Your booking has been confirmed!</span>
             </div>
         </div>
 
@@ -160,9 +165,7 @@ function topFunction() {
                     <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                         Notes :
                     </label>
-                    <input
-                        class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                        placeholder="Enter your note" v-model="newEvent.note" />
+                      <textarea class="textarea textarea-bordered w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"  placeholder="Enter your note" v-model="newEvent.note"></textarea>
                 </div>
                 <div class="space-y-2">
                     <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -198,7 +201,7 @@ function topFunction() {
                     <button type="submit"
                         class="w-full flex justify-center bg-green-400  hover:bg-green-500 text-gray-100 p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
                         @click="
-                            checkProperties(newEvent) ? createNewEvent(newEvent) : alert = 0 ;  topFunction();
+                            checkProperties(newEvent) ? createNewEvent(newEvent) : alert = 2 ;  topFunction();
                         ">
 
                         Add New Event</button>
