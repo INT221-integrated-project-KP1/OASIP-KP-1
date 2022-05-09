@@ -25,14 +25,14 @@ onBeforeMount(async () => {
 })
 
 
-const newEvent = ref({ eventCategory: { id: '', duration: '' }})
+const newEvent = ref({ eventCategory: { id: '', duration: '' } })
 
 function checkProperties(obj) {
     for (let key in obj) {
         if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
-            if(typeof(obj[key]) == 'object'){
+            if (typeof (obj[key]) == 'object') {
                 console.log('object')
-                if(checkProperties(obj[key]) == false){
+                if (checkProperties(obj[key]) == false) {
                     return false;
                 }
             }
@@ -76,37 +76,146 @@ const createNewEvent = async (event) => {
         })
         if (res.status === 201) {
             console.log('added sucessfully')
-            newEvent.value = { eventCategory: { id: '', duration: '' }}
-            alert("added successfully")
-        } else console.log('error, cannot be added')
+            newEvent.value = { eventCategory: { id: '', duration: '' } }
+            alert.value = 1;
+            setTimeout(() => alert.value = 0, 2000);
+        } else { console.log('error, cannot be added');
+                alert.value = -1 
+                setTimeout(() => alert.value = 0, 2000);};
     }
-    catch (err) { console.log(err) }
+    catch (err) { console.log(err); alert = -1; }
+    topFunction();
+}
+
+const alert = ref()
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+
 }
 
 </script>
  
 <template>
-    <div id="BookingForm">
-        <div>
-            
-            <p><span>Name: <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.name"/></span></p>
-            <p><span>Email: <input type="email" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.email"/></span></p>
-            <p><span>Notes: <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.note"/></span></p>
-            <p><span>Start Time: <input type="datetime-local" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="newEvent.startTime"/></span></p>
-            <p><span>Event Category:
-                    <select v-model="newEvent.eventCategory" class="select select-bordered w-full max-w-xs">
+    <div class="p-5">
+
+        <div class="alert alert-success shadow-lg" v-if="alert === 1">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Your booking has been confirmed!</span>
+            </div>
+        </div>
+
+        <div class="alert alert-warning shadow-lg" v-else-if="alert === -1">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Warning: Invalid Values </span>
+            </div>
+        </div>
+
+        <div class="alert alert-error shadow-lg" v-else-if="alert === 0">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Error! successfully.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FORM ตัส ก๊อปมา -->
+    <div class="flex justify-center self-center  z-10">
+        <div class="p-12 bg-white mx-auto rounded-2xl w-100 ">
+            <div class="mb-4">
+                <h3 class="font-semibold text-2xl text-gray-800">Insert Event</h3>
+                <p class="text-gray-500">Please insert event to booking.</p>
+            </div>
+            <div class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 tracking-wide">Name : </label>
+                    <input
+                        class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                        placeholder="Enter your name" v-model="newEvent.name" />
+                </div>
+
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 tracking-wide">Email : </label>
+                    <input
+                        class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                        placeholder="mail@gmail.com" v-model="newEvent.email" />
+                </div>
+                <div class="space-y-2">
+                    <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                        Notes :
+                    </label>
+                    <input
+                        class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                        placeholder="Enter your note" v-model="newEvent.note" />
+                </div>
+                <div class="space-y-2">
+                    <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                        Start Time:
+                    </label>
+                    <input input type="datetime-local"
+                        class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                        v-model="newEvent.startTime" />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                        Event Category:
+                    </label>
+                    <select v-model="newEvent.eventCategory"
+                        class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
                         <option v-for="(category, index) in categorys" :key="index"
                             :value="{ 'id': category.id, 'duration': category.eventDuration }">
                             {{ category.eventCategoryName }}</option>
                     </select>
-                </span>
-            </p>
-            <p><span>Event durations: <input type="text" class="input input-bordered w-full max-w-xs" disabled v-model="newEvent.eventCategory.duration"></span></p>
-            <button class="input input-bordered w-full max-w-xs" @click="
-                checkProperties(newEvent) ? createNewEvent(newEvent) : ''
-                ">Book</button>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                        Event durations:
+                    </label>
+                    <input type="text"
+                        class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                        disabled v-model="newEvent.eventCategory.duration">
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center bg-green-400  hover:bg-green-500 text-gray-100 p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
+                        @click="
+                            checkProperties(newEvent) ? createNewEvent(newEvent) : alert = 0 ;  topFunction();
+                        ">
+
+                        Add New Event</button>
+                </div>
+            </div>
+            <div class="pt-5 text-center text-gray-400 text-xs">
+                <span>
+                    Copyright © 2021-2022
+                    <a href="https://codepen.io/uidesignhub" rel="" target="_blank" title="Ajimon"
+                        class="text-green hover:text-green-500 ">AJI</a></span>
+            </div>
         </div>
     </div>
+
+
+
+
 </template>
  
 <style>

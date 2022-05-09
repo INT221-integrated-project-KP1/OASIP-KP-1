@@ -46,7 +46,7 @@ public class EventController {
         eventService.deleteEventById(id);
     }
 
-    @PutMapping("/{id}") //ต้องระบุ เลข officeCode และะต้องมี Body JSON ไฟล์ข้อมูลที่ต้องการ update ด้วย
+    @PutMapping("/{id}")
     public Event update(@RequestBody EventUpdateDTO update, @PathVariable int id) {
         return eventService.editEvent(update,id);
     }
