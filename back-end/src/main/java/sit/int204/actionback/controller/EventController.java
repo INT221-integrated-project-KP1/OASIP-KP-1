@@ -1,20 +1,20 @@
 package sit.int204.actionback.controller;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
-import sit.int204.actionback.dtos.SimpleEventDTO;
+import sit.int204.actionback.dtos.EventPageDTO;
+import sit.int204.actionback.dtos.EventUpdateDTO;
 import sit.int204.actionback.entities.Event;
-import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
 
-import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/api/kp1/scheduled")
-//@CrossOrigin(origins = "http://10.0.0.1:3000")
+@RequestMapping("api/scheduled")
 @CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
@@ -26,24 +26,28 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("")
-    public List<SimpleEventDTO> getEvent(){
-        return eventService.getEvent();
-    }
+    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "4") int pageSize){
+        return eventService.getEvent(page,pageSize);
+    } 
 
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
     }
-    
+
     @PostMapping("")
-    public void createTest(@RequestBody Event newEvent){
-         eventService.create(newEvent);
+    public ResponseEntity createTest(@RequestBody EventDTO newEvent){
+       return  eventService.create(newEvent);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTest(@PathVariable Integer id) {
-         eventService.deleteEventById(id);
+        eventService.deleteEventById(id);
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity update(@RequestBody EventUpdateDTO update, @PathVariable int id) {
+        return eventService.editEvent(update,id);
+    }
 }
