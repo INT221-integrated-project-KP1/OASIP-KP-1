@@ -15,7 +15,7 @@ let props = defineProps({
 defineEmits(["selectedEventId", "deleteEvent"]);
 
 //let selectedEventId = ref('');
-const event = ref({bookingName: '', bookingEmail : '', eventCategoryName : '', eventCategoryDescription: '', eventStartTime: '',eventDuration:'',eventNotes:''});
+const selectedEvent = ref({bookingName: '', bookingEmail : '', eventCategoryName : '', eventCategoryDescription: '', eventStartTime: '',eventDuration:'',eventNotes:''});
 
 
 const getEventById = async (id) => {
@@ -23,8 +23,8 @@ const getEventById = async (id) => {
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
     console.log(res.status);
     if (res.status === 200) {
-      event.value = await res.json();
-      console.log(event.value);
+      selectedEvent.value = await res.json();
+      console.log(selectedEvent.value);
     } else {
       console.log("error, cannot get data");
     }
@@ -89,13 +89,13 @@ console.log(props.events);
     <input type="checkbox" id="my-modal-6" class="modal-toggle" />
     <div class="modal modal-bottom sm:modal-middle">
     <div class="modal-box">
-    <h3 class="font-bold text-lg">Booking Name: {{ event.bookingName }}</h3>
-    <p class="py-2">Booking Email: {{ event.bookingEmail }}</p>
-    <p class="py-2">Event Category Name: {{ event.eventCategoryName }}</p>
-    <p class="py-2">Event Category Description: {{ event.eventCategoryDescription }}</p>
-    <p class="py-2">Event Start Time: {{ new Date(event.eventStartTime).toString() }}</p>
-    <p class="py-2">Event Duration: {{ event.eventDuration }} Minutes</p>
-    <p class="py-2">Event Notes: {{ event.eventNotes }}</p>
+    <h3 class="font-bold text-lg">Booking Name: {{ selectedEvent.bookingName }}</h3>
+    <p class="py-2">Booking Email: {{ selectedEvent.bookingEmail }}</p>
+    <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
+    <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
+    <p class="py-2">Event Start Time: {{ new Date(selectedEvent.eventStartTime).toString() }}</p>
+    <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
+    <p class="py-2">Event Notes: {{ selectedEvent.eventNotes }}</p>
     <div class="modal-action">
       <label for="my-modal-6" class="btn">Close</label>
     </div>

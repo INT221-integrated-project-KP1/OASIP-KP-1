@@ -81,9 +81,9 @@ const createNewEvent = async (event) => {
             setTimeout(() => alert.value = 0, 2000);
         } else { console.log('error, cannot be added');
                 alert.value = -1 
-                setTimeout(() => alert.value = 0, 2000);};
+                setTimeout(() => alert.value = 0, 2000);}
     }
-    catch (err) { console.log(err); alert = -1; }
+    catch (err) { console.log(err); alert.value = -1; }
     topFunction();
 }
 
@@ -196,7 +196,7 @@ function topFunction() {
 
                 <div>
                     <button type="submit"
-                        class="w-full flex justify-center bg-green-400  hover:bg-green-500 text-gray-100 p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
+                        class="w-full flex justify-center btn-success  hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
                         @click="
                             checkProperties(newEvent) ? createNewEvent(newEvent) : alert = 0 ;  topFunction();
                         ">

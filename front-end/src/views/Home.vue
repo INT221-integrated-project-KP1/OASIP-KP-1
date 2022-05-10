@@ -31,21 +31,21 @@ const getEvents = async () => {
   }
 };
 
-const event = ref();
-const getEventById = async (id) => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
-    console.log(res.status);
-    if (res.status === 200) {
-      event.value = await res.json();
-      console.log(event.value);
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
-};
+// const event = ref();
+// const getEventById = async (id) => {
+//   try {
+//     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
+//     console.log(res.status);
+//     if (res.status === 200) {
+//       event.value = await res.json();
+//       console.log(event.value);
+//     } else {
+//       console.log("error, cannot get data");
+//     }
+//   } catch (err) {
+//     console.log("Error: ", err.message);
+//   }
+// };
 
 const removeEvent = async (deleteId) => {
   console.log(deleteId);
@@ -68,7 +68,7 @@ onBeforeMount(async () => {
 const a = ref("display:none");
 
 const page = ref(0); //page start 0
-const pageSize = ref(6); //default 4
+const pageSize = ref(9); //default 4
 
 window.onscroll = () => {
   //const bottomOfWindow
@@ -89,7 +89,7 @@ window.onscroll = () => {
 </script>
 
 <template>
-  <div>
+  <div class="" >
     <div>
       <EventList
         :events="events" @deleteEvent="removeEvent"

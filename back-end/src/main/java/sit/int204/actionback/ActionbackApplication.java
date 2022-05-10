@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Gay {
+public class ActionbackApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Gay.class, args);
+        SpringApplication.run(ActionbackApplication.class, args);
     }
 
 
