@@ -181,11 +181,11 @@ const errorInsert = () => {
           <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
             Notes :
           </label>
-          <input
+          <textarea
             class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
             placeholder="Enter your note"
             v-model="newEvent.note"
-          />
+          ></textarea>
         </div>
         <div class="space-y-2">
           <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
