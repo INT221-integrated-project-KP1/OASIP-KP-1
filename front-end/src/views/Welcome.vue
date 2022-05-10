@@ -13,6 +13,8 @@
   <span class="animate-ping-slow relative inline-flex rounded-lg h-10 w-10 inset-y-[36rem] left-[64rem] bg-primary"></span>
   <span class="animate-ping-slow relative inline-flex rounded-lg h-14 w-14 inset-y-[2rem] left-[24rem] bg-primary"></span>
   <span class="animate-ping-slow relative inline-flex rounded-lg h-6 w-6  inset-y-[38rem] left-[6rem] bg-primary"></span>
+  <span class="animate-ping-slow relative inline-flex rounded-lg h-6 w-6  inset-y-[30rem] left-[60rem] bg-primary"></span>
+  <span class="animate-ping-slow relative inline-flex rounded-lg h-20 w-20 inset-y-[18rem] left-[70rem] bg-primary"></span>
   <span class="animate-ping-slow relative inline-flex rounded-lg h-6 w-6  inset-y-[20rem] left-[15rem] bg-primary"></span>
   <span class="animate-ping-moderato relative inline-flex rounded-lg h-3 w-3 inset-y-[8rem] left-[64rem] bg-primary"></span>
   <span class="animate-ping-moderato relative inline-flex rounded-lg h-3 w-3 inset-y-[14rem] left-[35rem] bg-primary"></span>

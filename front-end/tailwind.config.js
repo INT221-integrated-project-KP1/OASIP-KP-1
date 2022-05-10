@@ -3,7 +3,18 @@ module.exports = {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  theme: {
+  daisyui: {
+    themes: [
+      {
+        pastel: {
+          ...require("daisyui/src/colors/themes")["[data-theme=pastel]"],
+          'base-100':'#D1C1D7'
+        },
+      },
+    ],
+  },
+  theme: 
+  {
     extend: {
       keyframes: {
         'fade-in-down': {
