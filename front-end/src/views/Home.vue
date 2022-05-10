@@ -89,9 +89,10 @@ window.onscroll = () => {
 </script>
 
 <template>
-  <div class="" >
+
+  <div >
     <div>
-      <EventList
+      <EventList 
         :events="events" @deleteEvent="removeEvent"
       ></EventList>
     </div>

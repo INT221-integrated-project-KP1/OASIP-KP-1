@@ -12,7 +12,7 @@ import {useRoute, useRouter} from 'vue-router'
 
 <template>
   <div>
-  <div class="navbar bg-base-100" v-show="$route.name !=='Welcome'">
+  <div class="navbar bg-white" v-show="$route.name !=='Welcome'">
   <div class="navbar-start">
     <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost lg:hidden">
@@ -36,11 +36,11 @@ import {useRoute, useRouter} from 'vue-router'
     </ul>
   </div>
   <div class="navbar-end"></div>
-
+  
 </div>
 
 
-  <div class="bg-primary">
+  <div class="">
     <router-view></router-view>
   </div>
   </div>
