@@ -15,6 +15,7 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -54,6 +55,10 @@ public class EventService {
        if(!(checkEmail(newEvent.getBookingEmail()))){
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
        }
+       if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
+           System.out.println("ss");
+           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
+       }
 
         int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
@@ -83,30 +88,44 @@ public class EventService {
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
                     System.out.println("CategoryChecked");
-                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond <= milliSecond+duration){
-                        System.out.println("Overlab");
+                    if(newMillisecond+newDuration+minuteInMillisecond > milliSecond && newMillisecond+newDuration-minuteInMillisecond < milliSecond+duration){
+                        System.out.println("Overlab1+4");
                         // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                         return true;
                     }
-                    if(newMillisecond-minuteInMillisecond <= newMillisecond+newDuration+minuteInMillisecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+duration){
-                        System.out.println("Overlab");
+                    else if (newMillisecond+minuteInMillisecond > milliSecond && newMillisecond-minuteInMillisecond < milliSecond+duration){
+                        System.out.println("Overlab2+4");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+newDuration){
-                        System.out.println("Overlab");
+                    else if (newMillisecond-minuteInMillisecond < milliSecond && newMillisecond+newDuration+minuteInMillisecond > milliSecond+duration){
+                        System.out.println("Overlab3");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    if(newMillisecond+minuteInMillisecond >= milliSecond && newMillisecond+newDuration-minuteInMillisecond >= milliSecond+duration){
-                        System.out.println("Overlab");
-                        return true;
-                    }
+                    System.out.println(newMillisecond-minuteInMillisecond);
+                    System.out.println(milliSecond);
+                    System.out.println("***");
+                    System.out.println(newMillisecond+duration+minuteInMillisecond);
+                    System.out.println(milliSecond+duration);
                 }
             }
         }
         return false;
     }
+
+
+    public boolean checkTimeFuture(long eventStartTime){
+        Date date = new Date();
+        long timeMilli = date.getTime();
+        if(eventStartTime+60*1000 >= timeMilli) {
+
+            return true;
+        }
+        return false;
+    }
+
+
 
     public void deleteEventById(Integer id) {
         repository.findById(id)
@@ -124,9 +143,12 @@ public class EventService {
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
+        if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
+        }
+
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
-
 
 
         if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
