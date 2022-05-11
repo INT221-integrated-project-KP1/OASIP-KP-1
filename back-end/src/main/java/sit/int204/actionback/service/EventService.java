@@ -56,6 +56,7 @@ public class EventService {
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
        }
        if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
+           System.out.println("ss");
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
        }
 
@@ -118,6 +119,7 @@ public class EventService {
         Date date = new Date();
         long timeMilli = date.getTime();
         if(eventStartTime+60*1000 >= timeMilli) {
+
             return true;
         }
         return false;
