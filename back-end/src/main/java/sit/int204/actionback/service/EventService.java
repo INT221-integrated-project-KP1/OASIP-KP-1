@@ -64,13 +64,16 @@ public class EventService {
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if(!isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
-            Event e = modelMapper.map(newEvent, Event.class);
-            repository.saveAndFlush(e);
-            System.out.println("Created");
-            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+        if(isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab Time");
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
+        Event e = modelMapper.map(newEvent, Event.class);
+        repository.saveAndFlush(e);
+        System.out.println("Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+
+
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
     }
 
     public boolean isOverLab(EventOverLabDTO event, int id){
@@ -146,18 +149,17 @@ public class EventService {
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
         }
-
+        
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
-
-
-        if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
-            event.setEventStartTime(editEvent.getEventStartTime());
-            event.setEventNotes(editEvent.getEventNotes());
-            repository.saveAndFlush(event);
-            return ResponseEntity.status(HttpStatus.CREATED).body(event);
+        if(isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT UPDATE EVENT");
+
+        event.setEventStartTime(editEvent.getEventStartTime());
+        event.setEventNotes(editEvent.getEventNotes());
+        repository.saveAndFlush(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
     public boolean checkEmail(String email){
