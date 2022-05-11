@@ -83,22 +83,23 @@ public class EventService {
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
                     System.out.println("CategoryChecked");
-                    if(newMillisecond-minuteInMillisecond < milliSecond+duration && newMillisecond+minuteInMillisecond >= milliSecond){
-                        System.out.println("Overlab1");
+                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond <= milliSecond+duration){
+                        System.out.println("Overlab");
                         // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                         return true;
                     }
-                    if(newMillisecond+newDuration-minuteInMillisecond <= milliSecond+duration && newMillisecond+newDuration+minuteInMillisecond > milliSecond){
-                        System.out.println("Overlab2");
+                    if(newMillisecond-minuteInMillisecond <= newMillisecond+newDuration+minuteInMillisecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+duration){
+                        System.out.println("Overlab");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
                     if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+newDuration){
-                        System.out.println("Overlab3");
+                        System.out.println("Overlab");
                         return true;
+                        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    if(newMillisecond+minuteInMillisecond >= milliSecond && milliSecond+duration >= newMillisecond+newDuration-minuteInMillisecond){
-                        System.out.println("Overlab4");
+                    if(newMillisecond+minuteInMillisecond >= milliSecond && newMillisecond+newDuration-minuteInMillisecond >= milliSecond+duration){
+                        System.out.println("Overlab");
                         return true;
                     }
                 }
