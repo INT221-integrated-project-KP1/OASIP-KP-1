@@ -155,9 +155,9 @@ console.log(props.events);
                   <p class="py-2">Booking Email: {{ selectedEvent.bookingEmail }}</p>
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
-                  <p class="py-2">Event Start Time: <input type="datetime-local" v-model="editStartTime"></p>
+                  <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2">Event Notes: </p><textarea type="number" v-model="editNotes"
+                  <p class="py-2">Event Notes: </p><textarea class="border-4 border-primary" rows="4" cols="50" type="number" v-model="editNotes"
                       placeholder="Note ..."></textarea>
                   <div class="modal-action">
 
