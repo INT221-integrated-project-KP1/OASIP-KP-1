@@ -116,11 +116,14 @@ public class EventService {
                 ));
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
+
+
+
         if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
             event.setEventStartTime(editEvent.getEventStartTime());
             event.setEventNotes(editEvent.getEventNotes());
             repository.saveAndFlush(event);
-            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+            return ResponseEntity.status(HttpStatus.CREATED).body(event);
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT UPDATE EVENT");
     }

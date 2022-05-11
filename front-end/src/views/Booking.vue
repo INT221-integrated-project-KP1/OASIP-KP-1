@@ -89,175 +89,131 @@ const errorInsert = () => {
 </script>
 
 <template>
-  <div class="p-5">
-    <div class="alert alert-success shadow-lg" v-if="statusError === 1">
-      <div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="stroke-current flex-shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>Your booking has been confirmed!</span>
-      </div>
-    </div>
 
-    <div class="alert alert-warning shadow-lg" v-else-if="statusError === 2">
-      <div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="stroke-current flex-shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-          />
-        </svg>
-        <span>Warning: Invalid Values </span>
-      </div>
-    </div>
-
-    <div class="alert alert-error shadow-lg" v-else-if="statusError === -1">
-      <div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="stroke-current flex-shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>Error! successfully.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM INPUT -->
-  <div class="flex justify-center self-center z-10">
-    <div class="p-12 bg-white mx-auto rounded-2xl w-100">
-      <div class="mb-4">
-        <h3 class="font-semibold text-2xl text-gray-800">Insert Event</h3>
-        <p class="text-gray-500">Please insert event to booking.</p>
-      </div>
-      <div class="space-y-5">
-        <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700 tracking-wide"
-            >Name :
-          </label>
-          <input
-            class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-            placeholder="Enter your name"
-            v-model="newEvent.name"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700 tracking-wide"
-            >Email :
-          </label>
-          <input
-            class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-            placeholder="mail@gmail.com"
-            v-model="newEvent.email"
-          />
-        </div>
-        <div class="space-y-2">
-          <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-            Notes :
-          </label>
-          <textarea
-            class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-            placeholder="Enter your note"
-            v-model="newEvent.note"
-          ></textarea>
-        </div>
-        <div class="space-y-2">
-          <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-            Start Time:
-          </label>
-          <input
-            input
-            type="datetime-local"
-            class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-            v-model="newEvent.startTime"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-            Event Category:
-          </label>
-          <select
-            v-model="newEvent.eventCategory"
-            class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-          >
-            <option
-              v-for="(category, index) in categorys"
-              :key="index"
-              :value="{ id: category.id, duration: category.eventDuration }"
-            >
-              {{ category.eventCategoryName }}
-            </option>
-          </select>
-        </div>
-
-        <div class="space-y-2">
-          <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-            Event durations:
-          </label>
-          <input
-            type="text"
-            class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-            disabled
-            v-model="newEvent.eventCategory.duration"
-          />
-        </div>
-
+  <div class="flex">
+    <div class="p-5">
+      <div class="alert alert-success shadow-lg" v-if="statusError === 1">
         <div>
-          <button
-            type="submit"
-            class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-            @click="
-              checkProperties(newEvent)
-                ? createNewEvent(newEvent)
-                : errorInsert()
-            "
-          >
-            Add New Event
-          </button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Your booking has been confirmed!</span>
         </div>
       </div>
-      <div class="pt-5 text-center text-gray-400 text-xs">
-        <span>
-          Copyright © 2021-2022
-          <a
-            href="https://codepen.io/uidesignhub"
-            rel=""
-            target="_blank"
-            title="Ajimon"
-            class="text-green hover:text-green-500"
-            >AJI</a
-          ></span
-        >
+
+      <div class="alert alert-warning shadow-lg" v-else-if="statusError === 2">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>Warning: Invalid Values </span>
+        </div>
+      </div>
+
+      <div class="alert alert-error shadow-lg" v-else-if="statusError === -1">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Error! successfully.</span>
+        </div>
+      </div>
+    </div>
+  <div class="grid grid-cols-2 gap-5 p-5">
+    <!-- FORM INPUT -->
+    <div class="flex justify-center self-center z-10">
+      <div class="p-12 bg-white mx-auto rounded-2xl w-100">
+        <div class="mb-4">
+          <h3 class="font-semibold text-2xl text-gray-800">Insert Event</h3>
+          <p class="text-gray-500">Please insert event to booking.</p>
+        </div>
+        <div class="space-y-5">
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
+            </label>
+            <input
+              class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+              placeholder="Enter your name" v-model="newEvent.name" />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-gray-700 tracking-wide">Email :
+            </label>
+            <input
+              class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+              placeholder="mail@gmail.com" v-model="newEvent.email" />
+          </div>
+          <div class="space-y-2">
+            <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+              Notes :
+            </label>
+            <textarea
+              class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+              placeholder="Enter your note" v-model="newEvent.note"></textarea>
+          </div>
+          <div class="space-y-2">
+            <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+              Start Time:
+            </label>
+            <input input type="datetime-local"
+              class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+              v-model="newEvent.startTime" />
+          </div>
+
+          <div class="space-y-2">
+            <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+              Event Category:
+            </label>
+            <select v-model="newEvent.eventCategory"
+              class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
+              <option v-for="(category, index) in categorys" :key="index"
+                :value="{ id: category.id, duration: category.eventDuration }">
+                {{ category.eventCategoryName }}
+              </option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+              Event durations:
+            </label>
+            <input type="text"
+              class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+              disabled v-model="newEvent.eventCategory.duration" />
+          </div>
+
+          <div>
+            <button type="submit"
+              class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+              @click="
+                checkProperties(newEvent)
+                  ? createNewEvent(newEvent)
+                  : errorInsert()
+              ">
+              Add New Event
+            </button>
+          </div>
+        </div>
+        <div class="pt-5 text-center text-gray-400 text-xs">
+          <span>
+            Copyright © 2021-2022
+            <a href="https://codepen.io/uidesignhub" rel="" target="_blank" title="Ajimon"
+              class="text-green hover:text-green-500">AJI</a></span>
+        </div>
       </div>
     </div>
   </div>
+  <div class="flex-1 p-5 bg-white mx-20 my-5 rounded-2xl w-100">
+    dasdd
+  </div>
+</div>
 </template>
 
-<style></style>
+<style>
+</style>
