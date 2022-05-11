@@ -17,6 +17,8 @@ import sit.int204.actionback.utils.ListMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class EventService {
@@ -32,6 +34,7 @@ public class EventService {
 
     @Autowired
     private ListMapper listMapper;
+    private long milliSecond;
 
     public EventPageDTO getEvent(int page, int pageSize) {
         return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
@@ -48,11 +51,15 @@ public class EventService {
     }
 
     public ResponseEntity create(EventDTO newEvent){
+       if(!(checkEmail(newEvent.getBookingEmail()))){
+           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
+       }
+
         int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if(!isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()))){
+        if(!isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
             Event e = modelMapper.map(newEvent, Event.class);
             repository.saveAndFlush(e);
             System.out.println("Created");
@@ -61,8 +68,9 @@ public class EventService {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
     }
 
-    public boolean isOverLab(EventOverLabDTO event){
+    public boolean isOverLab(EventOverLabDTO event, int id){
         System.out.println("start");
+        long minuteInMillisecond = 60 * 1000;
         long newMillisecond = event.getEventStartTime().toEpochMilli();
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
@@ -71,23 +79,29 @@ public class EventService {
         for (int i = 0; i < eventList.size(); i++) {
             System.out.println(eventList.get(i).getEventCategory().getId());
             if(categoryId == eventList.get(i).getEventCategory().getId()){
-                long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
-                long duration = eventList.get(i).getEventDuration() * 60 * 1000;
-                System.out.println("CategoryChecked");
-                if(newMillisecond < milliSecond+duration && newMillisecond >= milliSecond){
-                    System.out.println("Overlab");
-                    // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-                    return true;
-                }
-                if(newMillisecond+newDuration <= milliSecond+duration && newMillisecond+newDuration > milliSecond){
-                    System.out.println("Overlab");
-                    return true;
-                    //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-                }
-                if(newMillisecond <= milliSecond && newMillisecond+newDuration >= milliSecond+newDuration){
-                    System.out.println("Overlab");
-                    return true;
-                    //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+                if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
+                    long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
+                    long duration = eventList.get(i).getEventDuration() * 60 * 1000;
+                    System.out.println("CategoryChecked");
+                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond <= milliSecond+duration){
+                        System.out.println("Overlab");
+                        // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+                        return true;
+                    }
+                    if(newMillisecond-minuteInMillisecond <= newMillisecond+newDuration+minuteInMillisecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+duration){
+                        System.out.println("Overlab");
+                        return true;
+                        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+                    }
+                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+newDuration){
+                        System.out.println("Overlab");
+                        return true;
+                        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+                    }
+                    if(newMillisecond+minuteInMillisecond >= milliSecond && newMillisecond+newDuration-minuteInMillisecond >= milliSecond+duration){
+                        System.out.println("Overlab");
+                        return true;
+                    }
                 }
             }
         }
@@ -112,13 +126,32 @@ public class EventService {
                 ));
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
-        if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration))){
+
+
+
+        if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
             event.setEventStartTime(editEvent.getEventStartTime());
             event.setEventNotes(editEvent.getEventNotes());
             repository.saveAndFlush(event);
-            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+            return ResponseEntity.status(HttpStatus.CREATED).body(event);
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT UPDATE EVENT");
     }
+
+    public boolean checkEmail(String email){
+        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+        Matcher m = p.matcher(email);
+        boolean matchFound = m.matches();
+        if(matchFound) {
+            System.out.println("that is email");
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
 }
 

@@ -32,7 +32,7 @@ module.exports = {
         'ping-moderato': 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
         'ping-fast': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
         'fade-in-down': 'fade-in-down 0.5s ease-in'
-      }
+      },
     }
   },
   plugins: [require("daisyui")],

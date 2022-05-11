@@ -11,7 +11,6 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventUpdateDTO {
-    private Integer Id;
     private Instant eventStartTime;
     private String eventNotes;
 }
