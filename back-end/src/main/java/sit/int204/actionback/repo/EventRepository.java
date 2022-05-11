@@ -9,4 +9,5 @@ import sit.int204.actionback.entities.Event;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+    List<Event> findAllByEventCategoryId(Integer eventCategoryId);
 }
