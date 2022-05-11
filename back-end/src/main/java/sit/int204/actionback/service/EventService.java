@@ -28,7 +28,7 @@ public class EventService {
     private EventRepository repository;
 
     @Autowired
-    private EventCategoryRepository rep;
+    private EventCategoryRepository eventCategoryRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -60,7 +60,7 @@ public class EventService {
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
        }
 
-        int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
+        int setEventDuration = (eventCategoryRepository.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
@@ -83,10 +83,8 @@ public class EventService {
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
         System.out.println(categoryId);;
-        List<Event> eventList = repository.findAll();
+        List<Event> eventList = repository.findAllByEventCategoryId(categoryId);
         for (int i = 0; i < eventList.size(); i++) {
-            System.out.println(eventList.get(i).getEventCategory().getId());
-            if(categoryId == eventList.get(i).getEventCategory().getId()){
                 if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
@@ -112,7 +110,6 @@ public class EventService {
                     System.out.println(newMillisecond+duration+minuteInMillisecond);
                     System.out.println(milliSecond+duration);
                 }
-            }
         }
         return false;
     }
@@ -149,7 +146,7 @@ public class EventService {
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
         }
-        
+
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
         if(isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
@@ -175,7 +172,21 @@ public class EventService {
         }
     }
 
+    public boolean checkeventDuration(int duration){
+        if(duration >=1 && duration <= 480){
+            System.out.println("invalid Duration");
+            return true;
+        }
+        return false;
+    }
 
+    public boolean checkEventCategoryName(String eventCategoryName){
+        if(eventCategoryRepository.findByEventCategoryName(eventCategoryName) == null){
+            System.out.println("Duplicate EventCategoryName");
+            return false;
+        }
+        return true;
+    }
 
 }
 
