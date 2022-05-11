@@ -17,6 +17,8 @@ import sit.int204.actionback.utils.ListMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class EventService {
@@ -49,6 +51,10 @@ public class EventService {
     }
 
     public ResponseEntity create(EventDTO newEvent){
+       if(!(checkEmail(newEvent.getBookingEmail()))){
+           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
+       }
+
         int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
 
@@ -78,19 +84,22 @@ public class EventService {
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
                     System.out.println("CategoryChecked");
                     if(newMillisecond-minuteInMillisecond < milliSecond+duration && newMillisecond+minuteInMillisecond >= milliSecond){
-                        System.out.println("Overlab");
+                        System.out.println("Overlab1");
                         // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                         return true;
                     }
                     if(newMillisecond+newDuration-minuteInMillisecond <= milliSecond+duration && newMillisecond+newDuration+minuteInMillisecond > milliSecond){
-                        System.out.println("Overlab");
+                        System.out.println("Overlab2");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
                     if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+newDuration){
-                        System.out.println("Overlab");
+                        System.out.println("Overlab3");
                         return true;
-                        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+                    }
+                    if(newMillisecond+minuteInMillisecond >= milliSecond && milliSecond+duration >= newMillisecond+newDuration-minuteInMillisecond){
+                        System.out.println("Overlab4");
+                        return true;
                     }
                 }
             }
@@ -127,5 +136,21 @@ public class EventService {
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT UPDATE EVENT");
     }
+
+    public boolean checkEmail(String email){
+        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+        Matcher m = p.matcher(email);
+        boolean matchFound = m.matches();
+        if(matchFound) {
+            System.out.println("that is email");
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
 }
 
