@@ -87,25 +87,26 @@ public class EventService {
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
                     System.out.println("CategoryChecked");
-                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond <= milliSecond+duration){
-                        System.out.println("Overlab");
+                    if(newMillisecond+newDuration+minuteInMillisecond > milliSecond && newMillisecond+newDuration-minuteInMillisecond < milliSecond+duration){
+                        System.out.println("Overlab1+4");
                         // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                         return true;
                     }
-                    if(newMillisecond-minuteInMillisecond <= newMillisecond+newDuration+minuteInMillisecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+duration){
-                        System.out.println("Overlab");
+                    else if (newMillisecond+minuteInMillisecond > milliSecond && newMillisecond-minuteInMillisecond < milliSecond+duration){
+                        System.out.println("Overlab2+4");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    if(newMillisecond-minuteInMillisecond <= milliSecond && newMillisecond+newDuration+minuteInMillisecond >= milliSecond+newDuration){
-                        System.out.println("Overlab");
+                    else if (newMillisecond-minuteInMillisecond < milliSecond && newMillisecond+newDuration+minuteInMillisecond > milliSecond+duration){
+                        System.out.println("Overlab3");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    if(newMillisecond+minuteInMillisecond >= milliSecond && newMillisecond+newDuration-minuteInMillisecond >= milliSecond+duration){
-                        System.out.println("Overlab");
-                        return true;
-                    }
+                    System.out.println(newMillisecond-minuteInMillisecond);
+                    System.out.println(milliSecond);
+                    System.out.println("***");
+                    System.out.println(newMillisecond+duration+minuteInMillisecond);
+                    System.out.println(milliSecond+duration);
                 }
             }
         }
@@ -146,7 +147,6 @@ public class EventService {
 
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
-
 
 
         if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
