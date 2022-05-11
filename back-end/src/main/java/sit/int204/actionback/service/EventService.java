@@ -15,6 +15,7 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -53,6 +54,9 @@ public class EventService {
     public ResponseEntity create(EventDTO newEvent){
        if(!(checkEmail(newEvent.getBookingEmail()))){
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
+       }
+       if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
+           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
        }
 
         int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
@@ -108,6 +112,18 @@ public class EventService {
         return false;
     }
 
+
+    public boolean checkTimeFuture(long eventStartTime){
+        Date date = new Date();
+        long timeMilli = date.getTime();
+        if(eventStartTime+60*1000 >= timeMilli) {
+            return true;
+        }
+        return false;
+    }
+
+
+
     public void deleteEventById(Integer id) {
         repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -124,6 +140,10 @@ public class EventService {
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
+        if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
+        }
+
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
 
