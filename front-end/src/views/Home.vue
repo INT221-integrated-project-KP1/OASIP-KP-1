@@ -65,8 +65,6 @@ onBeforeMount(async () => {
   await getEvents();
 });
 
-const a = ref("display:none");
-
 const page = ref(0); //page start 0
 const pageSize = ref(9); //default 4
 

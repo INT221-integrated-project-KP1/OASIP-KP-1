@@ -1,16 +1,32 @@
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import DeleteButton from "../components/deleteButton.vue";
 
 
-let props = defineProps({
+const props = defineProps({
   events: {
     default: [],
     type: Array,
   },
 });
 
-
+const myEvents = computed(() => {
+    let eventsToAdd = []
+    props.events.forEach((ele) => {
+        eventsToAdd.push({
+            "bookingName": ele.bookingName,
+            "bookingEmail": ele.bookingEmail,
+            "eventCategory":{
+              "eventCategoryName": ele.eventCategory.eventCategoryName,
+              "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
+            },
+            "eventStartTime": ele.eventStartTime,
+            "eventDuration": ele.eventDuration,
+            "eventNotes": ele.eventNotes
+        })
+    })
+    return eventsToAdd;
+})
 
 
 defineEmits(["selectedEventId", "deleteEvent"]);
@@ -64,7 +80,7 @@ const editEvent = async (startTime, notes, id) => {
   })
   if (res.status === 201) {
     const modEvent = await res.json();
-    props.events = props.events.map((event) =>
+    myEvents = myEvents.map((event) =>
       event.id === modEvent.id
         ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
         : event
@@ -77,7 +93,7 @@ const editEvent = async (startTime, notes, id) => {
 }
 
 
-console.log(props.events);
+console.log(myEvents);
 
 
 </script>
@@ -86,7 +102,7 @@ console.log(props.events);
   <div class="flex justify-center">
     <div class="m-10">
       <div id="HaveEvent">
-        <div v-if="events.length != 0">
+        <div v-if="myEvents.length != 0">
 
 
           <div class="card bg-white p-2 m-5">
@@ -118,7 +134,7 @@ console.log(props.events);
             <div>
               <ol class="">
                 <div class="grid grid-cols-3 gap-3 ">
-                  <li v-for="(event, index) in events" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                  <li v-for="(event, index) in myEvents" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
@@ -157,7 +173,7 @@ console.log(props.events);
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2">Event Notes: </p><textarea class="border-4 border-primary" rows="4" cols="50" type="number" v-model="editNotes"
+                  <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4" cols="50" type="number" v-model="editNotes"
                       placeholder="Note ..."></textarea>
                   <div class="modal-action">
 
