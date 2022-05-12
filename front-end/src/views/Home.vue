@@ -6,16 +6,13 @@ const events = ref([]);
 // GET
 const getEvents = async () => {
   try {
-    console.log(import.meta.env.URL);
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${
         pageSize.value
       }`
     );
-    console.log(res.status);
     if (res.status === 200) {
       const eventsToAdd = await res.json();
-      console.log(eventsToAdd);
       // events << eventToAdd
       // eventToAdd อันที่โหลดเพิ่ม
       // events ของที่แสดงอยู่
@@ -27,25 +24,38 @@ const getEvents = async () => {
       console.log("error, cannot get data");
     }
   } catch (err) {
-    console.log(err);
+    console.log("ERROR: " + err);
   }
 };
 
-// const event = ref();
-// const getEventById = async (id) => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
-//     console.log(res.status);
-//     if (res.status === 200) {
-//       event.value = await res.json();
-//       console.log(event.value);
-//     } else {
-//       console.log("error, cannot get data");
-//     }
-//   } catch (err) {
-//     console.log("Error: ", err.message);
-//   }
-// };
+//PUT
+const updateEvent = async (startTime, notes, id) => {
+  console.log("startTime: " + startTime)
+  console.log("Notes: " + notes)
+  console.log("id: " + id)
+  const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      eventStartTime: new Date(startTime).toISOString().replace(".000Z", "Z"),
+      eventNotes: notes,
+    })
+  })
+  if (res.status === 201) {
+    const modEvent = await res.json();
+    events.value = events.value.map((event) =>
+      event.id === modEvent.id
+        ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
+        : event
+    )
+
+    console.log('edited successfully')
+  } else {
+    console.log('error, cannot edit')
+  }
+}
 
 const removeEvent = async (deleteId) => {
   console.log(deleteId);
@@ -81,8 +91,8 @@ window.onscroll = () => {
     getEvents();
   }
   console.log("scroll");
-  console.log(document.documentElement.scrollTop + window.innerHeight);
-  console.log(document.documentElement.offsetHeight);
+  console.log("scroll: " + document.documentElement.scrollTop + window.innerHeight);
+  console.log("scroll(Height): " + document.documentElement.offsetHeight);
 };
 </script>
 
@@ -91,7 +101,7 @@ window.onscroll = () => {
   <div >
     <div>
       <EventList 
-        :events="events" @deleteEvent="removeEvent"
+        :events="events" @deleteEvent="removeEvent" @updateEvent="updateEvent"
       ></EventList>
     </div>
 

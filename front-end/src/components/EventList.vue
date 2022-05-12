@@ -14,6 +14,7 @@ const myEvents = computed(() => {
     let eventsToAdd = []
     props.events.forEach((ele) => {
         eventsToAdd.push({
+            "id": ele.id,
             "bookingName": ele.bookingName,
             "bookingEmail": ele.bookingEmail,
             "eventCategory":{
@@ -29,7 +30,7 @@ const myEvents = computed(() => {
 })
 
 
-defineEmits(["selectedEventId", "deleteEvent"]);
+defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
 
 //let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
@@ -65,36 +66,6 @@ const getEventById = async (id) => {
     console.log("Error: ", err.message);
   }
 };
-
-//PUT
-const editEvent = async (startTime, notes, id) => {
-  const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`, {
-    method: 'PUT',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      eventStartTime: new Date(startTime).toISOString().replace(".000Z", "Z"),
-      eventNotes: notes,
-    })
-  })
-  if (res.status === 201) {
-    const modEvent = await res.json();
-    myEvents = myEvents.map((event) =>
-      event.id === modEvent.id
-        ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
-        : event
-    )
-
-    console.log('edited successfully')
-  } else {
-    console.log('error, cannot edit')
-  }
-}
-
-
-console.log(myEvents);
-
 
 </script>
 
@@ -179,7 +150,7 @@ console.log(myEvents);
 
                     <label
                       class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
-                      for="my-modal-6" @click="editEvent(editStartTime, editNotes, selectedEvent.id)">Update</label>
+                      for="my-modal-6" @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id)">Update</label>
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                   </div>
