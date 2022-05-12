@@ -1,19 +1,36 @@
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import DeleteButton from "../components/deleteButton.vue";
 
 
-let props = defineProps({
+const props = defineProps({
   events: {
     default: [],
     type: Array,
   },
 });
 
+const myEvents = computed(() => {
+    let eventsToAdd = []
+    props.events.forEach((ele) => {
+        eventsToAdd.push({
+            "id": ele.id,
+            "bookingName": ele.bookingName,
+            "bookingEmail": ele.bookingEmail,
+            "eventCategory":{
+              "eventCategoryName": ele.eventCategory.eventCategoryName,
+              "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
+            },
+            "eventStartTime": ele.eventStartTime,
+            "eventDuration": ele.eventDuration,
+            "eventNotes": ele.eventNotes
+        })
+    })
+    return eventsToAdd;
+})
 
 
-
-defineEmits(["selectedEventId", "deleteEvent"]);
+defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
 
 //let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
@@ -50,43 +67,13 @@ const getEventById = async (id) => {
   }
 };
 
-//PUT
-const editEvent = async (startTime, notes, id) => {
-  const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`, {
-    method: 'PUT',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      eventStartTime: new Date(startTime).toISOString().replace(".000Z", "Z"),
-      eventNotes: notes,
-    })
-  })
-  if (res.status === 201) {
-    const modEvent = await res.json();
-    props.events = props.events.map((event) =>
-      event.id === modEvent.id
-        ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
-        : event
-    )
-
-    console.log('edited successfully')
-  } else {
-    console.log('error, cannot edit')
-  }
-}
-
-
-console.log(props.events);
-
-
 </script>
 
 <template>
   <div class="flex justify-center">
     <div class="m-10">
       <div id="HaveEvent">
-        <div v-if="events.length != 0">
+        <div v-if="myEvents.length != 0">
 
 
           <div class="card bg-white p-2 m-5">
@@ -118,7 +105,7 @@ console.log(props.events);
             <div>
               <ol class="">
                 <div class="grid grid-cols-3 gap-3 ">
-                  <li v-for="(event, index) in events" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                  <li v-for="(event, index) in myEvents" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
@@ -157,13 +144,13 @@ console.log(props.events);
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2">Event Notes: </p><textarea class="border-4 border-primary" rows="4" cols="50" type="number" v-model="editNotes"
+                  <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4" cols="50" type="number" v-model="editNotes"
                       placeholder="Note ..."></textarea>
                   <div class="modal-action">
 
                     <label
                       class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
-                      for="my-modal-6" @click="editEvent(editStartTime, editNotes, selectedEvent.id)">Update</label>
+                      for="my-modal-6" @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id)">Update</label>
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                   </div>

@@ -28,7 +28,7 @@ public class EventService {
     private EventRepository repository;
 
     @Autowired
-    private EventCategoryRepository rep;
+    private EventCategoryRepository eventCategoryRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -60,17 +60,20 @@ public class EventService {
            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
        }
 
-        int setEventDuration = (rep.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
+        int setEventDuration = (eventCategoryRepository.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if(!isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
-            Event e = modelMapper.map(newEvent, Event.class);
-            repository.saveAndFlush(e);
-            System.out.println("Created");
-            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+        if(isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab Time");
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
+        Event e = modelMapper.map(newEvent, Event.class);
+        repository.saveAndFlush(e);
+        System.out.println("Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+
+
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
     }
 
     public boolean isOverLab(EventOverLabDTO event, int id){
@@ -80,10 +83,8 @@ public class EventService {
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
         System.out.println(categoryId);;
-        List<Event> eventList = repository.findAll();
+        List<Event> eventList = repository.findAllByEventCategoryId(categoryId);
         for (int i = 0; i < eventList.size(); i++) {
-            System.out.println(eventList.get(i).getEventCategory().getId());
-            if(categoryId == eventList.get(i).getEventCategory().getId()){
                 if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
@@ -109,7 +110,6 @@ public class EventService {
                     System.out.println(newMillisecond+duration+minuteInMillisecond);
                     System.out.println(milliSecond+duration);
                 }
-            }
         }
         return false;
     }
@@ -149,15 +149,14 @@ public class EventService {
 
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
-
-
-        if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
-            event.setEventStartTime(editEvent.getEventStartTime());
-            event.setEventNotes(editEvent.getEventNotes());
-            repository.saveAndFlush(event);
-            return ResponseEntity.status(HttpStatus.CREATED).body(event);
+        if(isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT UPDATE EVENT");
+
+        event.setEventStartTime(editEvent.getEventStartTime());
+        event.setEventNotes(editEvent.getEventNotes());
+        repository.saveAndFlush(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
     public boolean checkEmail(String email){
@@ -173,7 +172,21 @@ public class EventService {
         }
     }
 
+    public boolean checkeventDuration(int duration){
+        if(duration >=1 && duration <= 480){
+            System.out.println("invalid Duration");
+            return true;
+        }
+        return false;
+    }
 
+    public boolean checkEventCategoryName(String eventCategoryName){
+        if(eventCategoryRepository.findByEventCategoryName(eventCategoryName) == null){
+            System.out.println("Duplicate EventCategoryName");
+            return false;
+        }
+        return true;
+    }
 
 }
 
