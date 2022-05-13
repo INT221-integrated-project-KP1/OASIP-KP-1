@@ -7,8 +7,7 @@ const events = ref([]);
 const getEvents = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${
-        pageSize.value
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${pageSize.value
       }`
     );
     if (res.status === 200) {
@@ -18,7 +17,9 @@ const getEvents = async () => {
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
       eventsToAdd.content.forEach((e) => {
-        events.value.push(e);
+        if (e.id != events.value.id) {
+          events.value.push(e); 
+        }
       });
     } else {
       console.log("error, cannot get data");
@@ -68,6 +69,10 @@ const removeEvent = async (deleteId) => {
   if (res.status === 200) {
     events.value = events.value.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
+    if (events.value.length <= 8) {
+      getEvents();
+    }
+
   } else console.log("error, cannot delete data");
 };
 
@@ -98,15 +103,14 @@ window.onscroll = () => {
 
 <template>
 
-  <div >
+  <div>
     <div>
-      <EventList 
-        :events="events" @deleteEvent="removeEvent" @updateEvent="updateEvent"
-      ></EventList>
+      <EventList :events="events" @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>
     </div>
 
-    
+
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
