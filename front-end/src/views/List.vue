@@ -2,6 +2,7 @@
 import { ref, onBeforeMount, reactive } from "vue";
 import EventList from "../components/EventList.vue";
 
+
 const events = ref([]);
 // GET
 const getEvents = async () => {

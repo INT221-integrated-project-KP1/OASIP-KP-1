@@ -4,6 +4,9 @@ import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 
+
+
+
 const props = defineProps({
   events: {
     default: [],
@@ -110,7 +113,7 @@ const getEventById = async (id) => {
                 </div>
               </ol>
 
-
+              
               <!-- Modal -->
               <input type="checkbox" id="my-modal-6" class="modal-toggle " />
               <div class="modal modal-bottom sm:modal-middle ">

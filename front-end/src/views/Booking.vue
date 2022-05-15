@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from "vue";
-
 const categorys = ref([]);
 const error = ref();
 const getEventCategory = async () => {
@@ -26,6 +25,7 @@ onBeforeMount(async () => {
 const newEvent = ref({ eventCategory: { id: "", duration: "" } });
 
 function checkProperties(obj) {
+  //check value of object is not null
   for (let key in obj) {
     if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
       if (typeof obj[key] == "object") {
@@ -41,6 +41,33 @@ function checkProperties(obj) {
   return true;
 }
 
+function validateBooking(event){
+  //check length type bra bra brah...
+  if(event.name.length >= 100){
+    alert('length of name is over 100')
+    return false;
+  }
+  if(!event.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+    alert('email is not valid')
+    return false;
+  }
+  if(event.notes.length > 480){
+    alert('Length of notes is over 480')
+    return false;
+  }
+  if(event.eventCategory.id == undefined){
+    alert('Invalid Event Category')
+    return false
+  }
+  let nowDate = new Date().getTime(); //time in millisecond
+  let eventDate = new Date(event.startTime).getTime();
+  if(eventDate < nowDate){
+    alert('Future eventStartTime ONly')
+    return false;
+  }
+}
+
+
 // POST
 const createNewEvent = async (event) => {
   try {
@@ -53,7 +80,7 @@ const createNewEvent = async (event) => {
       body: JSON.stringify({
         bookingName: event.name,
         bookingEmail: event.email,
-        eventNotes: event.note,
+        eventNotes: event.notes,
         eventStartTime: new Date(event.startTime)
           .toISOString()
           .replace(".000Z", "Z"),
@@ -91,6 +118,8 @@ const errorInsert = () => {
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
 };
+
+
 </script>
 
 <template>
@@ -162,7 +191,7 @@ const errorInsert = () => {
                 </label>
                 <textarea maxlength="500"
                   class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your note" v-model="newEvent.note"></textarea>
+                  placeholder="Enter your note" v-model="newEvent.notes"></textarea>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -211,7 +240,7 @@ const errorInsert = () => {
               <span>
                 Copyright © 2021-2022
                 <a href="https://codepen.io/uidesignhub" rel="" target="_blank" title="Ajimon"
-                  class="text-green hover:text-green-500">AJI</a></span>
+                  class="text-green hover:text-green-500">Tuskung Tech</a></span>
             </div>
           </div>
         </div>
