@@ -175,7 +175,7 @@ const errorInsert = () => {
                 </label>
                 <input maxlength="100"
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your name" v-model="newEvent.name" />
+                  placeholder="Enter your name" v-model="newEvent.name" @input="validateBooking(newEvent)"/>
               </div>
 
               <div class="space-y-2">
@@ -183,7 +183,7 @@ const errorInsert = () => {
                 </label>
                 <input
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="mail@gmail.com" v-model="newEvent.email" />
+                  placeholder="mail@gmail.com" v-model="newEvent.email" @input="validateBooking(newEvent)"/>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -191,7 +191,7 @@ const errorInsert = () => {
                 </label>
                 <textarea maxlength="500"
                   class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your note" v-model="newEvent.notes"></textarea>
+                  placeholder="Enter your note" v-model="newEvent.notes" @input="validateBooking(newEvent)"></textarea>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -199,7 +199,7 @@ const errorInsert = () => {
                 </label>
                 <input input type="datetime-local"
                   class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  v-model="newEvent.startTime" />
+                  v-model="newEvent.startTime" @input="validateBooking(newEvent)"/>
               </div>
 
               <div class="space-y-2">
