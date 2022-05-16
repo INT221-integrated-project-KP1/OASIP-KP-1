@@ -1,29 +1,23 @@
-<script>
-import { ref,onMounted } from "vue";
-//มาร์คไปก็อปมานะ
-
-const hours = ref(0)
-const minutes = ref(0)
-const seconds = ref(0)
-
-onMounted( setInterval(() => setTime(), 1000)) 
-
+<script setup>
+import {ref} from "vue";
+const time = ref()
+const timeStr = ref()
 const setTime = () => {
-      const date = new Date();
-      hours.value = date.getHours();
-      minutes.value = date.getMinutes();
-      seconds.value  = date.getSeconds();
-    }
+  time.value = new Date().toString().split(" ", 5)
+  timeStr.value = ''
+  for(let i=0; i<time.value.length; i++){
+    timeStr.value += ' ' + time.value[i];
+  }
+}
+
+setInterval(() => setTime(), 1000);
 
 </script>
-
+ 
 <template>
-  <div>
-    <div>
-      <div>{{ hours }} : {{ minutes }} : {{ seconds }}</div>
-    </div>
-  </div>
+<div>{{ timeStr }}</div>
 </template>
+ 
+<style>
 
-<style >
 </style>

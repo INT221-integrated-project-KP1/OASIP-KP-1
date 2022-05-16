@@ -69,8 +69,6 @@ const getEventById = async (id) => {
 
       let edit = new Date(selectedEvent.value.eventStartTime);
       editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
-
-
     } else {
       console.log("error, cannot get data");
     }
@@ -132,7 +130,7 @@ const getEventById = async (id) => {
                       v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
-                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea>
+                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br><span>{{editNotes.length}}/500</span>
                   <div class="modal-action">
 
                     <label
