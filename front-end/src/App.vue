@@ -1,12 +1,17 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, onUnmounted } from 'vue'
+import { ref, onMounted, onBeforeMount, onUnmounted,computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Clock from "./components/Clock.vue"
+
 const { params } = useRoute()
 const myRouter = useRouter()
 // const goHome = () => myRouter.push({name:'Home'})
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
 }
+
+
+
 
 </script>
 
@@ -23,16 +28,16 @@ const goWelcome = () => {
           </label>
           <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
             <li>
-              <router-link :to="{ name: 'Home' }">List All </router-link>
+              <router-link :to="{ name: 'Home' }">Home </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'List' }"> Add event </router-link>
+              <router-link :to="{ name: 'List' }"> List All </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'Booking' }"> Add event </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'AboutUs' }"> Add event </router-link>
+              <router-link :to="{ name: 'AboutUs' }"> About US </router-link>
             </li>
           </ul>
         </div>
@@ -57,7 +62,9 @@ const goWelcome = () => {
           </div>
         </ul>
       </div>
-      <div class="navbar-end"></div>
+      <div class="navbar-end">
+    <Clock />
+      </div>
 
     </div>
 

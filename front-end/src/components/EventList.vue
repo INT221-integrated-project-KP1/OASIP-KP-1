@@ -3,9 +3,12 @@ import { ref, computed } from "vue";
 import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
+import { useRoute, useRouter } from 'vue-router'
 
-
-
+const myRouter = useRouter()
+const goBooking = () => {
+  myRouter.push({ name: 'Booking' })
+}
 
 const props = defineProps({
   events: {
@@ -113,7 +116,7 @@ const getEventById = async (id) => {
                 </div>
               </ol>
 
-              
+
               <!-- Modal -->
               <input type="checkbox" id="my-modal-6" class="modal-toggle " />
               <div class="modal modal-bottom sm:modal-middle ">
@@ -145,7 +148,16 @@ const getEventById = async (id) => {
           </div>
         </div>
         <div v-else>
-          <h2>No Scheduled Events</h2>
+          <div class="card w-96 glass">
+            <figure><img src="../assets/gif2.gif" alt="gif2"></figure>
+            <div class="card-body">
+              <h2 class="card-title">No Scheduled Events </h2>
+              <p>Do you want to booking a new event?</p>
+              <div class="card-actions justify-end">
+                <button class="btn" @click="goBooking">Booking now!</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
