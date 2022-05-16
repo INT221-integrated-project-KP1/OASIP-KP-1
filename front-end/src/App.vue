@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeMount, onUnmounted,computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
+import {events} from "./stores/eventData.js"
 
 const { params } = useRoute()
 const myRouter = useRouter()

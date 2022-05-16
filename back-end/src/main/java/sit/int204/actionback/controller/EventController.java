@@ -29,7 +29,12 @@ public class EventController {
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int pageSize){
         return eventService.getEvent(page,pageSize);
-    } 
+    }
+
+    @GetMapping("/all")
+    public EventPageDTO getAllEvent(){
+        return eventService.getAllEvent();
+    }
 
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){

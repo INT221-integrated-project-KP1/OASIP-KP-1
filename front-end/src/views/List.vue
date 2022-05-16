@@ -1,14 +1,16 @@
 <script setup>
 import { ref, onBeforeMount, reactive } from "vue";
 import EventList from "../components/EventList.vue";
+import {events} from "../stores/eventData.js"
 
+const myEvents = events()
 
-const events = ref([]);
+// const events = ref([]);
 // GET
 const getEvents = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${pageSize.value
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${myEvents.page}&pageSize=${myEvents.pageSize
       }`
     );
     if (res.status === 200) {
@@ -18,8 +20,8 @@ const getEvents = async () => {
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
       eventsToAdd.content.forEach((e) => {
-        if (e.id != events.value.id) {
-          events.value.push(e); 
+        if (e.id != myEvents.eventList.id) {
+          myEvents.eventList.push(e); 
         }
       });
     } else {
@@ -29,6 +31,11 @@ const getEvents = async () => {
     console.log("ERROR: " + err);
   }
 };
+
+onBeforeMount(async () => {
+  console.log(myEvents.pageSize)
+  await getEvents();
+});
 
 //PUT
 const updateEvent = async (startTime, notes, id) => {
@@ -47,7 +54,7 @@ const updateEvent = async (startTime, notes, id) => {
   })
   if (res.status === 201) {
     const modEvent = await res.json();
-    events.value = events.value.map((event) =>
+    myEvents.eventList.value = myEvents.eventList.value.map((event) =>
       event.id === modEvent.id
         ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
         : event
@@ -68,21 +75,19 @@ const removeEvent = async (deleteId) => {
     }
   );
   if (res.status === 200) {
-    events.value = events.value.filter((event) => event.id !== deleteId);
+    myEvents.eventList.value = myEvents.eventList.value.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
-    if (events.value.length <= 8) {
-      getEvents();
+    if (myEvents.value.length <= 8) {
+      myEvents.getEvents();
     }
 
   } else console.log("error, cannot delete data");
 };
 
-onBeforeMount(async () => {
-  await getEvents();
-});
 
-const page = ref(0); //page start 0
-const pageSize = ref(9); //default 4
+
+// const page = ref(0); //page start 0
+// const pageSize = ref(9); //default 4
 
 window.onscroll = () => {
   //const bottomOfWindow
@@ -93,8 +98,8 @@ window.onscroll = () => {
     //bottomOfWindow
     console.log("bottomOfWindow");
     //do tood
-    page.value++;
-    getEvents();
+    myEvents.pageIncrement();
+    myEvents.getEvents();
   }
   console.log("scroll");
   console.log("scroll: " + document.documentElement.scrollTop + window.innerHeight);
@@ -103,10 +108,9 @@ window.onscroll = () => {
 </script>
 
 <template>
-
   <div>
     <div>
-      <EventList :events="events" @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>
+      <EventList :events="myEvents.eventList" @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>
     </div>
 
 

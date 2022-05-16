@@ -1,5 +1,69 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from "vue";
+import { events } from "../stores/eventData.js"
+
+const myEvents = events()
+
+const getEvents = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/scheduled/all`
+    );
+    if (res.status === 200) {
+      const eventsToAdd = await res.json();
+      // events << eventToAdd
+      // eventToAdd อันที่โหลดเพิ่ม
+      // events ของที่แสดงอยู่
+      // เอาอันที่โหลดเพิ่มมาใส่
+      eventsToAdd.content.forEach((e) => {
+        if (e.id != myEvents.eventList.id) {
+          myEvents.eventList.push(e); 
+        }
+      });
+    } else {
+      console.log("error, cannot get data");
+    }
+  } catch (err) {
+    console.log("ERROR: " + err);
+  }
+};
+
+function validateOverlab(categoryId, startTime, duration) {
+  getEvents();
+  let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
+  let newDurationMilli = duration * 60 * 1000;
+  let bool = ref(true);
+  myEvents.eventList.forEach((value) => {
+    if (categoryId == value.eventCategory.id) {
+      let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
+      let durationMilli = value.eventDuration * 60 * 1000;
+
+      if (newMilli + newDurationMilli + 60000 > milli && newMilli + newDurationMilli - 60000 < milli + durationMilli) {
+        //overlab 1+4
+        console.log('Overlab 1+4');
+        bool.value = false;
+        return false; //overlab
+      }
+      else if (newMilli + 60000 > milli && newMilli - 60000 < milli + durationMilli) {
+        //System.out.println("Overlab2+4");
+        console.log('Overlab2+4');
+        bool.value = false;
+        return false;
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+      }
+      else if (newMilli - 60000 < milli && newMilli + newDurationMilli + 60000 > milli + durationMilli) {
+        //System.out.println("Overlab3");
+        console.log('Overlab3');
+        bool.value = false;
+        return false;
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+      }
+    }
+    console.log('return:' + bool.value);
+    return bool.value;
+  })
+}
+
 const categorys = ref([]);
 const error = ref();
 const getEventCategory = async () => {
@@ -22,7 +86,7 @@ onBeforeMount(async () => {
   await getEventCategory();
 });
 
-const newEvent = ref({ eventCategory: { id: "", duration: "" } });
+const newEvent = ref({name: '',notes: '', email: '', eventCategory: { id: "", duration: "" } });
 
 function checkProperties(obj) {
   //check value of object is not null
@@ -41,31 +105,46 @@ function checkProperties(obj) {
   return true;
 }
 
-function validateBooking(event){
+
+const validateEventName = computed(() => {
   //check length type bra bra brah...
-  if(event.name.length >= 100){
-    alert('length of name is over 100')
+  if (newEvent.value.name != undefined) {
+    if ((newEvent.value.name.length > 100)) {
+      console.log('name false');
+      return false;
+    }
+  }
+  return true;
+})
+
+const validateEventEmail = computed(() =>{
+  if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+    //valid email
+    return true;
+  }
+  //invalid email
+  return false;
+})
+
+function validateEventNotes(notes) {
+  if (notes.length > 500) {
+    console.log('notes false');
+
     return false;
   }
-  if(!event.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-    alert('email is not valid')
-    return false;
-  }
-  if(event.notes.length > 480){
-    alert('Length of notes is over 480')
-    return false;
-  }
-  if(event.eventCategory.id == undefined){
-    alert('Invalid Event Category')
-    return false
-  }
-  let nowDate = new Date().getTime(); //time in millisecond
-  let eventDate = new Date(event.startTime).getTime();
-  if(eventDate < nowDate){
-    alert('Future eventStartTime ONly')
-    return false;
-  }
+  return true;
 }
+
+const validateFutureDate = computed(()=>{
+  let nowDate = new Date().getTime(); //time in millisecond
+  let eventDate = new Date(newEvent.value.startTime).getTime();
+  console.log('in Date')
+  if (eventDate < nowDate) {
+    console.log('future false');
+    return false;
+  }
+  return true;
+});
 
 
 // POST
@@ -90,7 +169,7 @@ const createNewEvent = async (event) => {
 
     if (res.status === 201) {
       console.log("added sucessfully");
-      newEvent.value = { eventCategory: { id: "", duration: "" } };
+      newEvent.value = { name: '', eventCategory: { id: "", duration: "" } };
       statusError.value = 1;
     } else {
       error.value = await res.text()
@@ -107,6 +186,7 @@ const createNewEvent = async (event) => {
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
 };
+
 const statusError = ref(0);
 function topFunction() {
   document.body.scrollTop = 0;
@@ -173,16 +253,20 @@ const errorInsert = () => {
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <input maxlength="100"
-                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your name" v-model="newEvent.name" />
+                <input maxlength="100" :class="validateEventName ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                " placeholder="Enter your name" v-model="newEvent.name" /><br><span>{{newEvent.name.length}}/100</span>
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :
+                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail" style="color: red;">*Invalid Email</span>
                 </label>
                 <input
-                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                  :class="validateEventEmail ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                "
                   placeholder="mail@gmail.com" v-model="newEvent.email" />
               </div>
               <div class="space-y-2">
@@ -190,16 +274,24 @@ const errorInsert = () => {
                   Notes :
                 </label>
                 <textarea maxlength="500"
-                  class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your note" v-model="newEvent.notes"></textarea>
+                  :class="validateEventNotes(newEvent.notes) ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                "
+                  placeholder="Enter your note" v-model="newEvent.notes"
+                  @input="validateEventNotes(newEvent.notes)"></textarea><br><span>{{newEvent.notes.length}}/500</span>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:
+                  Start Time:<span v-show="!validateFutureDate" style="color: red;">*Future Time Only</span>
                 </label>
                 <input input type="datetime-local"
-                  class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  v-model="newEvent.startTime" />
+                  :class="validateFutureDate ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                "
+                  v-model="newEvent.startTime"
+                  />
               </div>
 
               <div class="space-y-2">
@@ -207,7 +299,7 @@ const errorInsert = () => {
                   Event Category:
                 </label>
                 <select v-model="newEvent.eventCategory"
-                  class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
+                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
                   <option v-for="(category, index) in categorys" :key="index"
                     :value="{ id: category.id, duration: category.eventDuration }">
                     {{ category.eventCategoryName }}
@@ -220,7 +312,7 @@ const errorInsert = () => {
                   Event durations:
                 </label>
                 <input type="text"
-                  class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
+                  :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                   disabled v-model="newEvent.eventCategory.duration" />
               </div>
 
@@ -228,19 +320,16 @@ const errorInsert = () => {
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
                   @click="
-                    checkProperties(newEvent)
+                    checkProperties(newEvent) && validateEventEmail && validateEventName && validateEventNotes(newEvent.notes) && validateFutureDate && validateOverlab(newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)
                       ? createNewEvent(newEvent)
-                      : errorInsert()
-                  ">
+                      : errorInsert()">
                   Add New Event
                 </button>
               </div>
             </div>
             <div class="pt-5 text-center text-gray-400 text-xs">
               <span>
-                Copyright © 2021-2022
-                <a href="https://codepen.io/uidesignhub" rel="" target="_blank" title="Ajimon"
-                  class="text-green hover:text-green-500">Tuskung Tech</a></span>
+                Donate By 037-7-384-30-0 Bangkok Bank</span>
             </div>
           </div>
         </div>
