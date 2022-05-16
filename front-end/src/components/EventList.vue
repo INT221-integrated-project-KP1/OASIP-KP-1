@@ -4,6 +4,9 @@ import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRoute, useRouter } from 'vue-router'
+import { events } from "../stores/eventData.js"
+
+const myEventss = events()
 
 const myRouter = useRouter()
 const goBooking = () => {

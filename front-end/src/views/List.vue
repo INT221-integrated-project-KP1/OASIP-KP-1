@@ -10,7 +10,7 @@ const myEvents = events()
 const getEvents = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${myEvents.page.value}&pageSize=${myEvents.pageSize.value
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${myEvents.page}&pageSize=${myEvents.pageSize
       }`
     );
     if (res.status === 200) {
@@ -20,8 +20,8 @@ const getEvents = async () => {
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
       eventsToAdd.content.forEach((e) => {
-        if (e.id != myEvents.eventList.value.id) {
-          myEvents.eventList.value.push(e); 
+        if (e.id != myEvents.eventList.id) {
+          myEvents.eventList.push(e); 
         }
       });
     } else {
@@ -108,7 +108,6 @@ window.onscroll = () => {
 </script>
 
 <template>
-  {{myEvents.eventList}}
   <div>
     <div>
       <EventList :events="myEvents.eventList" @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>

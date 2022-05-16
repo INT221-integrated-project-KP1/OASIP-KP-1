@@ -4,13 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import {events} from "./stores/eventData.js"
 
-const myEvents = events()
-
-onBeforeMount(async () => {
-  console.log(myEvents.getEvents);
-  await myEvents.getEvents();
-});
-
 const { params } = useRoute()
 const myRouter = useRouter()
 // const goHome = () => myRouter.push({name:'Home'})

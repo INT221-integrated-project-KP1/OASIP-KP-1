@@ -1,5 +1,46 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from "vue";
+import { events } from "../stores/eventData.js"
+
+const myEvents = events()
+let bool = ref(true);
+function validateOverlab(categoryId, startTime, duration) {
+  let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
+  let newDurationMilli = duration * 60 * 1000;
+
+  myEvents.eventList.forEach((value) => {
+    console.log("test")
+    if (categoryId == value.eventCategory.id) {
+      let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
+      let durationMilli = value.eventDuration * 60 * 1000;
+
+      if (newMilli + newDurationMilli + 60000 > milli && newMilli + newDurationMilli - 60000 < milli + durationMilli) {
+        //overlab 1+4
+        console.log('Overlab 1+4');
+        bool.value = false;
+        return false; //overlab
+      }
+      else if (newMilli + 60000 > milli && newMilli - 60000 < milli + durationMilli) {
+        //System.out.println("Overlab2+4");
+        console.log('Overlab2+4');
+        bool.value = false;
+        return false;
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+      }
+      else if (newMilli - 60000 < milli && newMilli + newDurationMilli + 60000 > milli + durationMilli) {
+        //System.out.println("Overlab3");
+        console.log('Overlab3');
+        bool.value = false;
+        return false;
+        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+      }
+    }
+
+  })
+  console.log("return: " + bool.value)
+  return bool.value;
+}
+
 const categorys = ref([]);
 const error = ref();
 const getEventCategory = async () => {
@@ -41,30 +82,43 @@ function checkProperties(obj) {
   return true;
 }
 
-function validateBooking(event){
+function validateEventName(name) {
   //check length type bra bra brah...
-  if(event.name.length >= 100){
-    alert('length of name is over 100')
+  if (name != undefined) {
+    if ((name.length > 100)) {
+      console.log('name false');
+      return false;
+    }
+  }
+  return true;
+}
+
+function validateEventEmail(email) {
+  if (email.match('/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/')) {
+    console.log('email false');
+
     return false;
   }
-  if(!event.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-    alert('email is not valid')
+  return true;
+}
+function validateEventNotes(notes) {
+  if (notes.length > 480) {
+    console.log('notes false');
+
     return false;
   }
-  if(event.notes.length > 480){
-    alert('Length of notes is over 480')
-    return false;
-  }
-  if(event.eventCategory.id == undefined){
-    alert('Invalid Event Category')
-    return false
-  }
+  return true;
+}
+
+function validateFutureDate(time) {
   let nowDate = new Date().getTime(); //time in millisecond
-  let eventDate = new Date(event.startTime).getTime();
-  if(eventDate < nowDate){
-    alert('Future eventStartTime ONly')
+  let eventDate = new Date(time).getTime();
+  if (eventDate < nowDate) {
+    console.log('future false');
+
     return false;
   }
+  return true;
 }
 
 
@@ -90,7 +144,7 @@ const createNewEvent = async (event) => {
 
     if (res.status === 201) {
       console.log("added sucessfully");
-      newEvent.value = { eventCategory: { id: "", duration: "" } };
+      newEvent.value = { name: '', eventCategory: { id: "", duration: "" } };
       statusError.value = 1;
     } else {
       error.value = await res.text()
@@ -173,9 +227,10 @@ const errorInsert = () => {
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <input maxlength="100"
-                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your name" v-model="newEvent.name" @input="validateBooking(newEvent)"/>
+                <input maxlength="100" :class="validateEventName(newEvent.name) ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                " placeholder="Enter your name" v-model="newEvent.name" @input="validateEventName(newEvent.name)" />
               </div>
 
               <div class="space-y-2">
@@ -183,7 +238,7 @@ const errorInsert = () => {
                 </label>
                 <input
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="mail@gmail.com" v-model="newEvent.email" @input="validateBooking(newEvent)"/>
+                  placeholder="mail@gmail.com" v-model="newEvent.email" @input="validateEventEmail(newEvent.email)" />
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -191,7 +246,8 @@ const errorInsert = () => {
                 </label>
                 <textarea maxlength="500"
                   class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your note" v-model="newEvent.notes" @input="validateBooking(newEvent)"></textarea>
+                  placeholder="Enter your note" v-model="newEvent.notes"
+                  @input="validateEventNotes(newEvent.notes)"></textarea>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -199,7 +255,8 @@ const errorInsert = () => {
                 </label>
                 <input input type="datetime-local"
                   class="w-full content-center text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  v-model="newEvent.startTime" @input="validateBooking(newEvent)"/>
+                  v-model="newEvent.startTime" @input="validateFutureDate(newEvent.startTime)"
+                  @change="validateOverlab(newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)" />
               </div>
 
               <div class="space-y-2">
@@ -228,7 +285,7 @@ const errorInsert = () => {
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
                   @click="
-                    checkProperties(newEvent)
+                    checkProperties(newEvent) && validateEventEmail(newEvent.email) && validateEventName(newEvent.name) && validateEventNotes(newEvent.notes) && validateFutureDate(newEvent.startTime) && validateOverlab(newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)
                       ? createNewEvent(newEvent)
                       : errorInsert()
                   ">
