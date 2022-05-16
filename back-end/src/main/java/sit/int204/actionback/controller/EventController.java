@@ -1,12 +1,16 @@
 package sit.int204.actionback.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.EventPageDTO;
+import sit.int204.actionback.dtos.EventUpdateDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.service.EventService;
+
+import java.util.Optional;
 
 
 @RestController
@@ -33,10 +37,8 @@ public class EventController {
     }
 
     @PostMapping("")
-
-    public void createTest(@RequestBody EventDTO newEvent){
-         eventService.create(newEvent);
-
+    public ResponseEntity createTest(@RequestBody EventDTO newEvent){
+       return  eventService.create(newEvent);
     }
 
     @DeleteMapping("/{id}")
@@ -44,5 +46,8 @@ public class EventController {
         eventService.deleteEventById(id);
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity update(@RequestBody EventUpdateDTO update, @PathVariable int id) {
+        return eventService.editEvent(update,id);
+    }
 }
