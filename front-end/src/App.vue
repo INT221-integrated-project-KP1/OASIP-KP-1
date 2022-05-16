@@ -63,7 +63,7 @@ const goWelcome = () => {
         </ul>
       </div>
       <div class="navbar-end">
-    <Clock />
+    <Clock/>
       </div>
 
     </div>
