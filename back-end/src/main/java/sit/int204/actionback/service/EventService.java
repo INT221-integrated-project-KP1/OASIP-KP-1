@@ -39,7 +39,10 @@ public class EventService {
 
     public EventPageDTO getEvent(int page, int pageSize) {
         return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
+    }
 
+    public EventPageDTO getAllEvent(){
+        return modelMapper.map(repository.findAll(), EventPageDTO.class);
     }
 
     public EventDetailsBaseDTO getSimpleEventById(Integer id) {
@@ -172,7 +175,7 @@ public class EventService {
         }
     }
 
-    public boolean checkeventDuration(int duration){
+    public boolean checkEventDuration(int duration){
         if(duration >=1 && duration <= 480){
             System.out.println("invalid Duration");
             return true;
@@ -188,5 +191,43 @@ public class EventService {
         return true;
     }
 
-}
+//VALIDATE-INPUT-LENGTH
+    public boolean checkCountName(String Name){
+        if(Name.length() > 100 ){
+            System.out.println("length of name more than 100");
+            return false;
+        }
+        return true;
+    }
 
+    public boolean checkFields(Event event){
+        if( event.getId() != null){
+            System.out.println("No ID for this event");
+            return false;
+        }
+        if( event.getBookingName() != null){
+            System.out.println("No BookingName for this event");
+            return false;
+        }
+        if( event.getBookingEmail() != null){
+            System.out.println("No BookingEmail for this event");
+            return false;
+        }
+        if( event.getEventStartTime() != null){
+            System.out.println("No Time for this event");
+            return false;
+        }
+        if( event.getEventCategory() != null){
+            System.out.println("No EventCategoryID for this event");
+            return false;
+        }
+        if( event.getEventDuration() != null){
+            System.out.println("No Duration for this event");
+            return false;
+        }
+        return true;
+    }
+
+
+
+}
