@@ -1,13 +1,13 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 const time = ref()
 const timeStr = ref()
+
+
 const setTime = () => {
-  time.value = new Date().toString().split(" ", 5)
-  timeStr.value = ''
-  for (let i=0; i<time.value.length; i++){
-    timeStr.value += ' ' + time.value[i];
-  }
+  const date = new Date()
+  time.value = date.toDateString()
+  timeStr.value = date.toTimeString().slice(0, 8)
 }
 
 setInterval(() => setTime(), 1000);
@@ -15,9 +15,13 @@ setInterval(() => setTime(), 1000);
 </script>
  
 <template>
-<div>{{ timeStr }}</div>
+  <div class="stats shadow">
+    <div class="stat">
+      <div class="stat-title">{{ time }}</div>
+      <div class="stat-value">{{ timeStr }}</div>
+    </div>
+  </div>
 </template>
  
 <style>
-
 </style>
