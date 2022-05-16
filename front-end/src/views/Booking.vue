@@ -3,13 +3,37 @@ import { ref, onBeforeMount, computed, reactive } from "vue";
 import { events } from "../stores/eventData.js"
 
 const myEvents = events()
-let bool = ref(true);
+
+const getEvents = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/scheduled/all`
+    );
+    if (res.status === 200) {
+      const eventsToAdd = await res.json();
+      // events << eventToAdd
+      // eventToAdd อันที่โหลดเพิ่ม
+      // events ของที่แสดงอยู่
+      // เอาอันที่โหลดเพิ่มมาใส่
+      eventsToAdd.content.forEach((e) => {
+        if (e.id != myEvents.eventList.id) {
+          myEvents.eventList.push(e); 
+        }
+      });
+    } else {
+      console.log("error, cannot get data");
+    }
+  } catch (err) {
+    console.log("ERROR: " + err);
+  }
+};
+
 function validateOverlab(categoryId, startTime, duration) {
+  getEvents();
   let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
   let newDurationMilli = duration * 60 * 1000;
-
+  let bool = ref(true);
   myEvents.eventList.forEach((value) => {
-    console.log("test")
     if (categoryId == value.eventCategory.id) {
       let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
       let durationMilli = value.eventDuration * 60 * 1000;
@@ -35,10 +59,9 @@ function validateOverlab(categoryId, startTime, duration) {
         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
       }
     }
-
+    console.log('return:' + bool.value);
+    return bool.value;
   })
-  console.log("return: " + bool.value)
-  return bool.value;
 }
 
 const categorys = ref([]);
