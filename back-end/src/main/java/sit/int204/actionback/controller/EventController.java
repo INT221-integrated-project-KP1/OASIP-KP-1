@@ -7,9 +7,11 @@ import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
 import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.EventUpdateDTO;
+import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.service.EventService;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -32,7 +34,7 @@ public class EventController {
     }
 
     @GetMapping("/all")
-    public EventPageDTO getAllEvent(){
+    public List<SimpleEventDTO> getAllEvent(){
         return eventService.getAllEvent();
     }
 
