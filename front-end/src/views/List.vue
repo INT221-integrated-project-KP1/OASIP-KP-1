@@ -54,7 +54,7 @@ const updateEvent = async (startTime, notes, id) => {
   })
   if (res.status === 201) {
     const modEvent = await res.json();
-    myEvents.eventList.value = myEvents.eventList.value.map((event) =>
+    myEvents.eventList = myEvents.eventList.map((event) =>
       event.id === modEvent.id
         ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
         : event
@@ -75,10 +75,10 @@ const removeEvent = async (deleteId) => {
     }
   );
   if (res.status === 200) {
-    myEvents.eventList.value = myEvents.eventList.value.filter((event) => event.id !== deleteId);
+    myEvents.eventList = myEvents.eventList.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
-    if (myEvents.value.length <= 8) {
-      myEvents.getEvents();
+    if (myEvents.eventList.length == 8) {
+      getEvents();
     }
 
   } else console.log("error, cannot delete data");
@@ -99,7 +99,7 @@ window.onscroll = () => {
     console.log("bottomOfWindow");
     //do tood
     myEvents.pageIncrement();
-    myEvents.getEvents();
+    getEvents();
   }
   console.log("scroll");
   console.log("scroll: " + document.documentElement.scrollTop + window.innerHeight);
