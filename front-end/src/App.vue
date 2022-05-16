@@ -64,7 +64,7 @@ const goWelcome = () => {
         </ul>
       </div>
       <div class="navbar-end">
-    <Clock />
+    <Clock/>
       </div>
 
     </div>
@@ -92,7 +92,7 @@ const goWelcome = () => {
       <a class="link link-hover">Press kit</a>
     </div>
     <div>
-      <span class="footer-title">Social</span>
+      <span class="footer-title ">Social</span>
       <div class="grid grid-flow-col gap-4">
         <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
             <path
