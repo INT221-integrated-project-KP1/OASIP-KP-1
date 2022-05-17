@@ -111,7 +111,7 @@ window.onscroll = () => {
 <template>
   <div>
     <div>
-      <EventList :events="myEvents.eventList" @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>
+      <EventList @deleteEvent="removeEvent" @updateEvent="updateEvent"></EventList>
     </div>
 
 

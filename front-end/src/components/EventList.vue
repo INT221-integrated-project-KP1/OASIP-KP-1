@@ -6,38 +6,38 @@ import Fillter from "./Fillter.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 
-const myEventss = events()
+const myEvents = events()
 
 const myRouter = useRouter()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
-const props = defineProps({
-  events: {
-    default: [],
-    type: Array,
-  },
-});
+// const props = defineProps({
+//   events: {
+//     default: [],
+//     type: Array,
+//   },
+// });
 
-const myEvents = computed(() => {
-  let eventsToAdd = []
-  props.events.forEach((ele) => {
-    eventsToAdd.push({
-      "id": ele.id,
-      "bookingName": ele.bookingName,
-      "bookingEmail": ele.bookingEmail,
-      "eventCategory": {
-        "eventCategoryName": ele.eventCategory.eventCategoryName,
-        "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
-      },
-      "eventStartTime": ele.eventStartTime,
-      "eventDuration": ele.eventDuration,
-      "eventNotes": ele.eventNotes
-    })
-  })
-  return eventsToAdd;
-})
+// const myEvents = computed(() => {
+//   let eventsToAdd = []
+//   props.events.forEach((ele) => {
+//     eventsToAdd.push({
+//       "id": ele.id,
+//       "bookingName": ele.bookingName,
+//       "bookingEmail": ele.bookingEmail,
+//       "eventCategory": {
+//         "eventCategoryName": ele.eventCategory.eventCategoryName,
+//         "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
+//       },
+//       "eventStartTime": ele.eventStartTime,
+//       "eventDuration": ele.eventDuration,
+//       "eventNotes": ele.eventNotes
+//     })
+//   })
+//   return eventsToAdd;
+// })
 
 
 
@@ -66,7 +66,7 @@ const getEventById = async (id) => {
     if (res.status === 200) {
       selectedEvent.value = await res.json();
       editNotes.value = selectedEvent.value.eventNotes
-
+      
       let edit = new Date(selectedEvent.value.eventStartTime);
       editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
     } else {
@@ -83,13 +83,13 @@ const getEventById = async (id) => {
   <div class="flex justify-center">
     <div class="m-10">
       <div id="HaveEvent">
-        <div v-if="myEvents.length != 0">
+        <div v-if="myEvents.eventList.length != 0">
           <!-- <Fillter /> -->
           <div id="ListEvent">
             <div>
               <ol class="">
                 <div class="grid grid-cols-3 gap-2 ">
-                  <li v-for="(event, index) in myEvents" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
@@ -130,7 +130,8 @@ const getEventById = async (id) => {
                       v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
-                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br><span>{{editNotes.length}}/500</span>
+                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
+                    <!-- <span>{{editNotes.length}}/500</span> -->
                   <div class="modal-action">
 
                     <label
