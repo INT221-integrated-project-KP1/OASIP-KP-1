@@ -84,7 +84,7 @@ const getEventById = async (id) => {
     <div class="m-10">
       <div id="HaveEvent">
         <div v-if="myEvents.length != 0">
-          <Fillter />
+          <!-- <Fillter /> -->
           <div id="ListEvent">
             <div>
               <ol class="">
