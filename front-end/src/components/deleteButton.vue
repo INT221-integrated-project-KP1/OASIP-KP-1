@@ -1,15 +1,7 @@
 <script setup>
 defineEmits(['confirmDelete'])
 
-let props = defineProps({
-    event: {
-        default: [],
-        type: Object
-    }
-})
 
-console.log("TEST");
-console.log(props.event)
 </script>
  
 <template>

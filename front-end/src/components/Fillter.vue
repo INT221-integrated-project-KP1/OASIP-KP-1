@@ -1,37 +1,17 @@
 <script setup>
 import { ref, computed, onBeforeMount } from "vue";
+import { categorys } from "../stores/categoryData"
+
+const myCategorys = categorys()
 
 defineEmits(['Fillter'])
 
-const categorys = ref([]);
-const getEventCategory = async () => {
-    try {
-        console.log(import.meta.env.URL);
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/EventCategory`);
-        console.log(res.status);
-        if (res.status === 200) {
-            categorys.value = await res.json();
-            console.log(categorys.value);
-        } else {
-            console.log("error, cannot get data");
-        }
-    } catch (err) {
-        console.log(err);
-    }
-};
-onBeforeMount(async () => {
-    await getEventCategory();
-});
 
 </script>
  
 <template>
 
     <div class="card bg-white p-2 m-5">
-
-
-
-
 
         <div class="form-control ">
             <div class="flex justify-center">
@@ -40,7 +20,7 @@ onBeforeMount(async () => {
                 <div class="px-5">
                     <select class="select select-bordered ">
                         <option disabled selected>Pick category</option>
-                        <option v-for="(EventCategory, index) in categorys" :key="index">
+                        <option v-for="(EventCategory, index) in myCategorys.categoryList" :key="index">
                             {{ EventCategory.eventCategoryName }}</option>
                     </select>
 
