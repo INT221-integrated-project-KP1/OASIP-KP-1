@@ -6,38 +6,38 @@ import Fillter from "./Fillter.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 
-const myEventss = events()
+const myEvents = events()
 
 const myRouter = useRouter()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
-const props = defineProps({
-  events: {
-    default: [],
-    type: Array,
-  },
-});
+// const props = defineProps({
+//   events: {
+//     default: [],
+//     type: Array,
+//   },
+// });
 
-const myEvents = computed(() => {
-  let eventsToAdd = []
-  props.events.forEach((ele) => {
-    eventsToAdd.push({
-      "id": ele.id,
-      "bookingName": ele.bookingName,
-      "bookingEmail": ele.bookingEmail,
-      "eventCategory": {
-        "eventCategoryName": ele.eventCategory.eventCategoryName,
-        "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
-      },
-      "eventStartTime": ele.eventStartTime,
-      "eventDuration": ele.eventDuration,
-      "eventNotes": ele.eventNotes
-    })
-  })
-  return eventsToAdd;
-})
+// const myEvents = computed(() => {
+//   let eventsToAdd = []
+//   props.events.forEach((ele) => {
+//     eventsToAdd.push({
+//       "id": ele.id,
+//       "bookingName": ele.bookingName,
+//       "bookingEmail": ele.bookingEmail,
+//       "eventCategory": {
+//         "eventCategoryName": ele.eventCategory.eventCategoryName,
+//         "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
+//       },
+//       "eventStartTime": ele.eventStartTime,
+//       "eventDuration": ele.eventDuration,
+//       "eventNotes": ele.eventNotes
+//     })
+//   })
+//   return eventsToAdd;
+// })
 
 
 
@@ -83,13 +83,13 @@ const getEventById = async (id) => {
   <div class="flex justify-center">
     <div class="m-10">
       <div id="HaveEvent">
-        <div v-if="myEvents.length != 0">
+        <div v-if="myEvents.eventList.length != 0">
           <!-- <Fillter /> -->
           <div id="ListEvent">
             <div>
               <ol class="">
                 <div class="grid grid-cols-3 gap-2 ">
-                  <li v-for="(event, index) in myEvents" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
