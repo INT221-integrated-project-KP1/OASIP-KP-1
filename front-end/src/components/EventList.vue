@@ -21,7 +21,9 @@ const goBooking = () => {
       if (res.status === 200) {
         selectedEvent.value = await res.json();
         editNotes.value = selectedEvent.value.eventNotes
-        
+        if(editNotes.value == null){
+          editNotes.value = "";
+        }
         let edit = new Date(selectedEvent.value.eventStartTime);
         editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
         console.log(new Date().getDate());
@@ -110,7 +112,7 @@ const numberFormat = function (number, width) {
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
                     cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
-                    <!-- <span>{{editNotes.length}}/500</span> -->
+                    <span>{{500-editNotes.length}}</span>
                   <div class="modal-action">
 
                     <label
