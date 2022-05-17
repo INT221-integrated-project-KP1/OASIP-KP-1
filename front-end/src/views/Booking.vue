@@ -32,7 +32,7 @@ const getEvents = async () => {
 const getEventsAllPageThatLoaded = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${myEvents.pageSize*myEvents.page}`
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${(myEvents.pageSize)*(myEvents.page+1)}`
     );
     if (res.status === 200) {
       const eventsToAdd = await res.json();
