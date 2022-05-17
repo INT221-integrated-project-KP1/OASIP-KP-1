@@ -130,7 +130,8 @@ const getEventById = async (id) => {
                       v-model="editStartTime"></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
-                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br><span>{{editNotes.length}}/500</span>
+                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
+                    <!-- <span>{{editNotes.length}}/500</span> -->
                   <div class="modal-action">
 
                     <label
