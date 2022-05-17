@@ -1,15 +1,44 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, onUnmounted,computed } from 'vue'
+import { ref, onMounted, onBeforeMount, onUnmounted,computed, } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
-import {events} from "./stores/eventData.js"
+import { events } from "./stores/eventData.js"
 
 const { params } = useRoute()
 const myRouter = useRouter()
 // const goHome = () => myRouter.push({name:'Home'})
+const myEvents = events()
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
 }
+// GET
+const getEvents = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=${myEvents.page}&pageSize=${myEvents.pageSize
+      }`
+    );
+    if (res.status === 200) {
+      const eventsToAdd = await res.json();
+      // events << eventToAdd
+      // eventToAdd อันที่โหลดเพิ่ม
+      // events ของที่แสดงอยู่
+      // เอาอันที่โหลดเพิ่มมาใส่
+      eventsToAdd.content.forEach((e) => {
+        if (e.id != myEvents.eventList.id) {
+          myEvents.eventList.push(e); 
+        }
+      });
+    } else {
+      console.log("error, cannot get data");
+    }
+  } catch (err) {
+    console.log("ERROR: " + err);
+  }
+};
+
+  console.log(myEvents.pageSize)
+  await getEvents();
 
 
 

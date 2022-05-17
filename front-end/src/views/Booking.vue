@@ -93,17 +93,20 @@ const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", 
 function checkProperties(obj) {
   //check value of object is not null
   for (let key in obj) {
-    if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
-      if (typeof obj[key] == "object") {
-        console.log("object1");
-        if (checkProperties(obj[key]) == false) {
-          console.log("object2");
-          return false;
+    if (key !== "notes") {
+      if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
+        if (typeof obj[key] == "object") {
+          console.log("object1");
+          if (!(checkProperties(obj[key]))) {
+            console.log("object2");
+            return false;
+          }
         }
+      } else {
+        return false;
       }
-    } else {
-      return false;
     }
+    return true;
   }
   return true;
 }
@@ -121,23 +124,29 @@ const validateEventName = computed(() => {
 })
 
 const validateEventEmail = computed(() => {
-  if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-    //valid email
-    return true;
-  }
-  //invalid email
-  return false;
+  console.log(newEvent.value.email)
+return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+
+
+  // if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+  //   //valid email
+  //   return true;
+  // }
+  // //invalid email
+  // return false;
 })
 
-function validateEventNotes(notes) {
-  let note
-  console.log(notes)
-  if (notes == undefined) {
-    note = null
-  } else note = notes
+const validateEventNotes = () => {
+  // let note
+  // console.log(notes)
+  // if (notes == undefined) {
+  //   note = ""
+  // } else note = notes
+  // console.log("dd"+note)
 
   //undefine ไม่มี length
-  if (note.length > 500) {
+  console.log("check notes")
+  if (newEvent.value.notes.length > 500) {
     console.log('notes false');
 
     return false;
@@ -179,7 +188,7 @@ const createNewEvent = async (event) => {
 
     if (res.status === 201) {
       console.log("added sucessfully");
-      newEvent.value = { name: '', eventCategory: { id: "", duration: "" } };
+      newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
       statusError.value = 1;
     } else {
       error.value = await res.text()
@@ -188,8 +197,8 @@ const createNewEvent = async (event) => {
       statusError.value = 2;
     }
   } catch (err) {
-    error.value = await res.text()
-    console.log(await res.text())
+    // error.value = await res.text()
+    // console.log(await res.text())
     console.log(err);
     statusError.value = 2;
   }
@@ -213,10 +222,10 @@ const check = () => {
   console.log(checkProperties(newEvent.value) + "1")
   console.log(validateEventEmail.value + "2")
   console.log(validateEventName.value + "3")
-  console.log(validateEventNotes(newEvent.value.notes) + "4")
+  console.log(validateEventNotes() + "4")
   console.log(validateFutureDate.value + "5")
   console.log(validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
-  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && validateEventNotes(newEvent.value.notes) && validateFutureDate.value && validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && validateEventNotes() && validateFutureDate.value && validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
 
 }
 </script>
@@ -292,11 +301,12 @@ const check = () => {
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Notes :
                 </label>
-                <textarea maxlength="500" :class="validateEventNotes(newEvent.notes) ?
+                <textarea maxlength="500" :class="validateEventNotes() ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your note" v-model="newEvent.notes"
-                  @input="validateEventNotes(newEvent.notes)"></textarea><br><span>{{ newEvent.notes.length
+                " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
+                <!-- มาร์คเเก้ -->
+                <br><span>{{ newEvent.notes.length
                   }}/500</span>
               </div>
               <div class="space-y-2">
