@@ -12,8 +12,8 @@ export const categorys = defineStore('categoryListState',() => {
             const res = await fetch(`${import.meta.env.VITE_BASE_URL}/EventCategory`);
             console.log(res.status);
             if (res.status === 200) {
-                categorys.value = await res.json();
-                console.log(categorys.value);
+                categoryList.value = await res.json();
+                console.log(categoryList.value,"cat");
             } else {
                 console.log("error, cannot get data");
             }

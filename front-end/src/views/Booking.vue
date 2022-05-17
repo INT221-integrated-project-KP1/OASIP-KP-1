@@ -1,30 +1,14 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from "vue";
 import { events } from "../stores/eventData.js"
+import { categorys } from "../stores/categoryData.js"
 
 const myEvents = events()
+const myCategorys = categorys()
 
-const categorys = ref([]);
 const error = ref();
-const getEventCategory = async () => {
-  try {
-    console.log(import.meta.env.URL);
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/EventCategory`);
-    console.log(res.status);
-    if (res.status === 200) {
-      categorys.value = await res.json();
-      console.log(categorys.value);
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
 
-onBeforeMount(async () => {
-  await getEventCategory();
-});
+
 
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
 
@@ -229,14 +213,14 @@ const check = () => {
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " v-model="newEvent.startTime" />
               </div>
-
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Event Category:
                 </label>
                 <select v-model="newEvent.eventCategory"
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
-                  <option v-for="(category, index) in categorys" :key="index"
+                  
+                  <option v-for="(category, index) in myCategorys.categoryList" :key="index"
                     :value="{ id: category.id, duration: category.eventDuration }">
                     {{ category.eventCategoryName }}
                   </option>
