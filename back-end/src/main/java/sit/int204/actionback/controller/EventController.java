@@ -1,23 +1,22 @@
 package sit.int204.actionback.controller;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.EventDetailsBaseDTO;
+import sit.int204.actionback.dtos.EventPageDTO;
+import sit.int204.actionback.dtos.EventUpdateDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
-import sit.int204.actionback.entities.EventCategory;
-import sit.int204.actionback.repo.EventCategoryRepository;
-import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/api")
-// @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/scheduled")
 @CrossOrigin(origins = "*")
 public class EventController {
     @GetMapping("/hello")
@@ -26,44 +25,36 @@ public class EventController {
     }
 
     @Autowired
-    private EventRepository repo;
-
-    @Autowired
     private EventService eventService;
 
-    @GetMapping("test")
-    public List<Event> getGay(){
-        return repo.findAll();
+    @GetMapping("")
+    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "4") int pageSize){
+        return eventService.getEvent(page,pageSize);
     }
 
-    @GetMapping("/scheduled")
-    public List<SimpleEventDTO> getEvent(){
-        return eventService.getEvent();
+    @GetMapping("/all")
+    public List<SimpleEventDTO> getAllEvent(){
+        return eventService.getAllEvent();
     }
 
-    @GetMapping("/scheduled/{id}")
+    @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
     }
 
-    @PostMapping("/scheduled/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createTest(){
-        eventService.createEvent(1, "Somchai Jaidee (OR-7)", "somchai.jai@mail.kmutt.ac.th", "", Instant.parse("2018-11-30T18:35:24.00Z"), 2, 30);
-        eventService.createEvent(2, "Somsri Rakdee (SJ-3)", "somsri.rak@mail.kmutt.ac.th", "ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน", Instant.parse("2565-12-02T23:00:10Z"), 1, 30);
-        eventService.createEvent(3, "สมเกียรติ ขยันเรียน กลุ่ม TT-4", "somkiat.kay@kmutt.ac.th", "", Instant.parse("2565-12-20T06:30:41Z"), 3, 15);
+    @PostMapping("")
+    public ResponseEntity createTest(@RequestBody EventDTO newEvent){
+       return  eventService.create(newEvent);
     }
 
-    @DeleteMapping("/scheduled/delete")
-    public void deleteTest() {
-        eventService.deleteAll();
+    @DeleteMapping("/{id}")
+    public void deleteTest(@PathVariable Integer id) {
+        eventService.deleteEventById(id);
     }
 
-    @Autowired
-    private EventCategoryRepository EventCategoryRepository;
-
-    @GetMapping("/EventCategory")
-    public List<EventCategory> getEventCategory(){
-        return EventCategoryRepository.findAll();
+    @PutMapping("/{id}")
+    public ResponseEntity update(@RequestBody EventUpdateDTO update, @PathVariable int id) {
+        return eventService.editEvent(update,id);
     }
 }
