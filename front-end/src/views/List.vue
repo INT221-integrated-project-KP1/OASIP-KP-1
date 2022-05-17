@@ -78,8 +78,9 @@ const removeEvent = async (deleteId) => {
   if (res.status === 200) {
     myEvents.eventList = myEvents.eventList.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
+    if (myEvents.eventList.length%9 == 8) {
       getEvents();
-    
+    }
 
   } else console.log("error, cannot delete data");
 };
