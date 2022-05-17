@@ -28,6 +28,28 @@ const getEvents = async () => {
   }
 };
 
+// GET
+const getEventsAllPageThatLoaded = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${myEvents.pageSize*myEvents.page}`
+    );
+    if (res.status === 200) {
+      const eventsToAdd = await res.json();
+      // events << eventToAdd
+      // eventToAdd อันที่โหลดเพิ่ม
+      // events ของที่แสดงอยู่
+      // เอาอันที่โหลดเพิ่มมาใส่
+      //ตัสแก้
+      myEvents.update(eventsToAdd.content);
+    } else {
+      console.log("error, cannot get data");
+    }
+  } catch (err) {
+    console.log("ERROR: " + err);
+  }
+};
+
 function validateOverlab(categoryId, startTime, duration) {
   getEvents();
   let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
@@ -202,6 +224,7 @@ const createNewEvent = async (event) => {
     console.log(err);
     statusError.value = 2;
   }
+  getEventsAllPageThatLoaded();
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
 };

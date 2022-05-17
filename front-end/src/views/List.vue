@@ -19,13 +19,13 @@ const getEvents = async () => {
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
       //ตัสแก้
-      myEvents.update(eventsToAdd.content);
+      // myEvents.update(eventsToAdd.content);
       //ตัสไม่เอา
-      // eventsToAdd.content.forEach((e) => {
-      //   if (e.id != myEvents.eventList.id) {
-      //     myEvents.eventList.push(e); 
-      //   }
-      // });
+      eventsToAdd.content.forEach((e) => {
+        if (myEvents.eventList.every((e1)=>e.id != e1.id)) {
+          myEvents.eventList.push(e); 
+        }
+      });
     } else {
       console.log("error, cannot get data");
     }
@@ -78,7 +78,7 @@ const removeEvent = async (deleteId) => {
   if (res.status === 200) {
     myEvents.eventList = myEvents.eventList.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
-    if (myEvents.eventList.length == 8) {
+    if (myEvents.eventList.length%9 == 8) {
       getEvents();
     }
 
@@ -99,7 +99,7 @@ window.onscroll = () => {
     //bottomOfWindow
     console.log("bottomOfWindow");
     //do tood
-    myEvents.pageSizeIncrement();
+    myEvents.pageIncrement();
     getEvents();
   }
   console.log("scroll");
