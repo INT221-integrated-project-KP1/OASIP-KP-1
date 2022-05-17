@@ -111,5 +111,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - run:  docker image prune
     - run:  docker-compose pull
     - run:  docker-compose up --build -d
