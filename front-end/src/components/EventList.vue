@@ -66,7 +66,7 @@ const getEventById = async (id) => {
     if (res.status === 200) {
       selectedEvent.value = await res.json();
       editNotes.value = selectedEvent.value.eventNotes
-
+      
       let edit = new Date(selectedEvent.value.eventStartTime);
       editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
     } else {
