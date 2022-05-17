@@ -10,11 +10,15 @@ export const events = defineStore('eventListState',() => {
 
     const pageIncrement = () => {page.value++}
 
-
+    const pageSizeIncrement = () => {pageSize.value+=9}
     
-    console.log(eventList+"eventList");
-    return { eventList, update, pageIncrement, page, pageSize}
+    console.log(eventList.value+"eventList");
+    
+
+
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize,}
 })
+
 
 if (import.meta.hot) {
     import.meta.hot.accept(acceptHMRUpdate(events, import.meta.hot))

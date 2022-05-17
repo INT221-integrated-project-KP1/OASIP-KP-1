@@ -41,8 +41,9 @@ public class EventService {
         return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
     }
 
-    public EventPageDTO getAllEvent(){
-        return modelMapper.map(repository.findAll(), EventPageDTO.class);
+    public List<SimpleEventDTO> getAllEvent(){
+
+        return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
     }
 
     public EventDetailsBaseDTO getSimpleEventById(Integer id) {

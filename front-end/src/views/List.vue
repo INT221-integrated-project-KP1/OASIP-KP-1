@@ -5,7 +5,6 @@ import {events} from "../stores/eventData.js"
 
 const myEvents = events()
 
-// const events = ref([]);
 // GET
 const getEvents = async () => {
   try {
@@ -19,8 +18,11 @@ const getEvents = async () => {
       // eventToAdd อันที่โหลดเพิ่ม
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
+      //ตัสแก้
+      // myEvents.update(eventsToAdd.content);
+      //ตัสไม่เอา
       eventsToAdd.content.forEach((e) => {
-        if (e.id != myEvents.eventList.id) {
+        if (myEvents.eventList.every((e1)=>e.id != e1.id)) {
           myEvents.eventList.push(e); 
         }
       });
@@ -31,12 +33,11 @@ const getEvents = async () => {
     console.log("ERROR: " + err);
   }
 };
-
-onBeforeMount(async () => {
+onBeforeMount(async ()=>{
   console.log(myEvents.pageSize)
   await getEvents();
-});
-
+}
+)
 //PUT
 const updateEvent = async (startTime, notes, id) => {
   console.log("startTime: " + startTime)
@@ -54,7 +55,7 @@ const updateEvent = async (startTime, notes, id) => {
   })
   if (res.status === 201) {
     const modEvent = await res.json();
-    myEvents.eventList.value = myEvents.eventList.value.map((event) =>
+    myEvents.eventList = myEvents.eventList.map((event) =>
       event.id === modEvent.id
         ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
         : event
@@ -75,10 +76,10 @@ const removeEvent = async (deleteId) => {
     }
   );
   if (res.status === 200) {
-    myEvents.eventList.value = myEvents.eventList.value.filter((event) => event.id !== deleteId);
+    myEvents.eventList = myEvents.eventList.filter((event) => event.id !== deleteId);
     console.log("deleted successfully");
-    if (myEvents.value.length <= 8) {
-      myEvents.getEvents();
+    if (myEvents.eventList.length%9 == 8) {
+      getEvents();
     }
 
   } else console.log("error, cannot delete data");
@@ -99,7 +100,7 @@ window.onscroll = () => {
     console.log("bottomOfWindow");
     //do tood
     myEvents.pageIncrement();
-    myEvents.getEvents();
+    getEvents();
   }
   console.log("scroll");
   console.log("scroll: " + document.documentElement.scrollTop + window.innerHeight);

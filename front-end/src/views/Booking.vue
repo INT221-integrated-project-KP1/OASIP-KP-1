@@ -15,11 +15,33 @@ const getEvents = async () => {
       // eventToAdd อันที่โหลดเพิ่ม
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
-      eventsToAdd.content.forEach((e) => {
+      eventsToAdd.forEach((e) => {
         if (e.id != myEvents.eventList.id) {
-          myEvents.eventList.push(e); 
+          myEvents.eventList.push(e);
         }
       });
+    } else {
+      console.log("error, cannot get data");
+    }
+  } catch (err) {
+    console.log("ERROR: " + err);
+  }
+};
+
+// GET
+const getEventsAllPageThatLoaded = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${(myEvents.pageSize)*(myEvents.page+1)}`
+    );
+    if (res.status === 200) {
+      const eventsToAdd = await res.json();
+      // events << eventToAdd
+      // eventToAdd อันที่โหลดเพิ่ม
+      // events ของที่แสดงอยู่
+      // เอาอันที่โหลดเพิ่มมาใส่
+      //ตัสแก้
+      myEvents.update(eventsToAdd.content);
     } else {
       console.log("error, cannot get data");
     }
@@ -59,9 +81,9 @@ function validateOverlab(categoryId, startTime, duration) {
         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
       }
     }
-    console.log('return:' + bool.value);
-    return bool.value;
   })
+  console.log('return:' + bool.value);
+  return bool.value;
 }
 
 const categorys = ref([]);
@@ -86,21 +108,27 @@ onBeforeMount(async () => {
   await getEventCategory();
 });
 
-const newEvent = ref({name: '',notes: '', email: '', eventCategory: { id: "", duration: "" } });
+const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
 
+
+//ระเบิด 01
 function checkProperties(obj) {
   //check value of object is not null
   for (let key in obj) {
-    if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
-      if (typeof obj[key] == "object") {
-        console.log("object");
-        if (checkProperties(obj[key]) == false) {
-          return false;
+    if (key !== "notes") {
+      if (obj[key] !== null && obj[key] !== "" && obj[key] !== undefined) {
+        if (typeof obj[key] == "object") {
+          console.log("object1");
+          if (!(checkProperties(obj[key]))) {
+            console.log("object2");
+            return false;
+          }
         }
+      } else {
+        return false;
       }
-    } else {
-      return false;
     }
+    return true;
   }
   return true;
 }
@@ -117,17 +145,30 @@ const validateEventName = computed(() => {
   return true;
 })
 
-const validateEventEmail = computed(() =>{
-  if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-    //valid email
-    return true;
-  }
-  //invalid email
-  return false;
+const validateEventEmail = computed(() => {
+  console.log(newEvent.value.email)
+return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+
+
+  // if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+  //   //valid email
+  //   return true;
+  // }
+  // //invalid email
+  // return false;
 })
 
-function validateEventNotes(notes) {
-  if (notes.length > 500) {
+const validateEventNotes = () => {
+  // let note
+  // console.log(notes)
+  // if (notes == undefined) {
+  //   note = ""
+  // } else note = notes
+  // console.log("dd"+note)
+
+  //undefine ไม่มี length
+  console.log("check notes")
+  if (newEvent.value.notes.length > 500) {
     console.log('notes false');
 
     return false;
@@ -135,7 +176,7 @@ function validateEventNotes(notes) {
   return true;
 }
 
-const validateFutureDate = computed(()=>{
+const validateFutureDate = computed(() => {
   let nowDate = new Date().getTime(); //time in millisecond
   let eventDate = new Date(newEvent.value.startTime).getTime();
   console.log('in Date')
@@ -169,7 +210,7 @@ const createNewEvent = async (event) => {
 
     if (res.status === 201) {
       console.log("added sucessfully");
-      newEvent.value = { name: '', eventCategory: { id: "", duration: "" } };
+      newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
       statusError.value = 1;
     } else {
       error.value = await res.text()
@@ -178,11 +219,12 @@ const createNewEvent = async (event) => {
       statusError.value = 2;
     }
   } catch (err) {
-    error.value = await res.text()
-    console.log(await res.text())
+    // error.value = await res.text()
+    // console.log(await res.text())
     console.log(err);
     statusError.value = 2;
   }
+  getEventsAllPageThatLoaded();
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
 };
@@ -199,7 +241,16 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
+const check = () => {
+  console.log(checkProperties(newEvent.value) + "1")
+  console.log(validateEventEmail.value + "2")
+  console.log(validateEventName.value + "3")
+  console.log(validateEventNotes() + "4")
+  console.log(validateFutureDate.value + "5")
+  console.log(validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
+  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && validateEventNotes() && validateFutureDate.value && validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
 
+}
 </script>
 
 <template>
@@ -256,42 +307,39 @@ const errorInsert = () => {
                 <input maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newEvent.name" /><br><span>{{newEvent.name.length}}/100</span>
+                " placeholder="Enter your name" v-model="newEvent.name" /><br><span>{{ newEvent.name.length
+}}/100</span>
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail" style="color: red;">*Invalid Email</span>
+                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail"
+                    style="color: red;">*Invalid Email</span>
                 </label>
-                <input
-                  :class="validateEventEmail ?
+                <input :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                "
-                  placeholder="mail@gmail.com" v-model="newEvent.email" />
+                " placeholder="mail@gmail.com" v-model="newEvent.email" />
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Notes :
                 </label>
-                <textarea maxlength="500"
-                  :class="validateEventNotes(newEvent.notes) ?
+                <textarea maxlength="500" :class="validateEventNotes() ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                "
-                  placeholder="Enter your note" v-model="newEvent.notes"
-                  @input="validateEventNotes(newEvent.notes)"></textarea><br><span>{{newEvent.notes.length}}/500</span>
+                " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
+                <!-- มาร์คเเก้ -->
+                <br><span>{{ newEvent.notes.length
+                  }}/500</span>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Start Time:<span v-show="!validateFutureDate" style="color: red;">*Future Time Only</span>
                 </label>
-                <input input type="datetime-local"
-                  :class="validateFutureDate ?
+                <input input type="datetime-local" :class="validateFutureDate ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                "
-                  v-model="newEvent.startTime"
-                  />
+                " v-model="newEvent.startTime" />
               </div>
 
               <div class="space-y-2">
@@ -319,10 +367,9 @@ const errorInsert = () => {
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="
-                    checkProperties(newEvent) && validateEventEmail && validateEventName && validateEventNotes(newEvent.notes) && validateFutureDate && validateOverlab(newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)
-                      ? createNewEvent(newEvent)
-                      : errorInsert()">
+                  @click="check()
+                  ? createNewEvent(newEvent)
+                  : errorInsert()">
                   Add New Event
                 </button>
               </div>
