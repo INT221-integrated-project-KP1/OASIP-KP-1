@@ -15,6 +15,7 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +43,36 @@ public class EventService {
     }
 
     public List<SimpleEventDTO> getAllEvent(){
-
         return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
+    }
+
+
+    public List<SimpleEventDTO> getAllEventInPast(){
+        List<Event> eventList = repository.findAll(Sort.by("eventStartTime").descending());
+        List<Event> eventPast = repository.findAll(Sort.by("eventStartTime").descending());
+        long nowTime = Instant.now().toEpochMilli();
+        for(int i = 0; i < eventList.size(); i++){
+            long eventTime = eventList.get(i).getEventStartTime().toEpochMilli(); //eventStartTime
+            if(nowTime < eventTime){
+                eventPast.remove(eventList.get(i));
+            }
+        }
+        return listMapper.mapList(eventPast, SimpleEventDTO.class, modelMapper);
+    }
+
+
+    public List<SimpleEventDTO> getAllEventInFuture(){
+        List<Event> eventList = repository.findAll(Sort.by("eventStartTime").descending());
+        List<Event> eventFuture = repository.findAll(Sort.by("eventStartTime").descending());
+        long nowTime = Instant.now().toEpochMilli();
+        for(int i = 0; i < eventList.size(); i++){
+            long eventTime = eventList.get(i).getEventStartTime().toEpochMilli(); //eventStartTime
+            if(nowTime > eventTime){
+                //past
+                eventFuture.remove(eventList.get(i));
+            }
+        }
+        return listMapper.mapList(eventFuture, SimpleEventDTO.class, modelMapper);
     }
 
     public EventDetailsBaseDTO getSimpleEventById(Integer id) {
@@ -122,7 +151,7 @@ public class EventService {
     public boolean checkTimeFuture(long eventStartTime){
         Date date = new Date();
         long timeMilli = date.getTime();
-        if(eventStartTime+60*1000 >= timeMilli) {
+        if(eventStartTime+60*1000 > timeMilli) {
 
             return true;
         }
@@ -176,21 +205,7 @@ public class EventService {
         }
     }
 
-    public boolean checkEventDuration(int duration){
-        if(duration >=1 && duration <= 480){
-            System.out.println("invalid Duration");
-            return true;
-        }
-        return false;
-    }
 
-    public boolean checkEventCategoryName(String eventCategoryName){
-        if(eventCategoryRepository.findByEventCategoryName(eventCategoryName) == null){
-            System.out.println("Duplicate EventCategoryName");
-            return false;
-        }
-        return true;
-    }
 
 //VALIDATE-INPUT-LENGTH
     public boolean checkCountName(String Name){
