@@ -10,10 +10,10 @@ export const events = defineStore('eventListState',() => {
 
     const pageIncrement = () => {page.value++}
 
-
+    const pageSizeIncrement = () => {pageSize.value+=9}
     
     console.log(eventList+"eventList");
-    return { eventList, update, pageIncrement, page, pageSize}
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize}
 })
 
 if (import.meta.hot) {

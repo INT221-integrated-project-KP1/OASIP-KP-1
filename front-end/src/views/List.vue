@@ -5,7 +5,6 @@ import {events} from "../stores/eventData.js"
 
 const myEvents = events()
 
-// const events = ref([]);
 // GET
 const getEvents = async () => {
   try {
@@ -19,11 +18,14 @@ const getEvents = async () => {
       // eventToAdd อันที่โหลดเพิ่ม
       // events ของที่แสดงอยู่
       // เอาอันที่โหลดเพิ่มมาใส่
-      eventsToAdd.content.forEach((e) => {
-        if (e.id != myEvents.eventList.id) {
-          myEvents.eventList.push(e); 
-        }
-      });
+      //ตัสแก้
+      myEvents.update(eventsToAdd.content);
+      //ตัสไม่เอา
+      // eventsToAdd.content.forEach((e) => {
+      //   if (e.id != myEvents.eventList.id) {
+      //     myEvents.eventList.push(e); 
+      //   }
+      // });
     } else {
       console.log("error, cannot get data");
     }
@@ -31,12 +33,11 @@ const getEvents = async () => {
     console.log("ERROR: " + err);
   }
 };
-
-onBeforeMount(async () => {
+onBeforeMount(async ()=>{
   console.log(myEvents.pageSize)
   await getEvents();
-});
-
+}
+)
 //PUT
 const updateEvent = async (startTime, notes, id) => {
   console.log("startTime: " + startTime)
@@ -98,7 +99,7 @@ window.onscroll = () => {
     //bottomOfWindow
     console.log("bottomOfWindow");
     //do tood
-    myEvents.pageIncrement();
+    myEvents.pageSizeIncrement();
     getEvents();
   }
   console.log("scroll");
