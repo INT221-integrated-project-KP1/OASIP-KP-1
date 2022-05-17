@@ -21,7 +21,7 @@ services:
       - ~/datadir:/var/lib/mysql
       - ./db/script:/docker-entrypoint-initdb.d
     ports:
-      - "3360:3306"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
     restart: on-failure
