@@ -1,5 +1,9 @@
 <script setup>
 
+let red = "color:red;"
+let gay = "color:gay;"
+
+let classss = "test"
 </script>
  
 <template>
@@ -26,7 +30,11 @@
                     </div>
                 </div>
                 
-            </div>
+
+                <div v-on:click="alert('gay')">asdasdddadadd</div>
+                
+                
+            </div> 
         </div>
     </div>
 

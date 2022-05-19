@@ -26,11 +26,12 @@ public class EventCategoryController {
 
     @GetMapping("")
     public List<EventCategory> getEventCategory(){
-        return EventCategoryRepository.findAll();
+            return EventCategoryRepository.findAll();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@RequestBody EventCategory updateEventCategory, @PathVariable int id) {
         return eventCategoryService.updateEventCategory(updateEventCategory,id);
     }
+
 }

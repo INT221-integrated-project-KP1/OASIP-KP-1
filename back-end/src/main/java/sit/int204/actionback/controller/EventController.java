@@ -16,6 +16,15 @@ import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.EventUpdateDTO;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
+import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.repo.EventCategoryRepository;
+import sit.int204.actionback.repo.EventRepository;
+import sit.int204.actionback.service.EventService;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import sit.int204.actionback.exception.ApiTestException;
 import sit.int204.actionback.service.EventService;
 
@@ -36,6 +45,8 @@ public class EventController {
     private EventService eventService;
 
     @Autowired
+    private EventRepository eventRepository;
+
     private ApiTestException apiTestException;
     @GetMapping("")
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
@@ -48,19 +59,19 @@ public class EventController {
         return eventService.getAllEvent();
     }
 
-    @GetMapping("/all/past")
-    public List<SimpleEventDTO> getAllEventInPast(){
-        return eventService.getAllEventInPast();
-    }
-
-    @GetMapping("/all/future")
-    public List<SimpleEventDTO> getAllEventInFuture(){
-        return eventService.getAllEventInFuture();
-    }
-
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
+    }
+
+    @GetMapping("/filter")
+    public List<SimpleEventDTO> getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
+                                                         @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
+                                                         @RequestParam(defaultValue = "") String date,
+                                                         @RequestParam(defaultValue = "0") int offsetMin,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "4") int pageSize){
+        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
     @PostMapping("")
