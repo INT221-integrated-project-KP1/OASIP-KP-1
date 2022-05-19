@@ -11,19 +11,22 @@ const filterList = ref({
 });
 
 defineEmits(['Fillter'])
-
-
+//2022-05-24
+//2022-05-24T07:00:00Z
+//{{new Date(filterList.date)}} 
+//2022-05-24T00:00:00Z
 </script>
  
 <template>
-
+    {{filterList.date}}
+    {{new Date(filterList.date)}}
+    <br>{{new Date(filterList.date).getTimezoneOffset()}}
     <div class="card bg-white p-2 m-5">
 
         <div class="form-control ">
             <div class="flex justify-center">
-                <input type="text" placeholder="Search…" class="input input-bordered" />
                 <input type="date" class="input input-bordered" v-model="filterList.date"/>
-                {{new Date(filterList.date)}}
+                
                 <div class="px-5">
                     <select class="select select-bordered ">
                         <option disabled selected>Pick category</option>

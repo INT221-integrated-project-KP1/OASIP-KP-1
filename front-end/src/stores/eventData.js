@@ -6,7 +6,7 @@ export const events = defineStore('eventListState',() => {
     const pageSize = ref(9); //default 4
 
     //เอาค่าที่ fetch ส่งมาให้ updateEvent
-    const update = (updateEvent) => { eventList.value = updateEvent }
+    const update = (updateEvents) => { eventList.value = updateEvents }
     const pageIncrement = () => {page.value++}
     const pageSizeIncrement = () => {pageSize.value+=9}
 
@@ -63,10 +63,7 @@ const getEventsAllPageThatLoaded = async () => {
 
   // POST
 const createNewEvent = async (event) => {
-  const error = ref();
-  const status = ref(0);
   try {
-    console.log(event,"eventTus");
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
       method: "POST",
       headers: {
@@ -82,26 +79,21 @@ const createNewEvent = async (event) => {
         eventCategory: { id: event.eventCategory.id },
       }),
     });
-
     if (res.status === 201) {
       console.log("added sucessfully");
-      status.value = 1
+      return {error:"", status:1};
     } else {
-      error.value = await res.text()
-      console.log(await res.text(),"rrrrrrrr")
       console.log("error, cannot be added");
-      status.value = 2
-      return {error:await res.text(), status:status.value};
+      return {error:await res.text(), status:2};
     }
   } catch (err) {
     // error.value = await res.text()
     // console.log(await res.text())
-    status.value = 2
     console.log(err);
-  }
-  console.log(status.value,error.value);
-  return {error:error.value, status:status.value};
+    return {error:err, status:2};
 };
+  }
+  
 
     //REMOVE
     const removeEvent = async (deleteId) => {
