@@ -1,7 +1,10 @@
+<<<<<<< HEAD
+=======
 use mydb;
 
 set names utf8;
 
+>>>>>>> origin/testAction
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration) values 
 ('INFRA-26-11:15','INFRA-26-11:15@kmutt.ac.th',null,'2022-05-26 04:15:00',2,20);
 update eventCategory set event_duration = 30 where event_category_id=2;

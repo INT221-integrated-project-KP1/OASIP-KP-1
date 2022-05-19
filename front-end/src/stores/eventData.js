@@ -4,9 +4,15 @@ export const events = defineStore('eventListState',() => {
     const eventList = ref([])
     const page = ref(0); //page start 0
     const pageSize = ref(9); //default 4
+    const checkLoaded = ref(true); //ดูว่า fetch ครบทุกหน้ายัง
+    const filterList = ref({
+      eventCategoryId:0,
+      pastOrFutureOrAll:[],
+      date:"",
+  });
 
     //เอาค่าที่ fetch ส่งมาให้ updateEvent
-    const update = (updateEvent) => { eventList.value = updateEvent }
+    const update = (updateEvents) => { eventList.value = updateEvents }
     const pageIncrement = () => {page.value++}
     const pageSizeIncrement = () => {pageSize.value+=9}
 
@@ -20,6 +26,11 @@ export const events = defineStore('eventListState',() => {
     
     console.log(eventList.value+"eventList");
     
+    const resetFilter = () => {
+      page.value = 0;
+      eventList.value =[];
+      checkLoaded.value = true; //ทำให้กลับมารับค่า fetch ต่อ
+    }
 
 // GET
     const getEvents = async () => {
@@ -44,6 +55,57 @@ export const events = defineStore('eventListState',() => {
     }
   };
 
+  const getEventsFilteredMorePage = async () => {
+    const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
+    const offsetMin = new Date().getTimezoneOffset()
+    // const filterPastOrFutureOrAll = ref('');
+    // if(filterList.value.pastOrFutureOrAll===undefined || filterList.value.pastOrFutureOrAll.length!=1){
+    //   filterPastOrFutureOrAll.value = "all"
+    // }else{
+    //   filterPastOrFutureOrAll.value = filterList.value.pastOrFutureOrAll[0]
+    // }
+    const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `
+      );
+      if (res.status === 200) {
+        const eventsToAdd = await res.json();
+        if(eventsToAdd.length < pageSize.value){
+          checkLoaded.value = false;
+        }
+        addNewEvent(eventsToAdd)
+      } else {
+        console.log("error, cannot get data");
+      }
+    } catch (err) {
+      console.log("ERROR: " + err);
+    }
+  };
+
+
+  // GET
+  const getFilteredEvents = async () => {
+    const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
+    const offsetMin = new Date().getTimezoneOffset()
+    const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `
+      );
+      if (res.status === 200) {
+        const eventsToAdd = await res.json();
+        update(eventsToAdd);
+      } else {
+        console.log("error, cannot get data");
+      }
+    } catch (err) {
+      console.log("ERROR: " + err);
+    }
+  };
+
   // GET ALL LOAD
 const getEventsAllPageThatLoaded = async () => {
     try {
@@ -60,6 +122,40 @@ const getEventsAllPageThatLoaded = async () => {
       console.log("ERROR: " + err);
     }
   };
+
+  // POST
+const createNewEvent = async (event) => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        bookingName: event.name,
+        bookingEmail: event.email,
+        eventNotes: event.notes,
+        eventStartTime: new Date(event.startTime)
+          .toISOString()
+          .replace(".000Z", "Z"),
+        eventCategory: { id: event.eventCategory.id },
+      }),
+    });
+    if (res.status === 201) {
+      console.log("added sucessfully");
+      return {error:"", status:1};
+    } else {
+      console.log("error, cannot be added");
+      return {error:await res.text(), status:2};
+    }
+  } catch (err) {
+    // error.value = await res.text()
+    // console.log(await res.text())
+    console.log(err);
+    return {error:err, status:2};
+};
+  }
+  
 
     //REMOVE
     const removeEvent = async (deleteId) => {
@@ -173,7 +269,7 @@ const getEventsAllPageThatLoaded = async () => {
 
     getEvents();
 
-    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes}
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded }
 })
 
 
