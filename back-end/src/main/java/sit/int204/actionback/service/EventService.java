@@ -2,22 +2,30 @@ package sit.int204.actionback.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.exception.ApiTestException;
 import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import javax.naming.Binding;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +45,9 @@ public class EventService {
     private ListMapper listMapper;
     private long milliSecond;
 
+    @Autowired
+    private ApiTestException apiTestException;
+
     public EventPageDTO getEvent(int page, int pageSize) {
         return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
     }
@@ -55,31 +66,33 @@ public class EventService {
         return modelMapper.map(event, EventDetailsBaseDTO.class);
     }
 
-    public ResponseEntity create(EventDTO newEvent){
-       if(!(checkEmail(newEvent.getBookingEmail()))){
-           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("value Email error");
-       }
-       if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
-           System.out.println("ss");
-           return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
-       }
+    public ResponseEntity create(EventDTO newEvent)throws MethodArgumentNotValidException {
+//       if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
+//           System.out.println("ss");
+//           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Time Future Pls");
+//       }
 
         int setEventDuration = (eventCategoryRepository.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if(isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab Time");
+        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
+//            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
+//            bindingResult.addError(new ObjectError("kub", "overlab"));
+            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
+
         }
+
         Event e = modelMapper.map(newEvent, Event.class);
-        repository.saveAndFlush(e);
-        System.out.println("Created");
-        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+//        if (!(bindingResult.hasErrors())) {
+            repository.saveAndFlush(e);
+            System.out.println("Created");
+            return ResponseEntity.status(HttpStatus.CREATED).body(e);
+            //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
+//        }
+//        else throw new MethodArgumentNotValidException(null,bindingResult);
 
-
-        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
     }
-
     public boolean isOverLab(EventOverLabDTO event, int id){
         System.out.println("start");
         long minuteInMillisecond = 60 * 1000;
@@ -148,13 +161,13 @@ public class EventService {
                         "Does Not Exist !!!"
                 ));
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Time Future Pls");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Time Future Pls");
         }
 
         int eventDuration = event.getEventDuration();
         EventCategory eventCategory = event.getEventCategory();
         if(isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OverLab");
         }
 
         event.setEventStartTime(editEvent.getEventStartTime());
@@ -163,26 +176,26 @@ public class EventService {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    public boolean checkEmail(String email){
-        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
-        Matcher m = p.matcher(email);
-        boolean matchFound = m.matches();
-        if(matchFound) {
-            System.out.println("that is email");
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+//    public boolean checkEmail(String email){
+//        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+//        Matcher m = p.matcher(email);
+//        boolean matchFound = m.matches();
+//        if(matchFound) {
+//            System.out.println("that is email");
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+//    }
 
-    public boolean checkEventDuration(int duration){
-        if(duration >=1 && duration <= 480){
-            System.out.println("invalid Duration");
-            return true;
-        }
-        return false;
-    }
+//    public boolean checkEventDuration(int duration){
+//        if(duration >=1 && duration <= 480){
+//            System.out.println("invalid Duration");
+//            return true;
+//        }
+//        return false;
+//    }
 
     public boolean checkEventCategoryName(String eventCategoryName){
         if(eventCategoryRepository.findByEventCategoryName(eventCategoryName) == null){
@@ -193,42 +206,40 @@ public class EventService {
     }
 
 //VALIDATE-INPUT-LENGTH
-    public boolean checkCountName(String Name){
-        if(Name.length() > 100 ){
-            System.out.println("length of name more than 100");
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkFields(Event event){
-        if( event.getId() != null){
-            System.out.println("No ID for this event");
-            return false;
-        }
-        if( event.getBookingName() != null){
-            System.out.println("No BookingName for this event");
-            return false;
-        }
-        if( event.getBookingEmail() != null){
-            System.out.println("No BookingEmail for this event");
-            return false;
-        }
-        if( event.getEventStartTime() != null){
-            System.out.println("No Time for this event");
-            return false;
-        }
-        if( event.getEventCategory() != null){
-            System.out.println("No EventCategoryID for this event");
-            return false;
-        }
-        if( event.getEventDuration() != null){
-            System.out.println("No Duration for this event");
-            return false;
-        }
-        return true;
-    }
-
+//    public boolean checkCountName(String Name){
+//        if(Name.length() > 100 ){
+//            System.out.println("length of name more than 100");
+//            return false;
+//        }
+//        return true;
+//    }
+//    public boolean checkFields(Event event){
+//        if( event.getId() != null){
+//            System.out.println("No ID for this event");
+//            return false;
+//        }
+//        if( event.getBookingName() != null){
+//            System.out.println("No BookingName for this event");
+//            return false;
+//        }
+//        if( event.getBookingEmail() != null){
+//            System.out.println("No BookingEmail for this event");
+//            return false;
+//        }
+//        if( event.getEventStartTime() != null){
+//            System.out.println("No Time for this event");
+//            return false;
+//        }
+//        if( event.getEventCategory() != null){
+//            System.out.println("No EventCategoryID for this event");
+//            return false;
+//        }
+//        if( event.getEventDuration() != null){
+//            System.out.println("No Duration for this event");
+//            return false;
+//        }
+//        return true;
+//    }
 
 
 }
