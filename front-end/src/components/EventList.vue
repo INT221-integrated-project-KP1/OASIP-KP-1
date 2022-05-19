@@ -62,9 +62,11 @@ const numberFormat = function (number, width) {
 <template>
   <div class="flex justify-center">
     <div class="m-10">
+      
       <div id="HaveEvent">
+        <Fillter />
         <div v-if="myEvents.eventList.length != 0">
-          <Fillter />
+          
           <div id="ListEvent">
             <div>
               <ol class="">

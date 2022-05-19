@@ -31,7 +31,7 @@ let classss = "test"
                 </div>
                 
 
-                <div v-on:click="alert('gay')">asdasdddadadd</div>
+                
                 
                 
             </div> 

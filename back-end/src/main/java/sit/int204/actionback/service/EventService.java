@@ -88,7 +88,7 @@ public class EventService {
             //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
             //offsetMin เช่น -420 = +07:00
             Instant input = Instant.parse(date).plus(offsetMin, ChronoUnit.MINUTES);
-
+            System.out.println(input);
             long dayInMilli = 86400000;
             if(eventCategoryId != 0){
                 return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
