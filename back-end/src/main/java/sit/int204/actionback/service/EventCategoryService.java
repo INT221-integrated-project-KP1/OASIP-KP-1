@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +26,6 @@ public class EventCategoryService {
         eventCategoryRepository.saveAndFlush(updateEventCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body("Updated !!");
     }
-
 
     public boolean checkEventDuration(int duration){
         if(duration >=1 && duration <= 480){

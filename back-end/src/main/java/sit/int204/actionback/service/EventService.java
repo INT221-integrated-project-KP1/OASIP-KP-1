@@ -15,10 +15,12 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,32 +49,35 @@ public class EventService {
     }
 
 
-    public List<SimpleEventDTO> getAllEventInPast(){
-        List<Event> eventList = repository.findAll(Sort.by("eventStartTime").descending());
-        List<Event> eventPast = repository.findAll(Sort.by("eventStartTime").descending());
-        long nowTime = Instant.now().toEpochMilli();
-        for(int i = 0; i < eventList.size(); i++){
-            long eventTime = eventList.get(i).getEventStartTime().toEpochMilli(); //eventStartTime
-            if(nowTime < eventTime){
-                eventPast.remove(eventList.get(i));
+    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int page, int pageSize){
+        if(date.equals("")){
+            if(eventCategoryId == 0){
+                if(pastOrFutureOrAll.equals("future")){
+                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                } else if (pastOrFutureOrAll.equals("past")){
+                    return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                }
+                return listMapper.mapList(repository.findAllByIdNot(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            }
+
+            if(pastOrFutureOrAll.equals("future")){
+                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            } else if (pastOrFutureOrAll.equals("past")){
+                return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            }
+            return listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+        } else {
+            //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
+            Instant input = Instant.parse(date);
+            long dayInMilli = 86400000;
+            if(eventCategoryId != 0){
+                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            } else {
+                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
             }
         }
-        return listMapper.mapList(eventPast, SimpleEventDTO.class, modelMapper);
-    }
 
 
-    public List<SimpleEventDTO> getAllEventInFuture(){
-        List<Event> eventList = repository.findAll(Sort.by("eventStartTime").descending());
-        List<Event> eventFuture = repository.findAll(Sort.by("eventStartTime").descending());
-        long nowTime = Instant.now().toEpochMilli();
-        for(int i = 0; i < eventList.size(); i++){
-            long eventTime = eventList.get(i).getEventStartTime().toEpochMilli(); //eventStartTime
-            if(nowTime > eventTime){
-                //past
-                eventFuture.remove(eventList.get(i));
-            }
-        }
-        return listMapper.mapList(eventFuture, SimpleEventDTO.class, modelMapper);
     }
 
     public EventDetailsBaseDTO getSimpleEventById(Integer id) {
@@ -116,7 +121,7 @@ public class EventService {
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
         System.out.println(categoryId);;
-        List<Event> eventList = repository.findAllByEventCategoryId(categoryId);
+        List<Event> eventList = repository.findAllByEventCategoryId(categoryId, PageRequest.of(0, Integer.MAX_VALUE));
         for (int i = 0; i < eventList.size(); i++) {
                 if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
                     long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
@@ -149,9 +154,7 @@ public class EventService {
 
 
     public boolean checkTimeFuture(long eventStartTime){
-        Date date = new Date();
-        long timeMilli = date.getTime();
-        if(eventStartTime+60*1000 > timeMilli) {
+        if(eventStartTime+60*1000 > Instant.now().toEpochMilli()) {
 
             return true;
         }
