@@ -119,12 +119,11 @@ public class EventService {
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
-//            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
-//            bindingResult.addError(new ObjectError("kub", "overlab"));
-            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
-
-        }
+//        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
+////            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
+////            bindingResult.addError(new ObjectError("kub", "overlab"));
+//            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
+//        }
 
         Event e = modelMapper.map(newEvent, Event.class);
 //        if (!(bindingResult.hasErrors())) {
