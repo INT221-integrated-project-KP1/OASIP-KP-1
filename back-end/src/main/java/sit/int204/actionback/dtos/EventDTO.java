@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int204.actionback.Validation.Overlab;
 import sit.int204.actionback.entities.EventCategory;
 
 import java.time.Instant;
@@ -15,6 +16,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Overlab
 public class EventDTO {
     @NotNull
     @Size(min=1,max=100)

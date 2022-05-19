@@ -24,15 +24,12 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.utils.ListMapper;
 
-<<<<<<< HEAD
 import javax.naming.Binding;
 import java.util.*;
-=======
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
->>>>>>> 38f128d852572da19c30e59dbafae693ba4bdf2c
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,12 +108,11 @@ public class EventService {
         System.out.println(setEventDuration);
 
         newEvent.setEventDuration(setEventDuration);
-        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
-//            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
-//            bindingResult.addError(new ObjectError("kub", "overlab"));
-            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
-
-        }
+//        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
+////            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
+////            bindingResult.addError(new ObjectError("kub", "overlab"));
+//            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
+//        }
 
         Event e = modelMapper.map(newEvent, Event.class);
 //        if (!(bindingResult.hasErrors())) {
