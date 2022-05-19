@@ -15,5 +15,4 @@ public class EventCategoryDTO {
     private String eventCategoryName;
     private String eventCategoryDescription;
     private Integer eventDuration;
-
 }

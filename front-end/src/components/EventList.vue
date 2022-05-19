@@ -13,33 +13,29 @@ const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
-// const props = defineProps({
-//   events: {
-//     default: [],
-//     type: Array,
-//   },
-// });
-
-// const myEvents = computed(() => {
-//   let eventsToAdd = []
-//   props.events.forEach((ele) => {
-//     eventsToAdd.push({
-//       "id": ele.id,
-//       "bookingName": ele.bookingName,
-//       "bookingEmail": ele.bookingEmail,
-//       "eventCategory": {
-//         "eventCategoryName": ele.eventCategory.eventCategoryName,
-//         "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
-//       },
-//       "eventStartTime": ele.eventStartTime,
-//       "eventDuration": ele.eventDuration,
-//       "eventNotes": ele.eventNotes
-//     })
-//   })
-//   return eventsToAdd;
-// })
-
-
+  //GET BY ID
+  const getEventById = async (id) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
+      console.log(res.status);
+      if (res.status === 200) {
+        selectedEvent.value = await res.json();
+        editNotes.value = selectedEvent.value.eventNotes
+        if(editNotes.value == null){
+          editNotes.value = "";
+        }
+        let edit = new Date(selectedEvent.value.eventStartTime);
+        editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
+        console.log(new Date().getDate());
+        console.log(edit.getDate());
+        console.log(editStartTime.value);
+      } else {
+        console.log("error, cannot get data");
+      }
+    } catch (err) {
+      console.log("Error: ", err.message);
+    }
+  };
 
 
 defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
@@ -59,23 +55,7 @@ const numberFormat = function (number, width) {
   return new Array(+width + 1 - (number + '').length).join('0') + number;
 }
 
-const getEventById = async (id) => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
-    console.log(res.status);
-    if (res.status === 200) {
-      selectedEvent.value = await res.json();
-      editNotes.value = selectedEvent.value.eventNotes
-      
-      let edit = new Date(selectedEvent.value.eventStartTime);
-      editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
-};
+
 
 </script>
 
@@ -127,11 +107,12 @@ const getEventById = async (id) => {
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local"
-                      v-model="editStartTime"></p>
+                      v-model="editStartTime"
+                      ></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
                     cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
-                    <!-- <span>{{editNotes.length}}/500</span> -->
+                    <span>{{500-editNotes.length}}</span>
                   <div class="modal-action">
 
                     <label

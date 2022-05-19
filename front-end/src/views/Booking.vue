@@ -1,112 +1,14 @@
 <script setup>
 import { ref, onBeforeMount, computed, reactive } from "vue";
 import { events } from "../stores/eventData.js"
+import { categorys } from "../stores/categoryData.js"
 
 const myEvents = events()
+const myCategorys = categorys()
 
-const getEvents = async () => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled/all`
-    );
-    if (res.status === 200) {
-      const eventsToAdd = await res.json();
-      // events << eventToAdd
-      // eventToAdd อันที่โหลดเพิ่ม
-      // events ของที่แสดงอยู่
-      // เอาอันที่โหลดเพิ่มมาใส่
-      eventsToAdd.forEach((e) => {
-        if (e.id != myEvents.eventList.id) {
-          myEvents.eventList.push(e);
-        }
-      });
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log("ERROR: " + err);
-  }
-};
-
-// GET
-const getEventsAllPageThatLoaded = async () => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${(myEvents.pageSize)*(myEvents.page+1)}`
-    );
-    if (res.status === 200) {
-      const eventsToAdd = await res.json();
-      // events << eventToAdd
-      // eventToAdd อันที่โหลดเพิ่ม
-      // events ของที่แสดงอยู่
-      // เอาอันที่โหลดเพิ่มมาใส่
-      //ตัสแก้
-      myEvents.update(eventsToAdd.content);
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log("ERROR: " + err);
-  }
-};
-
-function validateOverlab(categoryId, startTime, duration) {
-  getEvents();
-  let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
-  let newDurationMilli = duration * 60 * 1000;
-  let bool = ref(true);
-  myEvents.eventList.forEach((value) => {
-    if (categoryId == value.eventCategory.id) {
-      let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
-      let durationMilli = value.eventDuration * 60 * 1000;
-
-      if (newMilli + newDurationMilli + 60000 > milli && newMilli + newDurationMilli - 60000 < milli + durationMilli) {
-        //overlab 1+4
-        console.log('Overlab 1+4');
-        bool.value = false;
-        return false; //overlab
-      }
-      else if (newMilli + 60000 > milli && newMilli - 60000 < milli + durationMilli) {
-        //System.out.println("Overlab2+4");
-        console.log('Overlab2+4');
-        bool.value = false;
-        return false;
-        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-      }
-      else if (newMilli - 60000 < milli && newMilli + newDurationMilli + 60000 > milli + durationMilli) {
-        //System.out.println("Overlab3");
-        console.log('Overlab3');
-        bool.value = false;
-        return false;
-        //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-      }
-    }
-  })
-  console.log('return:' + bool.value);
-  return bool.value;
-}
-
-const categorys = ref([]);
 const error = ref();
-const getEventCategory = async () => {
-  try {
-    console.log(import.meta.env.URL);
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/EventCategory`);
-    console.log(res.status);
-    if (res.status === 200) {
-      categorys.value = await res.json();
-      console.log(categorys.value);
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
 
-onBeforeMount(async () => {
-  await getEventCategory();
-});
+
 
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
 
@@ -158,36 +60,6 @@ return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@
   // return false;
 })
 
-const validateEventNotes = () => {
-  // let note
-  // console.log(notes)
-  // if (notes == undefined) {
-  //   note = ""
-  // } else note = notes
-  // console.log("dd"+note)
-
-  //undefine ไม่มี length
-  console.log("check notes")
-  if (newEvent.value.notes.length > 500) {
-    console.log('notes false');
-
-    return false;
-  }
-  return true;
-}
-
-const validateFutureDate = computed(() => {
-  let nowDate = new Date().getTime(); //time in millisecond
-  let eventDate = new Date(newEvent.value.startTime).getTime();
-  console.log('in Date')
-  if (eventDate < nowDate) {
-    console.log('future false');
-    return false;
-  }
-  return true;
-});
-
-
 // POST
 const createNewEvent = async (event) => {
   try {
@@ -224,7 +96,7 @@ const createNewEvent = async (event) => {
     console.log(err);
     statusError.value = 2;
   }
-  getEventsAllPageThatLoaded();
+  myEvents.getEventsAllPageThatLoaded();
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
 };
@@ -245,10 +117,10 @@ const check = () => {
   console.log(checkProperties(newEvent.value) + "1")
   console.log(validateEventEmail.value + "2")
   console.log(validateEventName.value + "3")
-  console.log(validateEventNotes() + "4")
-  console.log(validateFutureDate.value + "5")
-  console.log(validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
-  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && validateEventNotes() && validateFutureDate.value && validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+  console.log(myEvents.validateEventNotes(newEvent.value) + "4")
+  console.log(myEvents.validateFutureDate(newEvent.value) + "5")
+  console.log(myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
+  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && myEvents.validateEventNotes(newEvent.value) && myEvents.validateFutureDate(newEvent.value) && myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
 
 }
 </script>
@@ -324,7 +196,7 @@ const check = () => {
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Notes :
                 </label>
-                <textarea maxlength="500" :class="validateEventNotes() ?
+                <textarea maxlength="500" :class="myEvents.validateEventNotes(newEvent) ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
@@ -334,21 +206,21 @@ const check = () => {
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:<span v-show="!validateFutureDate" style="color: red;">*Future Time Only</span>
+                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent)" style="color: red;">*Future Time Only</span>
                 </label>
-                <input input type="datetime-local" :class="validateFutureDate ?
+                <input input type="datetime-local" :class="myEvents.validateFutureDate(newEvent) ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " v-model="newEvent.startTime" />
               </div>
-
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Event Category:
                 </label>
                 <select v-model="newEvent.eventCategory"
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
-                  <option v-for="(category, index) in categorys" :key="index"
+                  
+                  <option v-for="(category, index) in myCategorys.categoryList" :key="index"
                     :value="{ id: category.id, duration: category.eventDuration }">
                     {{ category.eventCategoryName }}
                   </option>
