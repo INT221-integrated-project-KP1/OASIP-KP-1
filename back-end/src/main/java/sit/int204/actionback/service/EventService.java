@@ -26,6 +26,9 @@ import sit.int204.actionback.utils.ListMapper;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.naming.Binding;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -64,7 +67,7 @@ public class EventService {
     }
 
 
-    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int page, int pageSize){
+    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
             if(eventCategoryId == 0){
                 if(pastOrFutureOrAll.equals("future")){
@@ -83,7 +86,9 @@ public class EventService {
             return listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
         } else {
             //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
-            Instant input = Instant.parse(date);
+            //offsetMin เช่น -420 = +07:00
+            Instant input = Instant.parse(date).plus(offsetMin, ChronoUnit.MINUTES);
+
             long dayInMilli = 86400000;
             if(eventCategoryId != 0){
                 return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
