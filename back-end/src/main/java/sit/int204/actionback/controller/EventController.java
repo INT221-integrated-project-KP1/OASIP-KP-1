@@ -48,6 +48,16 @@ public class EventController {
         return eventService.getAllEvent();
     }
 
+    @GetMapping("/all/past")
+    public List<SimpleEventDTO> getAllEventInPast(){
+        return eventService.getAllEventInPast();
+    }
+
+    @GetMapping("/all/future")
+    public List<SimpleEventDTO> getAllEventInFuture(){
+        return eventService.getAllEventInFuture();
+    }
+
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
