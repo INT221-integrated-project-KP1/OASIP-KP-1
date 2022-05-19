@@ -95,7 +95,7 @@ public class EventService {
     }
     public boolean isOverLab(EventOverLabDTO event, int id){
         System.out.println("start");
-        long minuteInMillisecond = 60 * 1000;
+        long minuteInMillisecond = 0;
         long newMillisecond = event.getEventStartTime().toEpochMilli();
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
