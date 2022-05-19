@@ -3,6 +3,12 @@ import { ref, computed, onBeforeMount } from "vue";
 import { categorys } from "../stores/categoryData"
 
 const myCategorys = categorys()
+const filterList = ref({
+    eventCategoryId:0,
+    pastOrFutureOrAll:"all",
+    date:"",
+
+});
 
 defineEmits(['Fillter'])
 
@@ -16,7 +22,8 @@ defineEmits(['Fillter'])
         <div class="form-control ">
             <div class="flex justify-center">
                 <input type="text" placeholder="Search…" class="input input-bordered" />
-
+                <input type="date" class="input input-bordered" v-model="filterList.date"/>
+                {{new Date(filterList.date)}}
                 <div class="px-5">
                     <select class="select select-bordered ">
                         <option disabled selected>Pick category</option>

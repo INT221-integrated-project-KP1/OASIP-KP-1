@@ -61,6 +61,48 @@ const getEventsAllPageThatLoaded = async () => {
     }
   };
 
+  // POST
+const createNewEvent = async (event) => {
+  const error = ref();
+  const status = ref(0);
+  try {
+    console.log(event,"eventTus");
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        bookingName: event.name,
+        bookingEmail: event.email,
+        eventNotes: event.notes,
+        eventStartTime: new Date(event.startTime)
+          .toISOString()
+          .replace(".000Z", "Z"),
+        eventCategory: { id: event.eventCategory.id },
+      }),
+    });
+
+    if (res.status === 201) {
+      console.log("added sucessfully");
+      status.value = 1
+    } else {
+      error.value = await res.text()
+      console.log(await res.text(),"rrrrrrrr")
+      console.log("error, cannot be added");
+      status.value = 2
+      return {error:await res.text(), status:status.value};
+    }
+  } catch (err) {
+    // error.value = await res.text()
+    // console.log(await res.text())
+    status.value = 2
+    console.log(err);
+  }
+  console.log(status.value,error.value);
+  return {error:error.value, status:status.value};
+};
+
     //REMOVE
     const removeEvent = async (deleteId) => {
     console.log(deleteId);
@@ -173,7 +215,7 @@ const getEventsAllPageThatLoaded = async () => {
 
     getEvents();
 
-    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes}
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent}
 })
 
 

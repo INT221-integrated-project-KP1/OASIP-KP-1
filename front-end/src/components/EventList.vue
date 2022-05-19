@@ -64,7 +64,7 @@ const numberFormat = function (number, width) {
     <div class="m-10">
       <div id="HaveEvent">
         <div v-if="myEvents.eventList.length != 0">
-          <!-- <Fillter /> -->
+          <Fillter />
           <div id="ListEvent">
             <div>
               <ol class="">
