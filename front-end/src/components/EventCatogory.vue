@@ -18,7 +18,15 @@ const selectedCategory = ref({ id: '', eventCategoryName: '', eventCategorDurati
 
 //GET BY ID
 const getEventCategoryById = ((id) => {
-    selectedCategory.value = myCategorys.categoryList.find((ele) => ele.id == id);
+    //selectedCategory.value = myCategorys.categoryList.find((ele) => ele.id == id);
+    myCategorys.categoryList.foreach((ele) => {
+        if(ele.id == id){
+            selectedCategory.id = ele.id
+            selectedCategory.eventCategoryName = ele.eventCategoryName
+            selectedCategory.eventCategorDuration = ele.eventCategorDuration
+            selectedCategory.eventCategoryDescription = ele.eventCategoryDescription
+        }
+    });
 })
 
 </script>
