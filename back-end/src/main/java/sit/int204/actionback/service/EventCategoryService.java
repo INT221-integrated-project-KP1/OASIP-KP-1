@@ -16,7 +16,7 @@ public class EventCategoryService {
     public EventCategoryRepository eventCategoryRepository;
 
     public ResponseEntity updateEventCategory(EventCategory updateEventCategory , int id) {
-        if(checkEventDuration(updateEventCategory.getEventDuration())){
+        if(!checkEventDuration(updateEventCategory.getEventDuration())){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid Duration");
         }
 
