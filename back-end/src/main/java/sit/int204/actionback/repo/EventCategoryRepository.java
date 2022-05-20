@@ -5,7 +5,9 @@ import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.service.EventCategoryService;
 
 public interface EventCategoryRepository extends JpaRepository<EventCategory, Integer> {
-    EventCategory findByEventCategoryName(String name);
+    //EventCategory findByEventCategoryName(String name);
+    EventCategory findByEventCategoryNameIgnoreCase(String name);
+
     String findEventCategoryNameById(Integer id);
 
     EventCategory findEventCategoryById(Integer id);

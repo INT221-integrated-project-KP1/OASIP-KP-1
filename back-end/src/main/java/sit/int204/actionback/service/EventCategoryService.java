@@ -8,6 +8,7 @@ import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -36,11 +37,15 @@ public class EventCategoryService {
     }
 
     public boolean checkEventCategoryName(String eventCategoryName, int id){
-        if(eventCategoryRepository.findEventCategoryNameById(id) == eventCategoryName){
+        if(eventCategoryRepository.findEventCategoryNameById(id).toLowerCase() == eventCategoryName.toLowerCase()){
             //ซ้ำกับชื่อเดิม = ไม่เปลี่ยนชื่อ
+            //หรืออาจจะเปลียนพิิมพ์เล็กใหญ่
             return true;
         }
-        if(eventCategoryRepository.findByEventCategoryName(eventCategoryName) == null){
+
+        //TusKungZ
+        //eventCategoryName = TUSKUNGZ
+        if(eventCategoryRepository.findByEventCategoryNameIgnoreCase(eventCategoryName) == null){
             //ไม่ซ้ำ
             return true;
         }
