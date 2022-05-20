@@ -38,7 +38,7 @@ const goBooking = () => {
   };
 
 
-defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
+defineEmits(["deleteEvent", "updateEvent"]);
 
 //let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });

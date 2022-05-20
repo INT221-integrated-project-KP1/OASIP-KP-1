@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("api/eventcategory")
 @CrossOrigin(origins = "*")
 public class EventCategoryController {
+    @Autowired
     private EventCategoryService eventCategoryService;
 
     @GetMapping("/hello2")
@@ -30,7 +31,7 @@ public class EventCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@RequestBody EventCategory updateEventCategory, @PathVariable int id) {
+    public ResponseEntity update(@RequestBody EventCategory updateEventCategory, @PathVariable Integer id) {
         return eventCategoryService.updateEventCategory(updateEventCategory,id);
     }
 

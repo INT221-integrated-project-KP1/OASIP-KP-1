@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, onUnmounted,computed, } from 'vue'
+import { ref, onMounted, onBeforeMount, onUnmounted, computed, } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import { events } from "./stores/eventData.js"
@@ -32,10 +32,13 @@ const goWelcome = () => {
               <router-link :to="{ name: 'Home' }">Home </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'List' }"> List All </router-link>
+              <router-link :to="{ name: 'List' }"> List Event All </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'Booking' }"> Add event </router-link>
+            </li>
+            <li>
+              <router-link :to="{ name: 'ListCategory' }"> List Category </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'AboutUs' }"> About US </router-link>
@@ -58,13 +61,15 @@ const goWelcome = () => {
             <router-link :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
               Add
               event </router-link>
+               <router-link :to="{ name: 'ListCategory' }" :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">
+              List Category </router-link>
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>
           </div>
         </ul>
       </div>
       <div class="navbar-end">
-    <Clock/>
+        <Clock />
       </div>
 
     </div>
