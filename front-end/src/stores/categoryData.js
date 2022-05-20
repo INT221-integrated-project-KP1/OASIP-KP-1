@@ -35,7 +35,12 @@ export const categorys = defineStore('categoryListState',() => {
           body: JSON.stringify(objectCategory)
         })
         if (res.status === 201) {
-          //
+          const modCategory = await res.json();
+          categoryList.value = categoryList.value.map((category) =>
+          category.id === modCategory.id
+          ? { ...category, eventCategoryName: modCategory.eventCategoryName, eventDuration: modCategory.eventDuration, eventCategoryDescription:modCategory.eventCategoryDescription }
+          : category
+      )
           console.log('edited successfully')
         } else {
           console.log('error, cannot edit')

@@ -33,7 +33,7 @@ public class EventCategoryService {
         eventCategory.setEventDuration(updateEventCategory.getEventDuration());
         eventCategory.setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
         eventCategoryRepository.saveAndFlush(eventCategory);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Updated !!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory);
     }
 
     public boolean checkEventDuration(Integer duration){

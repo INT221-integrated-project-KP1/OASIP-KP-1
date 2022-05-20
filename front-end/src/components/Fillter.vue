@@ -20,12 +20,6 @@ defineEmits(['Fillter'])
 </script>
  
 <template>
-
-    {{myEvents.filterList.pastOrFutureOrAll}}
-    <br>{{myEvents.filterList.date.toString()}}
-    <br>{{new Date(myEvents.filterList.date)}}
-    <br>{{myEvents.filterList.date==""}}
-    <br>{{new Date(myEvents.filterList.date).toDateString()}}
     <div class="card bg-white p-2 m-5">
 
         <div class="form-control ">

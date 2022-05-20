@@ -14,11 +14,15 @@ const goBooking = () => {
     myRouter.push({ name: 'Booking' })
 }
 
-const selectedCategory = ref({ id: '', eventCategoryName: '', eventCategorDuration: '', eventCategoryDescription: '' });
+const selectedCategory = ref({ id: '', eventCategoryName: '', eventDuration: '', eventCategoryDescription: '' });
 
 //GET BY ID
 const getEventCategoryById = ((id) => {
-    selectedCategory.value = myCategorys.categoryList.find((ele) => ele.id == id);
+    const temp = myCategorys.categoryList.find((ele) => ele.id == id);
+    selectedCategory.value.id = temp.id
+    selectedCategory.value.eventCategoryName = temp.eventCategoryName
+    selectedCategory.value.eventDuration = temp.eventDuration
+    selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
 })
 
 </script>
