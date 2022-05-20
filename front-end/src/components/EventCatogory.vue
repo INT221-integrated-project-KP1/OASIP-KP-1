@@ -14,7 +14,6 @@ const goBooking = () => {
     myRouter.push({ name: 'Booking' })
 }
 
-<<<<<<< HEAD
 const selectedCategory = ref({ id: '', eventCategoryName: '', eventDuration: '', eventCategoryDescription: '' });
 
 //GET BY ID
@@ -24,22 +23,6 @@ const getEventCategoryById = ((id) => {
     selectedCategory.value.eventCategoryName = temp.eventCategoryName
     selectedCategory.value.eventDuration = temp.eventDuration
     selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
-=======
-const selectedCategory = ref({ id: '', eventCategoryName: '', eventCategoryDuration: '', eventCategoryDescription: '' });
-
-//GET BY ID
-const getEventCategoryById = ((id) => {
-    //selectedCategory.value = myCategorys.categoryList.find((ele) => ele.id == id);
-    myCategorys.categoryList.foreach((ele) => {
-        if(ele.id == id){
-            selectedCategory.id = ele.id
-            selectedCategory.eventCategoryName = ele.eventCategoryName
-            selectedCategory.eventCategoryDuration = ele.eventCategoryDuration
-            selectedCategory.eventCategoryDescription = ele.eventCategoryDescription
-            return;
-        }
-    });
->>>>>>> 7eaf4c132939136ec57c386261f746b6973a200a
 })
 
 </script>
