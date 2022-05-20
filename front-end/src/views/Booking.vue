@@ -8,10 +8,7 @@ const myCategorys = categorys()
 
 const error = ref();
 
-
-
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
-
 
 //ระเบิด 01
 function checkProperties(obj) {
@@ -51,55 +48,21 @@ const validateEventEmail = computed(() => {
   console.log(newEvent.value.email)
 return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 
-
-  // if (newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-  //   //valid email
-  //   return true;
-  // }
-  // //invalid email
-  // return false;
 })
 
-// POST
-const createNewEvent = async (event) => {
-  try {
-    console.log(event);
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        bookingName: event.name,
-        bookingEmail: event.email,
-        eventNotes: event.notes,
-        eventStartTime: new Date(event.startTime)
-          .toISOString()
-          .replace(".000Z", "Z"),
-        eventCategory: { id: event.eventCategory.id },
-      }),
-    });
-
-    if (res.status === 201) {
-      console.log("added sucessfully");
-      newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
-      statusError.value = 1;
-    } else {
-      error.value = await res.text()
-      console.log(await res.text())
-      console.log("error, cannot be added");
-      statusError.value = 2;
-    }
-  } catch (err) {
-    // error.value = await res.text()
-    // console.log(await res.text())
-    console.log(err);
-    statusError.value = 2;
+const createNewEvent = async ()=>{
+  const status = await myEvents.createNewEvent(newEvent.value);
+  console.log(status,'tusCheckStauts');
+  if(status.status == 1){
+    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
   }
+  statusError.value = status.status
+  error.value = status.error
   myEvents.getEventsAllPageThatLoaded();
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
-};
+  setTimeout(() => (error.value = ""), 2000);
+}
 
 const statusError = ref(0);
 function topFunction() {
