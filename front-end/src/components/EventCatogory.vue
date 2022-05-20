@@ -25,6 +25,7 @@ const getEventCategoryById = ((id) => {
             selectedCategory.eventCategoryName = ele.eventCategoryName
             selectedCategory.eventCategorDuration = ele.eventCategorDuration
             selectedCategory.eventCategoryDescription = ele.eventCategoryDescription
+            return;
         }
     });
 })
