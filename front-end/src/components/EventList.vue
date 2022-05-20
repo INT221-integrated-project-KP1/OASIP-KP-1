@@ -38,7 +38,7 @@ const goBooking = () => {
   };
 
 
-defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
+defineEmits(["deleteEvent", "updateEvent"]);
 
 //let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
@@ -70,7 +70,7 @@ const numberFormat = function (number, width) {
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid grid-cols-3 gap-2 ">
+                <div class="grid grid-cols-3 gap-2 justify-items-center">
                   <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
@@ -132,7 +132,7 @@ const numberFormat = function (number, width) {
             </div>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="grid justify-items-center">
           <div class="card w-96 glass">
             <figure><img src="../assets/gif2.gif" alt="gif2"></figure>
             <div class="card-body">

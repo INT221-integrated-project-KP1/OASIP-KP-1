@@ -153,7 +153,7 @@ const createNewEvent = async (event) => {
     // console.log(await res.text())
     console.log(err);
     return {error:err, status:2};
-};
+}
   }
   
 

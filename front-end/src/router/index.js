@@ -4,6 +4,7 @@ import Booking from '../views/Booking.vue'
 import Welcome from '../views/Welcome.vue'
 import List from '../views/List.vue'
 import AboutUs from '../views/AboutUs.vue'
+import ListCategory from '../views/ListCategory.vue'
 
 const history = createWebHistory('/kp1/')
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
         path: '/list',
         name: 'List',
         component: List
+    },
+    {
+        path: '/ListCategory',
+        name: 'ListCategory',
+        component: ListCategory
     },
     {
         path: '/aboutus',

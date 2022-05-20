@@ -76,7 +76,7 @@ public class EventController {
 
     @PostMapping("")
     public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent ) throws MethodArgumentNotValidException {
-
+        System.out.println("postmapping");
     return eventService.create(newEvent);
    }
 

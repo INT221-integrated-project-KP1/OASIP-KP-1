@@ -109,32 +109,40 @@ public class EventService {
         return modelMapper.map(event, EventDetailsBaseDTO.class);
     }
 
-    public ResponseEntity create(EventDTO newEvent)throws MethodArgumentNotValidException {
+    public ResponseEntity create(EventDTO newEvent) {
 //       if(!checkTimeFuture(newEvent.getEventStartTime().toEpochMilli())){
 //           System.out.println("ss");
 //           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Time Future Pls");
 //       }
+           System.out.println("1");
 
-        int setEventDuration = (eventCategoryRepository.findById(newEvent.getEventCategory().getId())).get().getEventDuration();
-        System.out.println(setEventDuration);
+        //Integer newEventDuration = eventCategoryRepository.findEventDurationById(newEvent.getEventCategory().getId());
+        Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
+        System.out.println("2");
 
-        newEvent.setEventDuration(setEventDuration);
 //        if (isOverLab(new EventOverLabDTO(newEvent.getEventStartTime(), newEvent.getEventCategory(), newEvent.getEventDuration()), 0)) {
 ////            bindingResult.addError(new FieldError("EventDTO", "eventStartTime", "overlab"));
 ////            bindingResult.addError(new ObjectError("kub", "overlab"));
 //            return new ResponseEntity<>("overlab" , HttpStatus.BAD_REQUEST);
 //        }
 
+
         Event e = modelMapper.map(newEvent, Event.class);
+        System.out.println("3");
+        e.setEventDuration(newEventDuration);
+        System.out.println("3");
+
 //        if (!(bindingResult.hasErrors())) {
             repository.saveAndFlush(e);
-            System.out.println("Created");
+        System.out.println("3");
+
+        System.out.println("Created");
             return ResponseEntity.status(HttpStatus.CREATED).body(e);
             //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CANT CREATE");
 //        }
 //        else throw new MethodArgumentNotValidException(null,bindingResult);
-
     }
+
     public boolean isOverLab(EventOverLabDTO event, int id){
         System.out.println("start");
         long minuteInMillisecond = 0;

@@ -22,11 +22,45 @@ export const categorys = defineStore('categoryListState',() => {
         }
     };
 
+    //UPDATEselectedCategory.eventCategoryName, selectedCategory.eventCategoryDescription, selectedCategory.eventDuration,
+    //PUT
+    const updateCategory = async (objectCategory) => {
+        console.log(objectCategory);
+        console.log(objectCategory.id);
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategory/${objectCategory.id}`, {
+          method: 'PUT',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(objectCategory)
+        })
+        if (res.status === 201) {
+          const modCategory = await res.json();
+          categoryList.value = categoryList.value.map((category) =>
+          category.id === modCategory.id
+          ? { ...category, eventCategoryName: modCategory.eventCategoryName, eventDuration: modCategory.eventDuration, eventCategoryDescription:modCategory.eventCategoryDescription }
+          : category
+      )
+          console.log('edited successfully')
+        } else {
+          console.log('error, cannot edit')
+        }
+      }
+    
+    
+  const validateEventName = (newCategory) =>{
+    return categoryList.value
+    .filter((category) => category.id!==newCategory.id)
+    .some((category)=> category.eventCategoryName.toLowerCase()===newCategory.eventCategoryName.toLowerCase())
+  }
+
+
+
     getEventCategory();
 
-    return { categoryList, page, pageSize, getEventCategory}
-})
-
+    return { categoryList, page, pageSize, getEventCategory, updateCategory, validateEventName}
+}
+)
 
 if (import.meta.hot) {
     import.meta.hot.accept(acceptHMRUpdate(categorys, import.meta.hot))

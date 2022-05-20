@@ -34,5 +34,5 @@ public class EventDTO {
 
     private EventCategory eventCategory;
 
-    private Integer eventDuration;
+    //private Integer eventDuration;
 }
