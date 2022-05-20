@@ -25,6 +25,9 @@ const getEventCategoryById = ((id) => {
     selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
 })
 
+const alertError = () =>{alert("dawd")}
+
+
 </script>
 
 <template>
@@ -40,7 +43,7 @@ const getEventCategoryById = ((id) => {
                                     <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                                         class="card w-96 bg-base-100 shadow-xl space-x-5">
                                         <div class="card-body bg-white">
-                                            <p class="card-title"> Event Category Name : {{
+                                            <p class="card-title" > Event Category Name : {{
                                                     eventCategory.eventCategoryName
                                             }} </p>
                                             <p>Event Category Description:{{ eventCategory.eventCategoryDescription }}
@@ -58,8 +61,12 @@ const getEventCategoryById = ((id) => {
                             <input type="checkbox" id="my-modal-6" class="modal-toggle " />
                             <div class="modal modal-bottom sm:modal-middle ">
                                 <div class="modal-box bg-white">
+                                    <span v-show="myCategorys.validateEventName(selectedCategory)" style="color: red;">*Name unique</span>
                                     <p class="py-2">Event Category Name : </p><input
-                                        class="border-4 border-primary"
+                                    :class="!myCategorys.validateEventName(selectedCategory) ?
+                                    ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                                     : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                                     "
                                         v-model="selectedCategory.eventCategoryName" placeholder="Nameee ..."/><br>
 
 
@@ -73,7 +80,7 @@ const getEventCategoryById = ((id) => {
                                     <label
                                         class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                                         for="my-modal-6"
-                                        @click="myCategorys.updateCategory(selectedCategory)">
+                                        @click="!myCategorys.validateEventName(selectedCategory) ? myCategorys.updateCategory(selectedCategory):alertError()">
                                         Update
                                     </label>
                                     <label for="my-modal-6"

@@ -48,13 +48,17 @@ export const categorys = defineStore('categoryListState',() => {
       }
     
     
-
+  const validateEventName = (newCategory) =>{
+    return categoryList.value
+    .filter((category) => category.id!==newCategory.id)
+    .some((category)=> category.eventCategoryName.toLowerCase()===newCategory.eventCategoryName.toLowerCase())
+  }
 
 
 
     getEventCategory();
 
-    return { categoryList, page, pageSize, getEventCategory, updateCategory}
+    return { categoryList, page, pageSize, getEventCategory, updateCategory, validateEventName}
 }
 )
 
