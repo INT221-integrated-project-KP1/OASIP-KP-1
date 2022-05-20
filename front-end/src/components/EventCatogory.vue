@@ -14,7 +14,7 @@ const goBooking = () => {
     myRouter.push({ name: 'Booking' })
 }
 
-const selectedCategory = ref({ id: '', eventCategoryName: '', eventCategorDuration: '', eventCategoryDescription: '' });
+const selectedCategory = ref({ id: '', eventCategoryName: '', eventCategoryDuration: '', eventCategoryDescription: '' });
 
 //GET BY ID
 const getEventCategoryById = ((id) => {
@@ -23,7 +23,7 @@ const getEventCategoryById = ((id) => {
         if(ele.id == id){
             selectedCategory.id = ele.id
             selectedCategory.eventCategoryName = ele.eventCategoryName
-            selectedCategory.eventCategorDuration = ele.eventCategorDuration
+            selectedCategory.eventCategoryDuration = ele.eventCategoryDuration
             selectedCategory.eventCategoryDescription = ele.eventCategoryDescription
             return;
         }
