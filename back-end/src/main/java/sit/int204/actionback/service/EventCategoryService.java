@@ -36,9 +36,7 @@ public class EventCategoryService {
     }
 
     public boolean checkEventCategoryName(String eventCategoryName, int id){
-        EventCategory ec = eventCategoryRepository.findById(id);
-
-        if(ec.getEventCategoryName() == eventCategoryName){
+        if(eventCategoryRepository.findEventCategoryNameById(id) == eventCategoryName){
             //ซ้ำกับชื่อเดิม = ไม่เปลี่ยนชื่อ
             return true;
         }
