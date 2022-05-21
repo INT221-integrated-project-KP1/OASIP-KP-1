@@ -15,6 +15,7 @@ const myTeam = [
     'URLInstagram': "https://www.instagram.com/tuskungg/",
     'github': "tuskingcup",
     'URLGithub': "https://github.com/tuskingcup",
+    'ID': 63130500099
   }, {
     'photo': p1,
     'name': "Amornpong Duangchawee",
@@ -26,6 +27,7 @@ const myTeam = [
     'URLInstagram': "https://www.instagram.com/a.mornp/",
     'github': "huato112",
     'URLGithub': "https://github.com/huato112",
+    'ID': 63130500131
   },
   {
     'photo': p1,
@@ -33,9 +35,9 @@ const myTeam = [
     'role': "นอนดูเพื่อนทำงาน",
     'phone': "096-701-XXXX",
     'facebook': "Mark Aritach",
-    'URLfacebook': "https://www.facebook.com/profile.php?id=100004555050144",
+    'URLfacebook': "https://www.facebook.com/markkArit/",
     'instagram': "mark_aritach",
-    'URLInstagram': "https://www.instagram.com/mark_aritach/?hl=en",
+    'URLInstagram': "https://www.instagram.com/mark_aritach/",
     'github': "markid1ggwp",
     'URLGithub': "https://github.com/markid1ggwp",
     'ID': 63130500133
