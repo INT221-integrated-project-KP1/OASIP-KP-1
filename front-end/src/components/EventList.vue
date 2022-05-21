@@ -70,12 +70,13 @@ const numberFormat = function (number, width) {
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid grid-cols-3 gap-2 justify-items-center">
-                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                <div class="grid grid-cols-3 gap-10 justify-items-center">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5 
+                  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
-                      <p>Event Category Name:
+                      <p :class="myEvents.color[event.eventCategory.id-1]" class="rounded-md p-3">Event Category Name:
                         {{ event.eventCategory.eventCategoryName }}
                       </p>
                       <p>

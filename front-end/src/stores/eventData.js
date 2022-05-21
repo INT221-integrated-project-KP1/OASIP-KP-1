@@ -266,10 +266,11 @@ const createNewEvent = async (event) => {
     }
     return true;
     }
+    const color = ["bg-accent","bg-primary","bg-secondary","bg-secondary-focus","bg-accent-focus"]
 
     getEvents();
 
-    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded }
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded,color }
 })
 
 

@@ -11,7 +11,7 @@ const goBooking = () => {
 <template>
 
 
-    <div class="hero min-h-screen bg-primary">
+    <div class="hero min-h-screen bg-primary ">
 
         <div class="hero-content flex-col lg:flex-row-reverse">
             <img src="../assets/gif1.gif" alt="picture1" class="max-w-sm rounded-lg shadow-2xl hover:animate-bounce" />
