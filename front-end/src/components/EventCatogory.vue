@@ -4,8 +4,10 @@ import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { categorys } from "../stores/categoryData.js"
+import { events } from "../stores/eventData.js"
 
 const myCategorys = categorys()
+const myEvents = events()
 
 defineEmits(["updateEvent"]);
 
@@ -39,11 +41,12 @@ const alertError = () =>{alert("dawd")}
                     <div id="ListEvent">
                         <div>
                             <ol class="">
-                                <div class="grid grid-cols-3 gap-2 ">
+                                <div class="grid grid-cols-3 gap-10 ">
                                     <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
-                                        class="card w-96 bg-base-100 shadow-xl space-x-5">
+                                        class="card w-96 bg-base-100 shadow-xl space-x-5 
+                                        transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                                         <div class="card-body bg-white">
-                                            <p class="card-title" > Event Category Name : {{
+                                            <p class="card-title rounded-md p-6" :class="myEvents.color[eventCategory.id-1]" > Event Category Name : {{
                                                     eventCategory.eventCategoryName
                                             }} </p>
                                             <p>Event Category Description:{{ eventCategory.eventCategoryDescription }}

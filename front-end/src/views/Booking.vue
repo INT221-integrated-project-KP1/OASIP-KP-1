@@ -46,14 +46,14 @@ const validateEventName = computed(() => {
 
 const validateEventEmail = computed(() => {
   console.log(newEvent.value.email)
-return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+  return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 
 })
 
-const createNewEvent = async ()=>{
+const createNewEvent = async () => {
   const status = await myEvents.createNewEvent(newEvent.value);
-  console.log(status,'tusCheckStauts');
-  if(status.status == 1){
+  console.log(status, 'tusCheckStauts');
+  if (status.status == 1) {
     newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
   }
   statusError.value = status.status
@@ -126,7 +126,23 @@ const check = () => {
       </div>
     </div>
 
-    <DIV>
+    <DIV class ="grid grid-cols-2 gap-2">
+      <div >
+          <div class="grid grid-rows-3 gap-2 p-4">
+            <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
+              class="card w-50 bg-base-100 shadow-xl space-x-5 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+              <div class="card-body bg-white">
+                <p class="card-title rounded-md p-3" :class="myEvents.color[eventCategory.id-1]" > Event Category Name : {{
+                    eventCategory.eventCategoryName
+                }} </p>
+                <p>Event Category Description:{{ eventCategory.eventCategoryDescription }}
+                </p>
+                <p class="bg-base-300"> Event Duration: {{ eventCategory.eventDuration }} Minutes</p>
+                </div>
+            </li>
+            <!-- <ShadowEventVue /> -->
+          </div>
+      </div>
       <div class="grid gap-5 p-5 ">
         <!-- FORM INPUT -->
         <div class="flex justify-center self-center z-10 ">
@@ -147,7 +163,7 @@ const check = () => {
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail"
+                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail && newEvent.email.length > 0"
                     style="color: red;">*Invalid Email</span>
                 </label>
                 <input :class="validateEventEmail ?
@@ -165,11 +181,12 @@ const check = () => {
                 " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
                 <!-- มาร์คเเก้ -->
                 <br><span>{{ newEvent.notes.length
-                  }}/500</span>
+                }}/500</span>
               </div>
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent)" style="color: red;">*Future Time Only</span>
+                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent)" style="color: red;">*Future Time
+                    Only</span>
                 </label>
                 <input input type="datetime-local" :class="myEvents.validateFutureDate(newEvent) ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
@@ -182,7 +199,7 @@ const check = () => {
                 </label>
                 <select v-model="newEvent.eventCategory"
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
-                  
+
                   <option v-for="(category, index) in myCategorys.categoryList" :key="index"
                     :value="{ id: category.id, duration: category.eventDuration }">
                     {{ category.eventCategoryName }}
@@ -215,14 +232,7 @@ const check = () => {
             </div>
           </div>
         </div>
-        <!-- <div class="carousel w-80 h-80 ">
-            <div id="item1" class="carousel-item w-80 h-80">
-              <img src="../assets/93018428.jpg" class="w-80 h-80" />
-            </div> -->
-        <!-- <div id="item2" class="carousel-item w-80 h-80">
-              <img src="../assets/93018428.jpg" class="w-80 h-80" />
-            </div>
-          </div> -->
+    
       </div>
     </div>
   </DIV>
