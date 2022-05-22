@@ -42,7 +42,7 @@ defineEmits(['Fillter'])
     <div class="card bg-white p-2 m-5">
 
         <div class="form-control ">
-            <div class="flex justify-center">
+            <div class="lg:flex lg:justify-center hidden">
                 <input type="date" class="input input-bordered" v-model="filterList.date" />
 
                 <div class="px-5">

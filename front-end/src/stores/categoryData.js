@@ -22,6 +22,8 @@ export const categorys = defineStore('categoryListState',() => {
 
     //PUT
     const updateCategory = async (objectCategory) => {
+      objectCategory.eventCategoryName = objectCategory.eventCategoryName.trimStart().trimEnd().replace("  ", " ");
+      
         console.log(objectCategory);
         console.log(objectCategory.id);
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategory/${objectCategory.id}`, {
@@ -46,6 +48,8 @@ export const categorys = defineStore('categoryListState',() => {
     
     
   const validateEventName = (newCategory) =>{
+    newCategory.eventCategoryName = newCategory.eventCategoryName.trimStart();
+    
     return categoryList.value
     .filter((category) => category.id!==newCategory.id)
     .some((category)=> category.eventCategoryName.toLowerCase()===newCategory.eventCategoryName.toLowerCase())
