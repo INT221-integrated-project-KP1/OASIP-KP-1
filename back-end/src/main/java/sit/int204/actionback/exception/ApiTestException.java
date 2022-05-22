@@ -5,6 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -28,7 +29,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ControllerAdvice
 public class ApiTestException extends ResponseEntityExceptionHandler{
-
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
@@ -49,8 +50,16 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
         ZonedDateTime timeStamp = ZonedDateTime.now();
         ApiError apiError =
                 new ApiError(timeStamp,400,HttpStatus.BAD_REQUEST,e,request.getDescription(false).split("=")[1]);
-        return handleExceptionInternal(
-                ex, apiError, headers, apiError.getErrors(), request);
+        return  new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
+
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
+        System.out.println("All exceptions Method getting executed!!!!");
+
+        final List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        return new ResponseEntity("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
