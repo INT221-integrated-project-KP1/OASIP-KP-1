@@ -91,9 +91,9 @@ public class EventService {
             System.out.println(input);
             long dayInMilli = 86400000;
             if(eventCategoryId != 0){
-                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
             } else {
-                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
             }
         }
 
@@ -146,36 +146,39 @@ public class EventService {
     public boolean isOverLab(EventOverLabDTO event, int id){
         System.out.println("start");
         long minuteInMillisecond = 0;
-        long newMillisecond = event.getEventStartTime().toEpochMilli();
+        long startTimeMilli = event.getEventStartTime().toEpochMilli();
         long newDuration = event.getEventDuration() * 60 * 1000;
         int categoryId = event.getEventCategory().getId();
-        System.out.println(categoryId);;
-        List<Event> eventList = repository.findAllByEventCategoryId(categoryId, PageRequest.of(0, Integer.MAX_VALUE));
+        System.out.println(categoryId);
+
+        long maxDuration = 480 *60 *1000;
+
+        List<Event> eventList = repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(startTimeMilli-maxDuration-1), Instant.ofEpochMilli(startTimeMilli+maxDuration+1), PageRequest.of(0, Integer.MAX_VALUE));
         for (int i = 0; i < eventList.size(); i++) {
                 if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
-                    long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
+                    long checkStartTimeMilli = eventList.get(i).getEventStartTime().toEpochMilli();
                     long duration = eventList.get(i).getEventDuration() * 60 * 1000;
                     System.out.println("CategoryChecked");
-                    if(newMillisecond+newDuration+minuteInMillisecond > milliSecond && newMillisecond+newDuration-minuteInMillisecond < milliSecond+duration){
+                    if(startTimeMilli+newDuration+minuteInMillisecond > checkStartTimeMilli && startTimeMilli+newDuration-minuteInMillisecond < checkStartTimeMilli+duration){
                         System.out.println("Overlab1+4");
                         // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                         return true;
                     }
-                    else if (newMillisecond+minuteInMillisecond > milliSecond && newMillisecond-minuteInMillisecond < milliSecond+duration){
+                    else if (startTimeMilli+minuteInMillisecond > checkStartTimeMilli && startTimeMilli-minuteInMillisecond < checkStartTimeMilli+duration){
                         System.out.println("Overlab2+4");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    else if (newMillisecond-minuteInMillisecond < milliSecond && newMillisecond+newDuration+minuteInMillisecond > milliSecond+duration){
+                    else if (startTimeMilli-minuteInMillisecond < checkStartTimeMilli && startTimeMilli+newDuration+minuteInMillisecond > checkStartTimeMilli+duration){
                         System.out.println("Overlab3");
                         return true;
                         //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     }
-                    System.out.println(newMillisecond-minuteInMillisecond);
-                    System.out.println(milliSecond);
+                    System.out.println(startTimeMilli-minuteInMillisecond);
+                    System.out.println(checkStartTimeMilli);
                     System.out.println("***");
-                    System.out.println(newMillisecond+duration+minuteInMillisecond);
-                    System.out.println(milliSecond+duration);
+                    System.out.println(startTimeMilli+duration+minuteInMillisecond);
+                    System.out.println(checkStartTimeMilli+duration);
                 }
         }
         return false;
@@ -222,6 +225,15 @@ public class EventService {
         event.setEventNotes(editEvent.getEventNotes());
         repository.saveAndFlush(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
+    }
+
+    public List<SimpleEventDTO> getAllEventForOverLabFront(Integer categoryId, String startTime){
+
+        Instant input = Instant.parse(startTime);
+        long maxDuration = 480 *60 *1000;
+
+        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+
     }
 
 //    public boolean checkEmail(String email){

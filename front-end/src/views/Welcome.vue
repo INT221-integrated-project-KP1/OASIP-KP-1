@@ -58,4 +58,5 @@ const goHome = () => {
 </template>
  
 <style scoped>
+
 </style>

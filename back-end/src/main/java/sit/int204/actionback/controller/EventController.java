@@ -59,6 +59,12 @@ public class EventController {
         return eventService.getAllEvent();
     }
 
+    @GetMapping("/overlabcheck")
+    public List<SimpleEventDTO> getAllEventForOverLabCheck(@RequestParam Integer eventCategoryId,
+                                                           @RequestParam String startTime){
+        return eventService.getAllEventForOverLabFront(eventCategoryId, startTime);
+    }
+
     @GetMapping("/{id}")
     public EventDetailsBaseDTO getEventById(@PathVariable Integer id){
         return eventService.getSimpleEventById(id);
