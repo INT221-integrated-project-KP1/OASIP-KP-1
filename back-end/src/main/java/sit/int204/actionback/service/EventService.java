@@ -151,9 +151,9 @@ public class EventService {
         int categoryId = event.getEventCategory().getId();
         System.out.println(categoryId);
 
-        long dayInMilli = 86400000;
+        long maxDuration = 480 *60 *1000;
 
-        List<Event> eventList = repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(startTimeMilli-dayInMilli-1), Instant.ofEpochMilli(startTimeMilli+dayInMilli+1), PageRequest.of(0, Integer.MAX_VALUE));
+        List<Event> eventList = repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(startTimeMilli-maxDuration-1), Instant.ofEpochMilli(startTimeMilli+maxDuration+1), PageRequest.of(0, Integer.MAX_VALUE));
         for (int i = 0; i < eventList.size(); i++) {
                 if(!(id == eventList.get(i).getId())){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
                     long checkStartTimeMilli = eventList.get(i).getEventStartTime().toEpochMilli();
@@ -230,9 +230,9 @@ public class EventService {
     public List<SimpleEventDTO> getAllEventForOverLabFront(Integer categoryId, String startTime){
 
         Instant input = Instant.parse(startTime);
-        long dayInMilli = 86400000;
+        long maxDuration = 480 *60 *1000;
 
-        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
 
     }
 
