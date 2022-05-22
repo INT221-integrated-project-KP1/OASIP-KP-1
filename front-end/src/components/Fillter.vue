@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
+import { ref, } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
 

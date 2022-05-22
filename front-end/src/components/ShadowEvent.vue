@@ -1,9 +1,6 @@
 <script setup>
 
-let red = "color:red;"
-let gay = "color:gay;"
 
-let classss = "test"
 </script>
  
 <template>

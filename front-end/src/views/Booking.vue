@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, computed, reactive } from "vue";
+import { ref, computed } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
 
@@ -36,6 +36,7 @@ function checkProperties(obj) {
 const validateEventName = computed(() => {
   //check length type bra bra brah...
   if (newEvent.value.name != undefined) {
+    newEvent.value.name = newEvent.value.name.replace("  ", " ").trimStart();
     if ((newEvent.value.name.length > 100)) {
       console.log('name false');
       return false;
@@ -45,12 +46,15 @@ const validateEventName = computed(() => {
 })
 
 const validateEventEmail = computed(() => {
+  newEvent.value.email = newEvent.value.email.trimStart().trimEnd();
   console.log(newEvent.value.email)
   return newEvent.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 
 })
 
 const createNewEvent = async () => {
+  newEvent.value.notes = newEvent.value.notes.trimStart().trimEnd();
+  newEvent.value.name = newEvent.value.name.trimEnd();
   const status = await myEvents.createNewEvent(newEvent.value);
   console.log(status, 'tusCheckStauts');
   if (status.status == 1) {
@@ -126,9 +130,9 @@ const check = () => {
       </div>
     </div>
 
-    <DIV class ="grid grid-cols-2 gap-2">
-      <div >
-          <div class="grid grid-rows-3 gap-2 p-4">
+    <DIV class ="grid lg:grid-cols-2 gap-2">
+      <div class ="hidden lg:flex">
+          <ul class="grid grid-rows-3 gap-2 p-4">
             <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
               class="card w-50 bg-base-100 shadow-xl space-x-5 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
               <div class="card-body bg-white">
@@ -140,8 +144,7 @@ const check = () => {
                 <p class="bg-base-300"> Event Duration: {{ eventCategory.eventDuration }} Minutes</p>
                 </div>
             </li>
-            <!-- <ShadowEventVue /> -->
-          </div>
+          </ul>
       </div>
       <div class="grid gap-5 p-5 ">
         <!-- FORM INPUT -->
