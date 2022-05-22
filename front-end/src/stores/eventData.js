@@ -205,37 +205,65 @@ const createNewEvent = async (event) => {
     }
   }
 
+  //fetch to check overlab
+  ///api/scheduled/overlabcheck?eventCategoryId=5&startTime=2022-06-08T22:00:00Z
+  const getEventsForOverLab = async (eventCategoryId, startTime) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+      );
+      if (res.status === 200) {
+        const events = await res.json();
+        // events << eventToAdd
+        // eventToAdd อันที่โหลดเพิ่ม
+        // events ของที่แสดงอยู่
+        // เอาอันที่โหลดเพิ่มมาใส่
+        //ตัสแก้
+        tempOverLabCheck.value = [];
+        events.forEach((e)=>{
+          tempOverLabCheck.value.push(e);
+        })
+        
+      } else {
+        console.log("error, cannot get data");
+      }
+    } catch (err) {
+      console.log("ERROR: " + err);
+    }
+  };
+
+  const tempOverLabCheck = ref([]);
   //VALIDATE TIME OVERLAB
     function validateOverlab(categoryId, startTime, duration) {
-    getEvents();
+    getEventsForOverLab(categoryId, startTime);
     let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
     let newDurationMilli = duration * 60 * 1000;
     let bool = ref(true);
-    eventList.value.forEach((value) => {
-      if (categoryId == value.eventCategory.id) {
+    tempOverLabCheck.value.forEach((value) => {
+        console.log("START")
+        console.log(value);
         let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
         let durationMilli = value.eventDuration * 60 * 1000;
 
-        if (newMilli + newDurationMilli + 60000 > milli && newMilli + newDurationMilli - 60000 < milli + durationMilli) {
+        if (newMilli + newDurationMilli> milli && newMilli + newDurationMilli< milli + durationMilli) {
           //overlab 1+4
             console.log('Overlab 1+4');
             bool.value = false;
           return false; //overlab
         }
-        else if (newMilli + 60000 > milli && newMilli - 60000 < milli + durationMilli) {
+        else if (newMilli> milli && newMilli< milli + durationMilli) {
           //System.out.println("Overlab2+4");
             console.log('Overlab2+4');
             bool.value = false;
             return false;
           //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
         }
-        else if (newMilli - 60000 < milli && newMilli + newDurationMilli + 60000 > milli + durationMilli) {
+        else if (newMilli< milli && newMilli + newDurationMilli> milli + durationMilli) {
           //System.out.println("Overlab3");
             console.log('Overlab3');
             bool.value = false;
             return false;
           //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-        }
         }
     })
     console.log('return:' + bool.value);
