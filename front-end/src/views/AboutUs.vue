@@ -48,13 +48,13 @@ const myTeam = [
 </script>
  
 <template>
-  <div class="grid grid-cols-3 gap-2 justify-items-center p-5 ">
+  <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 justify-items-center p-5 ">
     <div v-for="(team, index) in myTeam" :key="index" class=" 
     max-w-sm content-center justify-center mx-auto bg-white mt-[10vh] rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700
    transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
       <img class="w-30 h-30 object-cover  mb-2 z-10 " :src="team.photo" alt="logo">
 
-      <div class="flex flex-col   pl-10  pb-10">
+      <div class="flex flex-col pl-10  pb-10">
         <h1 class="text-3xl text-gray-900 font-semibold">{{ team.name }}</h1>
         <div class="mb-2 mt-2">
           <h1 class="text-base text-gray-300 font-semibold">Student ID {{ team.ID }}</h1>
@@ -67,20 +67,20 @@ const myTeam = [
 
           <h1 class="text-base text-gray-300 font-semibold">Contact Details</h1>
           <div class="mt-2 flex items-center">
-            <img class="w-10" src="../assets/Logo/Phone.png" />
+            <img class="w-10" src="../assets/Logo/Phone.png" alt="phone"/>
             <h1 class="text-base text-gray-900 ml-5 font-semibold">{{ team.phone }}</h1>
           </div>
           <div class="mt-2 flex items-center ">
-            <img class="w-10" src="../assets/Logo/Facebook.png" />
+            <img class="w-10" src="../assets/Logo/Facebook.png" alt="Facebook"/>
             <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.facebook }}</a>
           </div>
           <div class="mt-2 flex items-center ">
-            <img class="w-10" src="../assets/Logo/IG.png" />
+            <img class="w-10" src="../assets/Logo/IG.png" alt="IG"/>
             <a :href="team.URLInstagram" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.instagram }}</a>
           </div>
           <div class="mt-2 flex items-center ">
-            <img class="w-10" src="../assets/Logo/GitHub.png" />
-            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.github }}</a>
+            <img class="w-10" src="../assets/Logo/GitHub.png" alt="GitHub"/>
+            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point hover:text-bluue-600">{{ team.github }}</a>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 
 const myEvents = events()
@@ -40,13 +40,10 @@ const goBooking = () => {
 
 defineEmits(["deleteEvent", "updateEvent"]);
 
-//let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
-//`${edit.getFullYear}-${edit.getMonth+1}-${edit.getDate}T${edit.getHours}:${edit.getUTCMinutes}`
-// let test = ref('2022-02-20T02:02');
 //2022-02-20T02:02
 
 
@@ -70,7 +67,7 @@ const numberFormat = function (number, width) {
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid grid-cols-3 gap-10 justify-items-center">
+                <div class="grid xl:grid-cols-3 lg:grid-cols-2  gap-10 justify-items-center">
                   <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5 
                   transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                     <div class="card-body bg-white">

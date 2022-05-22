@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onBeforeMount, reactive } from "vue";
 import EventList from "../components/EventList.vue";
 import { events } from "../stores/eventData.js";
 
@@ -13,17 +12,12 @@ window.onscroll = () => {
   if (myEvents.checkLoaded) {  
     if (scrollTop + innerHeight - offsetHeight >= 0) {
       //bottomOfWindow
-      console.log("bottomOfWindow");
+      // console.log("bottomOfWindow");
       //do tood
       myEvents.pageIncrement();
       myEvents.getEventsFilteredMorePage();
     }
   }
-  console.log("scroll");
-  console.log(
-    "scroll: " + document.documentElement.scrollTop + window.innerHeight
-  );
-  console.log("scroll(Height): " + document.documentElement.offsetHeight);
   }
 </script>
 

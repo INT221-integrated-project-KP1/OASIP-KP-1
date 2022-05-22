@@ -1,13 +1,10 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, onUnmounted, computed, } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
-import { events } from "./stores/eventData.js"
 
-const { params } = useRoute()
+
 const myRouter = useRouter()
-// const goHome = () => myRouter.push({name:'Home'})
-const myEvents = events()
+
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
 }
@@ -17,6 +14,9 @@ const goWelcome = () => {
 </script>
 
 <template>
+
+
+
   <div>
     <div class="navbar bg-white" v-show="$route.name !== 'Welcome'">
       <div class="navbar-start">

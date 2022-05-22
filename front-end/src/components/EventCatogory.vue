@@ -1,8 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
-import DeleteButton from "../components/deleteButton.vue";
-import ShadowEventVue from "./ShadowEvent.vue";
-import { useRoute, useRouter } from 'vue-router'
+import { ref} from "vue";
+import { useRouter } from 'vue-router'
 import { categorys } from "../stores/categoryData.js"
 import { events } from "../stores/eventData.js"
 
@@ -37,11 +35,10 @@ const alertError = () =>{alert("dawd")}
         <div class="m-10">
             <div id="HaveEvent">
                 <div v-if="myCategorys.categoryList.length != 0">
-                    <!-- <Fillter /> -->
                     <div id="ListEvent">
                         <div>
                             <ol class="">
-                                <div class="grid grid-cols-3 gap-10 ">
+                                <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-10 justify-items-center">
                                     <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                                         class="card w-96 bg-base-100 shadow-xl space-x-5 
                                         transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
@@ -58,9 +55,10 @@ const alertError = () =>{alert("dawd")}
                                             </div>
                                         </div>
                                     </li>
-                                    <!-- <ShadowEventVue /> -->
                                 </div>
                             </ol>
+                            
+                            <!-- modal -->
                             <input type="checkbox" id="my-modal-6" class="modal-toggle " />
                             <div class="modal modal-bottom sm:modal-middle ">
                                 <div class="modal-box bg-white">

@@ -1,9 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref, computed ,onBeforeMount} from 'vue'
+import { ref} from 'vue'
 export const categorys = defineStore('categoryListState',() => {
     const categoryList = ref([])
-    const page = ref(0); //page start 0
-    const pageSize = ref(9); //default 4
 
     //GET
     const getEventCategory = async () => {
@@ -22,7 +20,6 @@ export const categorys = defineStore('categoryListState',() => {
         }
     };
 
-    //UPDATEselectedCategory.eventCategoryName, selectedCategory.eventCategoryDescription, selectedCategory.eventDuration,
     //PUT
     const updateCategory = async (objectCategory) => {
         console.log(objectCategory);
@@ -58,7 +55,7 @@ export const categorys = defineStore('categoryListState',() => {
 
     getEventCategory();
 
-    return { categoryList, page, pageSize, getEventCategory, updateCategory, validateEventName}
+    return { categoryList, getEventCategory, updateCategory, validateEventName}
 }
 )
 

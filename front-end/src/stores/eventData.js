@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref, computed ,onBeforeMount} from 'vue'
+import { ref} from 'vue'
 export const events = defineStore('eventListState',() => {
     const eventList = ref([])
     const page = ref(0); //page start 0
@@ -58,12 +58,7 @@ export const events = defineStore('eventListState',() => {
   const getEventsFilteredMorePage = async () => {
     const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
     const offsetMin = new Date().getTimezoneOffset()
-    // const filterPastOrFutureOrAll = ref('');
-    // if(filterList.value.pastOrFutureOrAll===undefined || filterList.value.pastOrFutureOrAll.length!=1){
-    //   filterPastOrFutureOrAll.value = "all"
-    // }else{
-    //   filterPastOrFutureOrAll.value = filterList.value.pastOrFutureOrAll[0]
-    // }
+
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
@@ -149,8 +144,6 @@ const createNewEvent = async (event) => {
       return {error:await res.text(), status:2};
     }
   } catch (err) {
-    // error.value = await res.text()
-    // console.log(await res.text())
     console.log(err);
     return {error:err, status:2};
 }
@@ -213,14 +206,9 @@ const createNewEvent = async (event) => {
         `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
-        const events = await res.json();
-        // events << eventToAdd
-        // eventToAdd อันที่โหลดเพิ่ม
-        // events ของที่แสดงอยู่
-        // เอาอันที่โหลดเพิ่มมาใส่
-        //ตัสแก้
+        const eventsOverLab = await res.json();
         tempOverLabCheck.value = [];
-        events.forEach((e)=>{
+        eventsOverLab.forEach((e)=>{
           tempOverLabCheck.value.push(e);
         })
         
@@ -245,25 +233,21 @@ const createNewEvent = async (event) => {
         let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
         let durationMilli = value.eventDuration * 60 * 1000;
 
-        if (newMilli + newDurationMilli> milli && newMilli + newDurationMilli< milli + durationMilli) {
+        if (newMilli + newDurationMilli > milli && newMilli + newDurationMilli <= milli + durationMilli) {
           //overlab 1+4
             console.log('Overlab 1+4');
             bool.value = false;
           return false; //overlab
         }
-        else if (newMilli> milli && newMilli< milli + durationMilli) {
-          //System.out.println("Overlab2+4");
+        else if (newMilli >= milli && newMilli < milli + durationMilli) {
             console.log('Overlab2+4');
             bool.value = false;
             return false;
-          //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
         }
-        else if (newMilli< milli && newMilli + newDurationMilli> milli + durationMilli) {
-          //System.out.println("Overlab3");
+        else if (newMilli <= milli && newMilli + newDurationMilli >= milli + durationMilli) {
             console.log('Overlab3');
             bool.value = false;
             return false;
-          //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
         }
     })
     console.log('return:' + bool.value);
