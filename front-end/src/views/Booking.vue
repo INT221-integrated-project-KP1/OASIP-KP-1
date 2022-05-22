@@ -80,14 +80,21 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const check = () => {
-  console.log(checkProperties(newEvent.value) + "1")
-  console.log(validateEventEmail.value + "2")
-  console.log(validateEventName.value + "3")
-  console.log(myEvents.validateEventNotes(newEvent.value) + "4")
-  console.log(myEvents.validateFutureDate(newEvent.value) + "5")
-  console.log(myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
-  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && myEvents.validateEventNotes(newEvent.value) && myEvents.validateFutureDate(newEvent.value) && myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+const check = async () => {
+  const bool1 = checkProperties(newEvent.value);
+  const bool2 = validateEventEmail.value
+  const bool3 = validateEventName.value
+  const bool4 = myEvents.validateEventNotes(newEvent.value)
+  const bool5 = myEvents.validateFutureDate(newEvent.value)
+  //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
+  const bool6 = await myEvents.validateOverlab(0, newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6){
+    createNewEvent()
+  }else{
+    errorInsert();
+  }
+
+  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6
 
 }
 </script>
@@ -222,10 +229,7 @@ const check = () => {
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check()
-                  ? createNewEvent(newEvent)
-                  : errorInsert()">
-                  Add New Event
+                  @click="check()">Add New Event
                 </button>
               </div>
             </div>
