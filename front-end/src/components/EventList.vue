@@ -67,9 +67,8 @@ const numberFormat = function (number, width) {
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid xl:grid-cols-3 lg:grid-cols-2  gap-10 justify-items-center">
-                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5 
-                  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+                <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-10 justify-items-center">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
@@ -98,7 +97,7 @@ const numberFormat = function (number, width) {
               </ol>
 
 
-              <!-- Modal -->
+                 <!-- Modal -->
               <input type="checkbox" id="my-modal-6" class="modal-toggle " />
               <div class="modal modal-bottom sm:modal-middle ">
                 <div class="modal-box bg-white">
@@ -114,11 +113,10 @@ const numberFormat = function (number, width) {
                     cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
                     <span>{{500-editNotes.length}}</span>
                   <div class="modal-action">
-
                     <label
                       class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                       for="my-modal-6"
-                      @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id)">Update</label>
+                      @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label>
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                   </div>

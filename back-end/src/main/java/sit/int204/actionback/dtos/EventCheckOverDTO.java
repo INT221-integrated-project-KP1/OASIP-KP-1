@@ -11,7 +11,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventFilterDTO {
+public class EventCheckOverDTO {
     private Instant eventStartTime;
     private Integer eventDuration;
 }

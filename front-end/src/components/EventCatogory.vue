@@ -43,7 +43,7 @@ const alertError = () =>{alert("dawd")}
                     <div id="ListEvent">
                         <div>
                             <ol class="">
-                                <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-10 justify-items-center">
+                                <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-10 justify-items-center">
                                     <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                                         class="card w-96 bg-base-100 shadow-xl space-x-5 
                                         transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">

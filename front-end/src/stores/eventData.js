@@ -170,7 +170,12 @@ const createNewEvent = async (event) => {
     };
 
     //PUT
-    const updateEvent = async (startTime, notes, id) => {
+    const updateEvent = async (startTime, notes, id, duration) => {
+    console.log("startTimeUpdate: " + startTime)
+    if(!await validateOverlab(id, 0, startTime.replace(":00", ""), duration)){
+      alert("Edit Failed")
+      return console.log("GayTood")
+    }
     console.log("startTime: " + startTime)
     console.log("Notes: " + notes)
     console.log("id: " + id)
@@ -191,19 +196,20 @@ const createNewEvent = async (event) => {
           ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
           : event
       )
-  
+      alert("Edited Successfully")
       console.log('edited successfully')
     } else {
       console.log('error, cannot edit')
+      alert("Edit Failed")
     }
   }
 
   //fetch to check overlab
   ///api/scheduled/overlabcheck?eventCategoryId=5&startTime=2022-06-08T22:00:00Z
-  const getEventsForOverLab = async (eventCategoryId, startTime) => {
+  const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
         const eventsOverLab = await res.json();
@@ -211,8 +217,11 @@ const createNewEvent = async (event) => {
         eventsOverLab.forEach((e)=>{
           tempOverLabCheck.value.push(e);
         })
+        console.log("อันนี้ ๆ")
+        console.log(tempOverLabCheck.value)
         
       } else {
+        
         console.log("error, cannot get data");
       }
     } catch (err) {
@@ -222,29 +231,36 @@ const createNewEvent = async (event) => {
 
   const tempOverLabCheck = ref([]);
   //VALIDATE TIME OVERLAB
-    function validateOverlab(categoryId, startTime, duration) {
-    getEventsForOverLab(categoryId, startTime);
+  const validateOverlab = async (eventId, categoryId, startTime, duration) => {
+    await getEventsForOverLab(eventId, categoryId, startTime);
     let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
     let newDurationMilli = duration * 60 * 1000;
     let bool = ref(true);
+
+
+    console.log("อันนี้ ๆ V.2")
+    console.log(tempOverLabCheck.value)
     tempOverLabCheck.value.forEach((value) => {
-        console.log("START")
-        console.log(value);
+        console.log("Loop มั้ย")
         let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
         let durationMilli = value.eventDuration * 60 * 1000;
 
-        if (newMilli + newDurationMilli > milli && newMilli + newDurationMilli <= milli + durationMilli) {
+        console.log("อันน้")
+        console.log(newMilli == milli);
+        console.log(newMilli < milli + durationMilli);
+
+        if (newMilli + newDurationMilli >= milli && newMilli + newDurationMilli <= milli + durationMilli) {
           //overlab 1+4
             console.log('Overlab 1+4');
             bool.value = false;
           return false; //overlab
         }
-        else if (newMilli >= milli && newMilli < milli + durationMilli) {
+        if (newMilli >= milli && newMilli < milli + durationMilli) {
             console.log('Overlab2+4');
             bool.value = false;
             return false;
         }
-        else if (newMilli <= milli && newMilli + newDurationMilli >= milli + durationMilli) {
+        if (newMilli <= milli && newMilli + newDurationMilli >= milli + durationMilli) {
             console.log('Overlab3');
             bool.value = false;
             return false;
