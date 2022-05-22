@@ -1,6 +1,8 @@
 package sit.int204.actionback.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.Instant;
 
 @Entity
@@ -28,6 +30,8 @@ public class Event {
     private EventCategory eventCategory;
 
     @Column(name = "event_duration")
+    @Min(1)
+    @Max(480)
     private Integer eventDuration;
 
     public Integer getEventDuration() {

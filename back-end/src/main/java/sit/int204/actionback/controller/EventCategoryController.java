@@ -1,19 +1,21 @@
 package sit.int204.actionback.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import sit.int204.actionback.dtos.EventUpdateDTO;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
+import sit.int204.actionback.service.EventCategoryService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/EventCategory")
+@RequestMapping("api/eventcategory")
 @CrossOrigin(origins = "*")
 public class EventCategoryController {
+    @Autowired
+    private EventCategoryService eventCategoryService;
 
     @GetMapping("/hello2")
     public String home() {
@@ -25,6 +27,12 @@ public class EventCategoryController {
 
     @GetMapping("")
     public List<EventCategory> getEventCategory(){
-        return EventCategoryRepository.findAll();
+            return EventCategoryRepository.findAll();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity update(@RequestBody EventCategory updateEventCategory, @PathVariable Integer id) {
+        return eventCategoryService.updateEventCategory(updateEventCategory,id);
+    }
+
 }

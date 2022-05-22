@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
+//Page ตอน Get
 public class EventPageDTO {
     private List<SimpleEventDTO> content;
     private int number;

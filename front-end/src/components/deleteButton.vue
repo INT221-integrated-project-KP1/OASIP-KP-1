@@ -1,15 +1,7 @@
 <script setup>
 defineEmits(['confirmDelete'])
 
-let props = defineProps({
-    event: {
-        default: [],
-        type: Object
-    }
-})
 
-console.log("TEST");
-console.log(props.event)
 </script>
  
 <template>
@@ -28,10 +20,10 @@ console.log(props.event)
             <div class="modal-action">
                 <div class="modal-action">
                     <label for="my-modal"
-                        class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline">Deny</label>
-                    <label for="my-modal"
-                        class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5 m-4 inline"
+                        class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                         @click="$emit('confirmDelete')">Accept</label>
+                    <label for="my-modal"
+                        class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5 m-4 inline">Deny</label>
                 </div>
             </div>
         </div>
@@ -40,5 +32,6 @@ console.log(props.event)
 </template>
  
 <style>
+
 </style>
 

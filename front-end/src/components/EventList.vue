@@ -1,56 +1,49 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 
-const myEventss = events()
+const myEvents = events()
 
 const myRouter = useRouter()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
-const props = defineProps({
-  events: {
-    default: [],
-    type: Array,
-  },
-});
-
-const myEvents = computed(() => {
-  let eventsToAdd = []
-  props.events.forEach((ele) => {
-    eventsToAdd.push({
-      "id": ele.id,
-      "bookingName": ele.bookingName,
-      "bookingEmail": ele.bookingEmail,
-      "eventCategory": {
-        "eventCategoryName": ele.eventCategory.eventCategoryName,
-        "eventCategoryDescription": ele.eventCategory.eventCategoryDescription,
-      },
-      "eventStartTime": ele.eventStartTime,
-      "eventDuration": ele.eventDuration,
-      "eventNotes": ele.eventNotes
-    })
-  })
-  return eventsToAdd;
-})
+  //GET BY ID
+  const getEventById = async (id) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
+      console.log(res.status);
+      if (res.status === 200) {
+        selectedEvent.value = await res.json();
+        editNotes.value = selectedEvent.value.eventNotes
+        if(editNotes.value == null){
+          editNotes.value = "";
+        }
+        let edit = new Date(selectedEvent.value.eventStartTime);
+        editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
+        console.log(new Date().getDate());
+        console.log(edit.getDate());
+        console.log(editStartTime.value);
+      } else {
+        console.log("error, cannot get data");
+      }
+    } catch (err) {
+      console.log("Error: ", err.message);
+    }
+  };
 
 
+defineEmits(["deleteEvent", "updateEvent"]);
 
-
-defineEmits(["selectedEventId", "deleteEvent", "updateEvent"]);
-
-//let selectedEventId = ref('');
 const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
-//`${edit.getFullYear}-${edit.getMonth+1}-${edit.getDate}T${edit.getHours}:${edit.getUTCMinutes}`
-// let test = ref('2022-02-20T02:02');
 //2022-02-20T02:02
 
 
@@ -59,41 +52,28 @@ const numberFormat = function (number, width) {
   return new Array(+width + 1 - (number + '').length).join('0') + number;
 }
 
-const getEventById = async (id) => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
-    console.log(res.status);
-    if (res.status === 200) {
-      selectedEvent.value = await res.json();
-      editNotes.value = selectedEvent.value.eventNotes
 
-      let edit = new Date(selectedEvent.value.eventStartTime);
-      editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
-    } else {
-      console.log("error, cannot get data");
-    }
-  } catch (err) {
-    console.log("Error: ", err.message);
-  }
-};
 
 </script>
 
 <template>
   <div class="flex justify-center">
     <div class="m-10">
+      
       <div id="HaveEvent">
-        <div v-if="myEvents.length != 0">
-          <Fillter />
+        <Fillter />
+        <div v-if="myEvents.eventList.length != 0">
+          
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid grid-cols-3 gap-2 ">
-                  <li v-for="(event, index) in myEvents" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5">
+                <div class="grid xl:grid-cols-3 lg:grid-cols-2  gap-10 justify-items-center">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5 
+                  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
-                      <p>Event Category Name:
+                      <p :class="myEvents.color[event.eventCategory.id-1]" class="rounded-md p-3">Event Category Name:
                         {{ event.eventCategory.eventCategoryName }}
                       </p>
                       <p>
@@ -127,10 +107,12 @@ const getEventById = async (id) => {
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local"
-                      v-model="editStartTime"></p>
+                      v-model="editStartTime"
+                      ></p>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
-                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br><span>{{editNotes.length}}/500</span>
+                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
+                    <span>{{500-editNotes.length}}</span>
                   <div class="modal-action">
 
                     <label
@@ -148,7 +130,7 @@ const getEventById = async (id) => {
             </div>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="grid justify-items-center">
           <div class="card w-96 glass">
             <figure><img src="../assets/gif2.gif" alt="gif2"></figure>
             <div class="card-body">
@@ -168,4 +150,5 @@ const getEventById = async (id) => {
 </template>
 
 <style>
+
 </style>
