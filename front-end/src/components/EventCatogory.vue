@@ -80,7 +80,8 @@ const alertError = () =>{alert("dawd")}
                                         
                                     <p class="py-2">Event Duration : </p><input max="480" type="number" min="1"
                                         v-model="selectedCategory.eventDuration"/> <br>
-                                    <label
+                                                   <div class="modal-action">
+                                                          <label
                                         class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                                         for="my-modal-6"
                                         @click="!myCategorys.validateEventName(selectedCategory) ? myCategorys.updateCategory(selectedCategory):alertError()">
@@ -88,6 +89,7 @@ const alertError = () =>{alert("dawd")}
                                     </label>
                                     <label for="my-modal-6"
                                         class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
+                                        </div>                 
                                 </div>
                             </div>
                         </div>
@@ -111,4 +113,5 @@ const alertError = () =>{alert("dawd")}
 </template>
 
 <style>
+
 </style>

@@ -6,10 +6,29 @@ import { categorys } from "../stores/categoryData.js"
 const myEvents = events()
 const myCategorys = categorys()
 
+ const filterList = ref({
+      eventCategoryId:0,
+      pastOrFutureOrAll:[],
+      date:"",
+  });
+
+const reset = () => {
+    filterList.value.eventCategoryId = 0;
+    filterList.value.pastOrFutureOrAll = [];
+    filterList.value.date = "";
+    filtering();
+}
+
 const filtering = () => {
+    for(const key in filterList.value){
+        myEvents.filterList[key] = filterList.value[key]
+    }
+    
     myEvents.resetFilter();
     myEvents.getFilteredEvents();
 }
+
+
 
 
 defineEmits(['Fillter'])
@@ -24,10 +43,10 @@ defineEmits(['Fillter'])
 
         <div class="form-control ">
             <div class="flex justify-center">
-                <input type="date" class="input input-bordered" v-model="myEvents.filterList.date" />
+                <input type="date" class="input input-bordered" v-model="filterList.date" />
 
                 <div class="px-5">
-                    <select class="select select-bordered " v-model="myEvents.filterList.eventCategoryId">
+                    <select class="select select-bordered " v-model="filterList.eventCategoryId">
                         <option v-if="myEvents.filterList.eventCategoryId == 0" disabled selected>Pick category</option>
                         <option v-else-if="myEvents.filterList.eventCategoryId != 0" value=0>none</option>
                         <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
@@ -37,19 +56,19 @@ defineEmits(['Fillter'])
                 </div>
                 <label class="label cursor-pointer">
 
-                    <input type="checkbox" v-model="myEvents.filterList.pastOrFutureOrAll" value="past"
+                    <input type="checkbox" v-model="filterList.pastOrFutureOrAll" value="past"
                         class="checkbox checkbox-primary" />
                     <span class="label-text p-2">Past events</span>
                 </label>
 
                 <label class="label cursor-pointer">
 
-                    <input type="checkbox" v-model="myEvents.filterList.pastOrFutureOrAll" value="future"
+                    <input type="checkbox" v-model="filterList.pastOrFutureOrAll" value="future"
                         class="checkbox checkbox-primary" />
                     <span class="label-text p-2">Upcoming events</span>
                 </label>
 
-                <button class="btn btn-square " @click="filtering">
+                <button class="btn btn-square bg-primary" @click="filtering">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +76,9 @@ defineEmits(['Fillter'])
                     </svg>
                 </button>
 
-
+                <button class="btn btn-square mx-2 " @click="reset">
+                    RESET
+                </button>
 
             </div>
 
@@ -67,4 +88,5 @@ defineEmits(['Fillter'])
 </template>
  
 <style>
+
 </style>

@@ -32,5 +32,6 @@ defineEmits(['confirmDelete'])
 </template>
  
 <style>
+
 </style>
 

@@ -28,6 +28,7 @@ const myTeam = [
     'github': "huato112",
     'URLGithub': "https://github.com/huato112",
     'ID': 63130500131
+
   },
   {
     'photo': p1,
@@ -37,14 +38,13 @@ const myTeam = [
     'facebook': "Mark Aritach",
     'URLfacebook': "https://www.facebook.com/markkArit/",
     'instagram': "mark_aritach",
-    'URLInstagram': "https://www.instagram.com/mark_aritach/",
+    'URLInstagram': "https://www.instagram.com/mark_aritach",
     'github': "markid1ggwp",
     'URLGithub': "https://github.com/markid1ggwp",
     'ID': 63130500133
   }
 
 ]
-const photo = '../assets/1.jpg'
 </script>
  
 <template>
@@ -70,17 +70,17 @@ const photo = '../assets/1.jpg'
             <img class="w-10" src="../assets/Logo/Phone.png" />
             <h1 class="text-base text-gray-900 ml-5 font-semibold">{{ team.phone }}</h1>
           </div>
-          <div class="mt-2 flex items-center">
+          <div class="mt-2 flex items-center ">
             <img class="w-10" src="../assets/Logo/Facebook.png" />
-            <a :href="team.URLfacebook" class="text-base text-gray-900 ml-5 font-semibold">{{ team.facebook }}</a>
+            <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.facebook }}</a>
           </div>
-          <div class="mt-2 flex items-center">
+          <div class="mt-2 flex items-center ">
             <img class="w-10" src="../assets/Logo/IG.png" />
-            <a :href="team.URLInstagram" class="text-base text-gray-900 ml-5 font-semibold">{{ team.instagram }}</a>
+            <a :href="team.URLInstagram" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.instagram }}</a>
           </div>
-          <div class="mt-2 flex items-center">
+          <div class="mt-2 flex items-center ">
             <img class="w-10" src="../assets/Logo/GitHub.png" />
-            <a :href="team.URLGithub" class="text-base text-gray-900 ml-5 font-semibold">{{ team.github }}</a>
+            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.github }}</a>
           </div>
         </div>
       </div>

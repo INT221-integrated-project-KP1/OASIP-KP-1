@@ -153,4 +153,5 @@ const numberFormat = function (number, width) {
 </template>
 
 <style>
+
 </style>
