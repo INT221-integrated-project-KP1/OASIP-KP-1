@@ -1,6 +1,9 @@
 package sit.int204.actionback.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "eventCategory")
@@ -11,12 +14,16 @@ public class EventCategory {
     private Integer id;
 
     @Column(name = "event_category_name", length = 100)
+    @NotNull
+
     private String eventCategoryName;
 
     @Column(name = "event_category_description", length = 500)
     private String eventCategoryDescription;
 
     @Column(name = "event_duration")
+    @Min(value=1)
+    @Max(value=480)
     private Integer eventDuration;
 
     public Integer getEventDuration() {

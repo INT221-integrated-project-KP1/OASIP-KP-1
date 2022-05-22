@@ -5,17 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Size;
 import java.time.Instant;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUpdateDTO {
-    @Future
+public class EventFilterDTO {
     private Instant eventStartTime;
-
-    @Size(max=500)
-    private String eventNotes;
+    private Integer eventDuration;
 }

@@ -67,23 +67,23 @@ public class EventService {
     }
 
 
-    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
+    public List<EventFilterDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
             if(eventCategoryId == 0){
                 if(pastOrFutureOrAll.equals("future")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
                 } else if (pastOrFutureOrAll.equals("past")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
                 }
-                return listMapper.mapList(repository.findAllByIdNot(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByIdNot(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
             }
 
             if(pastOrFutureOrAll.equals("future")){
-                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
             } else if (pastOrFutureOrAll.equals("past")){
-                return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
             }
-            return listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            return listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
         } else {
             //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
             //offsetMin เช่น -420 = +07:00
@@ -91,9 +91,9 @@ public class EventService {
             System.out.println(input);
             long dayInMilli = 86400000;
             if(eventCategoryId != 0){
-                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
             } else {
-                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventFilterDTO.class, modelMapper);
             }
         }
 
@@ -236,63 +236,7 @@ public class EventService {
         //แก้ DTO return แค้่ startTime, Duration พอ
     }
 
-//    public boolean checkEmail(String email){
-//        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
-//        Matcher m = p.matcher(email);
-//        boolean matchFound = m.matches();
-//        if(matchFound) {
-//            System.out.println("that is email");
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
-//    }
 
-//    public boolean checkEventDuration(int duration){
-//        if(duration >=1 && duration <= 480){
-//            System.out.println("invalid Duration");
-//            return true;
-//        }
-//        return false;
-//    }
-
-
-//VALIDATE-INPUT-LENGTH
-//    public boolean checkCountName(String Name){
-//        if(Name.length() > 100 ){
-//            System.out.println("length of name more than 100");
-//            return false;
-//        }
-//        return true;
-//    }
-//    public boolean checkFields(Event event){
-//        if( event.getId() != null){
-//            System.out.println("No ID for this event");
-//            return false;
-//        }
-//        if( event.getBookingName() != null){
-//            System.out.println("No BookingName for this event");
-//            return false;
-//        }
-//        if( event.getBookingEmail() != null){
-//            System.out.println("No BookingEmail for this event");
-//            return false;
-//        }
-//        if( event.getEventStartTime() != null){
-//            System.out.println("No Time for this event");
-//            return false;
-//        }
-//        if( event.getEventCategory() != null){
-//            System.out.println("No EventCategoryID for this event");
-//            return false;
-//        }
-//        if( event.getEventDuration() != null){
-//            System.out.println("No Duration for this event");
-//            return false;
-//        }
-//        return true;
-//    }
 
 
 }

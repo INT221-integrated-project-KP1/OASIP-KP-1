@@ -8,6 +8,7 @@ import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.service.EventCategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class EventCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@RequestBody EventCategory updateEventCategory, @PathVariable Integer id) {
+    public ResponseEntity update(@Valid @RequestBody EventCategory updateEventCategory, @PathVariable Integer id) {
         return eventCategoryService.updateEventCategory(updateEventCategory,id);
     }
 
