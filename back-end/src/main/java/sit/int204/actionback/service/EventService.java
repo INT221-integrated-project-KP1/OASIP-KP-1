@@ -284,12 +284,12 @@ public class EventService {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    public List<EventOverLabDTO> getAllEventForOverLabFront(Integer categoryId, String startTime){
+    public List<EventCheckOverDTO> getAllEventForOverLabFront(Integer categoryId, String startTime){
 
         Instant input = Instant.parse(startTime);
         long maxDuration = 480 *60 *1000;
 
-        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventOverLabDTO.class, modelMapper);
+        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventCheckOverDTO.class, modelMapper);
         //แก้ DTO return แค้่ startTime, Duration พอ
     }
 

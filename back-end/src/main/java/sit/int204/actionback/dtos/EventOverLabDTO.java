@@ -11,5 +11,6 @@ import java.time.Instant;
 @AllArgsConstructor
 public class EventOverLabDTO{
     private Instant eventStartTime;
+    private EventCategory eventCategory;
     private Integer eventDuration;
 }
