@@ -233,7 +233,7 @@ public class EventService {
         long maxDuration = 480 *60 *1000;
 
         return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
-
+        //แก้ DTO return แค้่ startTime, Duration พอ
     }
 
 //    public boolean checkEmail(String email){

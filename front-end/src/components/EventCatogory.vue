@@ -1,6 +1,5 @@
 <script setup>
-import { ref} from "vue";
-import { useRouter } from 'vue-router'
+import { ref, computed} from "vue";
 import { categorys } from "../stores/categoryData.js"
 import { events } from "../stores/eventData.js"
 
@@ -9,10 +8,7 @@ const myEvents = events()
 
 defineEmits(["updateEvent"]);
 
-const myRouter = useRouter()
-const goBooking = () => {
-    myRouter.push({ name: 'Booking' })
-}
+
 
 const selectedCategory = ref({ id: '', eventCategoryName: '', eventDuration: '', eventCategoryDescription: '' });
 
@@ -23,6 +19,15 @@ const getEventCategoryById = ((id) => {
     selectedCategory.value.eventCategoryName = temp.eventCategoryName
     selectedCategory.value.eventDuration = temp.eventDuration
     selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
+})
+
+const validateEventDuration = computed(() => {
+    if(selectedCategory.value.eventDuration > 480){
+        selectedCategory.value.eventDuration = 480;
+    }
+    else if(selectedCategory.value.eventDuration < 0){
+        selectedCategory.value.eventDuration = 0;
+    }
 })
 
 const alertError = () =>{alert("dawd")}
@@ -75,8 +80,7 @@ const alertError = () =>{alert("dawd")}
                                     <p class="py-2">Event Category Description : </p><textarea
                                         class="border-4 border-primary" rows="4" cols="50" maxlength="500"
                                         v-model="selectedCategory.eventCategoryDescription" placeholder="Descriptionnnnn ..."></textarea><br>
-                                        
-                                    <p class="py-2">Event Duration : </p><input max="480" type="number" min="1"
+                                    <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1"
                                         v-model="selectedCategory.eventDuration"/> <br>
                                                    <div class="modal-action">
                                                           <label
