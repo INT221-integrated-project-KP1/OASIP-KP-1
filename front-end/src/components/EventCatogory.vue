@@ -80,7 +80,7 @@ const alertError = () =>{alert("dawd")}
                                     <p class="py-2">Event Category Description : </p><textarea
                                         class="border-4 border-primary" rows="4" cols="50" maxlength="500"
                                         v-model="selectedCategory.eventCategoryDescription" placeholder="Descriptionnnnn ..."></textarea><br>
-                                    <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1"
+                                    <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1" class="border-4 border-primary"
                                         v-model="selectedCategory.eventDuration"/> <br>
                                                    <div class="modal-action">
                                                           <label
