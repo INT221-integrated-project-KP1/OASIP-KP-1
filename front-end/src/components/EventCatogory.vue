@@ -44,13 +44,64 @@ const validateEventName = computed(() => {
 
 const alertError = () =>{alert("dawd")}
 
+const statusError = ref(0)
+const EditCategory = async (Category) => {
+  if(!validateEventName.value){
+      return errorInsert()
+  }
+   if(Category.eventCategoryDescription.length > 500){
+       console.log('ssssss')
+      return errorInsert()
+   }
+let status = await myCategorys.updateCategory(Category)
+  statusError.value = status
+  console.log(status)
+  topFunction()
+  setTimeout(() => (statusError.value = 0), 2000);
+}
+
+const errorInsert = () => {
+  topFunction()
+  statusError.value = -1
+  setTimeout(() => (statusError.value = 0), 2000);
+};
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
 
 </script>
 
 <template>
-    <div class="flex justify-center">
-        <div class="m-10">
-            <div id="HaveEvent">
+<div class="flex justify-center">
+    <div class="m-10">
+
+      <div id="HaveEvent">
+        <div class="p-5">
+          <div class="alert alert-success shadow-lg" v-if="statusError === 1">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Your Edit has been confirmed!</span>
+            </div>
+          </div>
+
+          <div class="alert alert-error shadow-lg" v-else-if="statusError === -1">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Error! Input Value Uncomplete</span>
+            </div>
+          </div>
+
+       
                 <div v-if="myCategorys.categoryList.length != 0">
                     <div id="ListEvent">
                         <div>
@@ -100,7 +151,8 @@ const alertError = () =>{alert("dawd")}
                                                           <label
                                         class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                                         for="my-modal-6"
-                                        @click="!myCategorys.validateEventName(selectedCategory) ? myCategorys.updateCategory(selectedCategory):alertError()">
+                                        @click="
+                                        EditCategory(selectedCategory)">
                                         Update
                                     </label>
                                     <label for="my-modal-6"
@@ -118,13 +170,16 @@ const alertError = () =>{alert("dawd")}
                             <h2 class="card-title">No EventCategory </h2>
                         </div>
                     </div>
-                </div>
-            </div>
-
+                
+            
         </div>
 
+      </div>
+    
     </div>
 
+</div>
+ </div>
 
 </template>
 
