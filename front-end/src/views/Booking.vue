@@ -66,11 +66,12 @@ const createNewEvent = async () => {
   console.log(status, 'tusCheckStauts');
     errorWarning.value = status.error
   if (status.status == 1) {
+    myEvents.getEventsFilteredMorePageThatLoaded();
     newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
   }
   statusError.value = status.status
   error.value = status.error
-  myEvents.getEventsAllPageThatLoaded();
+
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
   setTimeout(() => (error.value = ""), 2000);
@@ -94,7 +95,7 @@ const check = async () => {
   const bool3 = validateEventName.value
   const bool4 = myEvents.validateEventNotes(newEvent.value)
   const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
-  const bool6 = boolOverlap.value
+  const bool6 = myEvents.boolOverlap
 let er=""
 if(!bool1){
 er += "Value has null\n"

@@ -5,6 +5,9 @@ export const events = defineStore('eventListState',() => {
     const page = ref(0); //page start 0
     const pageSize = ref(9); //default 4
     const checkLoaded = ref(true); //ดูว่า fetch ครบทุกหน้ายัง
+    const tempOverLabCheck = ref([]);
+    const boolOverlap = ref(true);
+
     const filterList = ref({
       eventCategoryId:0,
       pastOrFutureOrAll:[],
@@ -26,6 +29,7 @@ export const events = defineStore('eventListState',() => {
     
     console.log(eventList.value+"eventList");
     
+    //REET FILTER
     const resetFilter = () => {
       page.value = 0;
       eventList.value =[];
@@ -55,6 +59,7 @@ export const events = defineStore('eventListState',() => {
     }
   };
 
+  //GET FILTER MORE
   const getEventsFilteredMorePage = async () => {
     const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
     const offsetMin = new Date().getTimezoneOffset()
@@ -80,7 +85,7 @@ export const events = defineStore('eventListState',() => {
   };
 
 
-  // GET
+  // GET FILTER
   const getFilteredEvents = async () => {
     let date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
     const offsetMin = new Date().getTimezoneOffset()
@@ -102,15 +107,23 @@ export const events = defineStore('eventListState',() => {
     }
   };
 
-  // GET ALL LOAD
-const getEventsAllPageThatLoaded = async () => {
+  // GET ALL LOAD FILTER
+  const getEventsFilteredMorePageThatLoaded = async () => {
+    const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
+    const offsetMin = new Date().getTimezoneOffset()
+
+    const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${(pageSize.value)*(page.value+1)}`
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `
       );
       if (res.status === 200) {
         const eventsToAdd = await res.json();
-        addNewEvent(eventsToAdd.content)
+        if(eventsToAdd.length < pageSize.value){
+          checkLoaded.value = false;
+        }
+        addNewEvent(eventsToAdd)
       } else {
         console.log("error, cannot get data");
       }
@@ -247,8 +260,7 @@ const createNewEvent = async (event) => {
     }
   };
 
-  const tempOverLabCheck = ref([]);
-  const boolOverlap = ref(true);
+
   //VALIDATE TIME OVERLAB
   const validateOverlab = async (eventId, categoryId, startTime, duration) => {
     boolOverlap.value = true;
@@ -327,7 +339,7 @@ const createNewEvent = async (event) => {
 
     getEvents();
 
-    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded,color, boolOverlap }
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded,color, boolOverlap, getEventsFilteredMorePageThatLoaded }
 })
 
 
