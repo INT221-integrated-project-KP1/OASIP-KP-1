@@ -123,7 +123,8 @@ export const events = defineStore('eventListState',() => {
         if(eventsToAdd.length < pageSize.value){
           checkLoaded.value = false;
         }
-        addNewEvent(eventsToAdd)
+        
+        update(eventsToAdd);
       } else {
         console.log("error, cannot get data");
       }
