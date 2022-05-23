@@ -7,16 +7,10 @@ import { useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 
 const myEvents = events()
-const categorySelect = ref()
+
 const myRouter = useRouter()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
-}
-
-const boolOverlap = ref(true)
-
-const checkValidateOverlab = async (id, edit, duration) => {
-  boolOverlap.value = await myEvents.validateOverlab(id, 0, edit, duration)
 }
 
 //GET BY ID
@@ -141,7 +135,7 @@ const errorInsert = () => {
                         Event Details: {{ event.eventDetails }}
                       </p>
                       <div class="card-actions justify-end">
-                        <label @click="getEventById(event.id);categorySelect=event.id" for="my-modal-6" :class="
+                        <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
                           ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
                         ">Show
                           more...</label>
@@ -164,11 +158,11 @@ const errorInsert = () => {
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <div v-if="myEvents.validateFutureDate(selectedEvent.eventStartTime)">
-                    
-                    <p class="py-2">Event Start Time:<span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time Only</span>
-                      <span v-show="!myEvents.validateOverlab(selectedEvent.id,categorySelect, editStartTime, selectedEvent.duration)" style="color: red;">*OverLap Time</span>
-            <span>                      <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime" @change=" checkValidateOverlab(selectedEvent.id, editStartTime, selectedEvent.duration)"/>
-</span>
+                    <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time Only</span>
+                      <span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time</span>
+                    <p class="py-2">Event Start Time:
+            
+                      <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime" @change="myEvents.validateOverlab(selectedEvent.id, 0, editStartTime, selectedEvent.duration)"/>
                     </p>
                     <p class="py-2">Event Notes: <span v-show="editNotes.length > 500" style="color: red;">*Invalid
                         Notes</span>
@@ -190,10 +184,10 @@ const errorInsert = () => {
                     <label
                       :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
                       for="my-modal-6"
-                      @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration);boolOverlap=true">Update</label>
+                      @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration)">Update</label>
                     <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
                     <label for="my-modal-6"
-                      class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline" @click="boolOverlap=true">Close</label>
+                      class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                   </div>
                 </div>
               </div>

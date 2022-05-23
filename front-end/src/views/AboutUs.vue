@@ -5,7 +5,7 @@ import p1 from "../assets/AdminPNG/1.png"
 
 const myTeam = [
   {
-    'photo': p1,
+    'photo': 'https://scontent-kut2-2.xx.fbcdn.net/v/t39.30808-6/271129077_4438876166238753_8476312548203047623_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=T1mEev51WzYAX_wsfMl&_nc_ht=scontent-kut2-2.xx&oh=00_AT_Cms-KZhe8UwUNifEqJcEhz_Y83XSdi9RPi_QBzzaeSg&oe=62907E4A',
     'name': "Rapeepat Klamjeen",
     'role': "ยาจก",
     'phone': "085-132-XXXX",
@@ -17,7 +17,7 @@ const myTeam = [
     'URLGithub': "https://github.com/tuskingcup",
     'ID': 63130500099
   }, {
-    'photo': p1,
+    'photo': 'https://scontent-kut2-1.xx.fbcdn.net/v/t1.18169-9/10492251_463085203858201_6361870020470654759_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=yqKEK4zni20AX9-Zbq1&_nc_ht=scontent-kut2-1.xx&oh=00_AT_Hiso1w1OLR4uDHMkUJ1AQwFpRDaQTqHBe8DLGFJlaMA&oe=62B21C6E',
     'name': "Amornpong Duangchawee",
     'role': "Valorant $$",
     'phone': "098-XXX-4953",
@@ -31,7 +31,7 @@ const myTeam = [
 
   },
   {
-    'photo': p1,
+    'photo': 'https://scontent-kut2-2.xx.fbcdn.net/v/t39.30808-6/272998035_1930265093801974_3627705199021434752_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wvQFFgpbOP0AX8prhF4&_nc_ht=scontent-kut2-2.xx&oh=00_AT8_GnV7n7NOKBMoDes3jcGdHsYDkEZvcKedVGTTxsK7tQ&oe=6290EF55',
     'name': "Aritach Krudminburee",
     'role': "นอนดูเพื่อนทำงาน",
     'phone': "096-701-XXXX",
@@ -54,7 +54,7 @@ const myTeam = [
    transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
       <img class="w-30 h-30 object-cover  mb-2 z-10 " :src="team.photo" alt="logo">
 
-      <div class="flex flex-col pl-10  pb-10">
+      <div class=" flex flex-col pl-10 pb-10 pr-10">
         <h1 class="text-3xl text-gray-900 font-semibold">{{ team.name }}</h1>
         <div class="mb-2 mt-2">
           <h1 class="text-base text-gray-300 font-semibold">Student ID {{ team.ID }}</h1>
@@ -67,20 +67,26 @@ const myTeam = [
 
           <h1 class="text-base text-gray-300 font-semibold">Contact Details</h1>
           <div class="mt-2 flex items-center">
-            <img class="w-10" src="../assets/Logo/Phone.png" alt="phone"/>
+            <img class="w-10" src="../assets/Logo/Phone.png" alt="phone" />
             <h1 class="text-base text-gray-900 ml-5 font-semibold">{{ team.phone }}</h1>
           </div>
-          <div class="mt-2 flex items-center">
-            <img class="w-10" src="../assets/Logo/Facebook.png" alt="Facebook"/>
-            <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point ">{{ team.facebook }}</a>
+          <div class="tuskungtech mt-2 flex items-center">
+            <img class="w-10" src="../assets/Logo/Facebook.png" alt="Facebook" />
+            <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point ">{{
+                team.facebook
+            }}</a>
           </div>
-          <div class="mt-2 flex items-center ">
-            <img class="w-10" src="../assets/Logo/IG.png" alt="IG"/>
-            <a :href="team.URLInstagram" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.instagram }}</a>
+          <div class="tuskungtech mt-2 flex items-center ">
+            <img class="w-10" src="../assets/Logo/IG.png" alt="IG" />
+            <a :href="team.URLInstagram" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{
+                team.instagram
+            }}</a>
           </div>
-          <div class="mt-2 flex items-center ">
-            <img class="w-10" src="../assets/Logo/GitHub.png" alt="GitHub"/>
-            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.github }}</a>
+          <div class="tuskungtech mt-2 flex items-center ">
+            <img class="w-10" src="../assets/Logo/GitHub.png" alt="GitHub" />
+            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{
+                team.github
+            }}</a>
           </div>
         </div>
       </div>
@@ -91,5 +97,18 @@ const myTeam = [
 
 </template>
  
-<style>
+<style scoped>
+.tuskungtech {
+  padding: 2%;
+  border: none;
+  color: black;
+  transition: 0.3s;
+  height: auto
+}
+
+.tuskungtech:hover {
+  background-color: #1F1D1E;
+  color: white;
+  
+}
 </style>

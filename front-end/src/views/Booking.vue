@@ -1,16 +1,21 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
 
+
+
 const myEvents = events()
+myEvents.boolOverlap = true;
+
+
 const myCategorys = categorys()
 
 const error = ref();
 const errorWarning = ref();
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
 
-const boolOverlap = ref(true);
+
 
 //ระเบิด 01
 function checkProperties(obj) {
@@ -61,11 +66,12 @@ const createNewEvent = async () => {
   console.log(status, 'tusCheckStauts');
     errorWarning.value = status.error
   if (status.status == 1) {
+    myEvents.getEventsFilteredMorePageThatLoaded();
     newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
   }
   statusError.value = status.status
   error.value = status.error
-  myEvents.getEventsAllPageThatLoaded();
+
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
   setTimeout(() => (error.value = ""), 2000);
@@ -83,17 +89,13 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const checkValidateOverlab = async () => {
-  boolOverlap.value = await myEvents.validateOverlab(0, newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
-}
-
 const check = async () => {
   const bool1 = checkProperties(newEvent.value);
   const bool2 = validateEventEmail.value
   const bool3 = validateEventName.value
   const bool4 = myEvents.validateEventNotes(newEvent.value)
   const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
-  const bool6 = boolOverlap.value
+  const bool6 = myEvents.boolOverlap
 let er=""
 if(!bool1){
 er += "Value has null\n"
@@ -240,14 +242,14 @@ error.value = er
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Start Time:<span v-show="!myEvents.validateFutureDate(newEvent.startTime)" style="color: red;">*Future Time
                     Only</span><span v-show="!newEvent.eventCategory.id > 0" style="color: red;">*Select Category First
-                    </span><span v-show="!boolOverlap" style="color: red;">*OverLap Time
+                    </span><span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time
                     </span>
                 </label>
                 
                 <input input type="datetime-local" :disabled="!newEvent.eventCategory.id > 0" :class="myEvents.validateFutureDate(newEvent.startTime) ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " v-model="newEvent.startTime" @change="checkValidateOverlab()"/>
+                " v-model="newEvent.startTime" @change="myEvents.validateOverlab(0, newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)"/>
               </div>
              
 
