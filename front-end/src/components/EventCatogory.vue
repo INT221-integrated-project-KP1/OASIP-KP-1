@@ -30,6 +30,18 @@ const validateEventDuration = computed(() => {
     }
 })
 
+const validateEventName = computed(() => {
+  //check length type bra bra brah...
+  if (selectedCategory.eventCategoryName != undefined) {
+    nselectedCategory.eventCategoryName = selectedCategory.eventCategoryName.replace("  ", " ").trimStart();
+    if ((selectedCategory.eventCategoryName.length > 100)) {
+      console.log('name false');
+      return false;
+    }
+  }
+  return true;
+})
+
 const alertError = () =>{alert("dawd")}
 
 
@@ -68,18 +80,20 @@ const alertError = () =>{alert("dawd")}
                             <div class="modal modal-bottom sm:modal-middle ">
                                 <div class="modal-box bg-white">
                                     <span v-show="myCategorys.validateEventName(selectedCategory)" style="color: red;">*Name unique</span>
-                                    <p class="py-2">Event Category Name : </p><input
+                                    <span v-show="!validateEventName" style="color: red;">*Name > 100</span>
+                                    <p class="py-2">Event Category Name : </p><input maxlength="100"
                                     :class="!myCategorys.validateEventName(selectedCategory) ?
                                     ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                                      : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                                      "
                                         v-model="selectedCategory.eventCategoryName" placeholder="Nameee ..."/><br>
-
+                                    <span>{{ 100-selectedCategory.eventCategoryName.length}}/100</span>
 
 
                                     <p class="py-2">Event Category Description : </p><textarea
                                         class="border-4 border-primary" rows="4" cols="50" maxlength="500"
                                         v-model="selectedCategory.eventCategoryDescription" placeholder="Descriptionnnnn ..."></textarea><br>
+                                        <span>{{ 500-selectedCategory.eventCategoryDescription.length}}/500</span>
                                     <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1" class="border-4 border-primary"
                                         v-model="selectedCategory.eventDuration"/> <br>
                                                    <div class="modal-action">

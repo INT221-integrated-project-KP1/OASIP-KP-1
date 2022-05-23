@@ -251,6 +251,7 @@ const createNewEvent = async (event) => {
   const boolOverlap = ref(true);
   //VALIDATE TIME OVERLAB
   const validateOverlab = async (eventId, categoryId, startTime, duration) => {
+    boolOverlap.value = true;
   await getEventsForOverLab(eventId, categoryId, startTime);
     let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
     let newDurationMilli = duration * 60 * 1000;
