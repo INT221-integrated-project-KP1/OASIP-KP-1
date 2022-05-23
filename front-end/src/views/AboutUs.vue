@@ -70,9 +70,9 @@ const myTeam = [
             <img class="w-10" src="../assets/Logo/Phone.png" alt="phone"/>
             <h1 class="text-base text-gray-900 ml-5 font-semibold">{{ team.phone }}</h1>
           </div>
-          <div class="mt-2 flex items-center ">
+          <div class="mt-2 flex items-center">
             <img class="w-10" src="../assets/Logo/Facebook.png" alt="Facebook"/>
-            <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.facebook }}</a>
+            <a :href="team.URLfacebook" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point ">{{ team.facebook }}</a>
           </div>
           <div class="mt-2 flex items-center ">
             <img class="w-10" src="../assets/Logo/IG.png" alt="IG"/>
@@ -80,7 +80,7 @@ const myTeam = [
           </div>
           <div class="mt-2 flex items-center ">
             <img class="w-10" src="../assets/Logo/GitHub.png" alt="GitHub"/>
-            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point hover:text-bluue-600">{{ team.github }}</a>
+            <a :href="team.URLGithub" target="_blank" class="text-base text-gray-900 ml-5 font-semibold point">{{ team.github }}</a>
           </div>
         </div>
       </div>

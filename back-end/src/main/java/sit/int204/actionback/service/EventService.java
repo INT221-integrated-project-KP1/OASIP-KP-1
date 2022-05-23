@@ -71,9 +71,9 @@ public class EventService {
 
     public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
-            if(eventCategoryId == 0){
+            if(eventCategoryId <= 0){
                 if(pastOrFutureOrAll.equals("future")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
                 } else if (pastOrFutureOrAll.equals("past")){
                     return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
                 }
@@ -81,7 +81,7 @@ public class EventService {
             }
 
             if(pastOrFutureOrAll.equals("future")){
-                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             } else if (pastOrFutureOrAll.equals("past")){
                 return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
             }
@@ -92,10 +92,10 @@ public class EventService {
             Instant input = Instant.parse(date).plus(offsetMin, ChronoUnit.MINUTES);
             System.out.println(input);
             long dayInMilli = 86400000;
-            if(eventCategoryId != 0){
-                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            if(eventCategoryId > 0){
+                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             } else {
-                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             }
         }
 
@@ -194,7 +194,7 @@ public class EventService {
         for (int i = 0; i < eventList.size(); i++) {
             System.out.println(eventList.size());
 
-            if(0 != eventList.get(i).getId()){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
+            if(id != eventList.get(i).getId()){ //เวลา update จะได้ไม่ต้องเช็คตัวมันเอง
                 System.out.println("start Va5");
 
                 long milliSecond = eventList.get(i).getEventStartTime().toEpochMilli();
@@ -215,15 +215,11 @@ public class EventService {
                     return false;
                     //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                 }
-                else if (newEventStartTimeMilli < milliSecond && newEventStartTimeMilli+newDurationMilli > milliSecond){
+                else if (newEventStartTimeMilli <= milliSecond && newEventStartTimeMilli+newDurationMilli >= milliSecond){
                     System.out.println("Overlab3");
                     return false;
                     //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
-                } else if(newEventStartTimeMilli == milliSecond && newDurationMilli == duration){
-                    System.out.println("OverLab5");
-                    return false;
                 }
-
             }
         }
         return true;
@@ -284,12 +280,15 @@ public class EventService {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    public List<EventCheckOverDTO> getAllEventForOverLabFront(Integer categoryId, String startTime){
-
+    public List<EventCheckOverDTO> getAllEventForOverLabFront(Integer eventId,Integer categoryId, String startTime){
+        if(eventId != 0){
+            categoryId = repository.findById(eventId).get().getEventCategory().getId();
+            System.out.println(categoryId);
+        }
         Instant input = Instant.parse(startTime);
         long maxDuration = 480 *60 *1000;
 
-        return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventCheckOverDTO.class, modelMapper);
+        return listMapper.mapList(repository.findAllByIdNotAndEventCategoryIdAndEventStartTimeBetween(eventId, categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventCheckOverDTO.class, modelMapper);
         //แก้ DTO return แค้่ startTime, Duration พอ
     }
 

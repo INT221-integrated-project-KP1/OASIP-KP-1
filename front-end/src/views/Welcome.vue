@@ -46,7 +46,6 @@ const goHome = () => {
           <h1 class="text-5xl font-bold">Welcome to Group</h1>
           <h1 class="text-4xl font-bold p-9 ">KP-1</h1>
 
-
           <p class="py-6">
 
           </p>

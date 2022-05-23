@@ -11,7 +11,7 @@ defineEmits(['confirmDelete'])
 
     <input type="checkbox" id="my-modal" class="modal-toggle" />
 
-    <div class="modal modal-bottom sm:modal-middle">
+    <div class="modal ">
         <div class="modal-box bg-white">
             <div class="font-bold text-lg">
                 <p>คุณเเน่ใจที่จะลบไหม</p>

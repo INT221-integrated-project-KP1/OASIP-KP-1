@@ -7,8 +7,10 @@ const myEvents = events()
 const myCategorys = categorys()
 
 const error = ref();
-
+const errorWarning = ref();
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
+
+const boolOverlap = ref(true);
 
 //ระเบิด 01
 function checkProperties(obj) {
@@ -57,6 +59,7 @@ const createNewEvent = async () => {
   newEvent.value.name = newEvent.value.name.trimEnd();
   const status = await myEvents.createNewEvent(newEvent.value);
   console.log(status, 'tusCheckStauts');
+    errorWarning.value = status.error
   if (status.status == 1) {
     newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
   }
@@ -80,14 +83,46 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const check = () => {
-  console.log(checkProperties(newEvent.value) + "1")
-  console.log(validateEventEmail.value + "2")
-  console.log(validateEventName.value + "3")
-  console.log(myEvents.validateEventNotes(newEvent.value) + "4")
-  console.log(myEvents.validateFutureDate(newEvent.value) + "5")
-  console.log(myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration) + "6")
-  return checkProperties(newEvent.value) && validateEventEmail.value && validateEventName.value && myEvents.validateEventNotes(newEvent.value) && myEvents.validateFutureDate(newEvent.value) && myEvents.validateOverlab(newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+const checkValidateOverlab = async () => {
+  boolOverlap.value = await myEvents.validateOverlab(0, newEvent.value.eventCategory.id, newEvent.value.startTime, newEvent.value.eventCategory.duration)
+}
+
+const check = async () => {
+  const bool1 = checkProperties(newEvent.value);
+  const bool2 = validateEventEmail.value
+  const bool3 = validateEventName.value
+  const bool4 = myEvents.validateEventNotes(newEvent.value)
+  const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
+  const bool6 = boolOverlap.value
+let er=""
+if(!bool1){
+er += "Value has null\n"
+  }
+if(!bool2){
+      er += "Email invaild\n"
+    }
+    if(!bool3){
+      er += "Name > 100\n"
+    }
+    if(!bool4){
+      er += "Notes > 500\n"
+    }
+    if(!bool5){
+      er += "Time is not Future\n"
+    }
+    if(!bool6){
+      er += "Time is OverLap\n"
+    }
+
+  //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
+  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6){
+    createNewEvent()
+  }else{
+error.value = er    
+    errorInsert();
+  }
+
+  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6
 
 }
 </script>
@@ -114,7 +149,7 @@ const check = () => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <span>Warning: {{ error }}</span>
+          <span>Warning: {{ errorWarning }}</span>
         </div>
       </div>
 
@@ -125,7 +160,7 @@ const check = () => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span>Error! Input Value Uncomplete</span>
+          <span>Error! Input Value Uncomplete {{ error }}</span>
         </div>
       </div>
     </div>
@@ -162,7 +197,7 @@ const check = () => {
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your name" v-model="newEvent.name" /><br>
-                <span>{{ newEvent.name.length}}/100</span>
+                <span>{{ 100-newEvent.name.length}}/100</span>
               </div>
 
               <div class="space-y-2">
@@ -183,20 +218,11 @@ const check = () => {
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
                 <!-- มาร์คเเก้ -->
-                <br><span>{{ newEvent.notes.length
+                <br><span>{{ 500-newEvent.notes.length
                 }}/500</span>
               </div>
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent)" style="color: red;">*Future Time
-                    Only</span>
-                </label>
-                <input input type="datetime-local" :class="myEvents.validateFutureDate(newEvent) ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " v-model="newEvent.startTime" />
-              </div>
-              <div class="space-y-2">
+
+               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Event Category:
                 </label>
@@ -212,6 +238,21 @@ const check = () => {
 
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent.startTime)" style="color: red;">*Future Time
+                    Only</span><span v-show="!newEvent.eventCategory.id > 0" style="color: red;">*Select Category First
+                    </span><span v-show="!boolOverlap" style="color: red;">*OverLap Time
+                    </span>
+                </label>
+                
+                <input input type="datetime-local" :disabled="!newEvent.eventCategory.id > 0" :class="myEvents.validateFutureDate(newEvent.startTime) ?
+                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                " v-model="newEvent.startTime" @change="checkValidateOverlab()"/>
+              </div>
+             
+
+              <div class="space-y-2">
+                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Event durations:
                 </label>
                 <input type="text"
@@ -222,10 +263,7 @@ const check = () => {
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check()
-                  ? createNewEvent(newEvent)
-                  : errorInsert()">
-                  Add New Event
+                  @click="check()">Add New Event
                 </button>
               </div>
             </div>

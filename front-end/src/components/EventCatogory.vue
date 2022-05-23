@@ -43,7 +43,7 @@ const alertError = () =>{alert("dawd")}
                     <div id="ListEvent">
                         <div>
                             <ol class="">
-                                <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-10 justify-items-center">
+                                <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-10 justify-items-center">
                                     <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                                         class="card w-96 bg-base-100 shadow-xl space-x-5 
                                         transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
@@ -80,7 +80,7 @@ const alertError = () =>{alert("dawd")}
                                     <p class="py-2">Event Category Description : </p><textarea
                                         class="border-4 border-primary" rows="4" cols="50" maxlength="500"
                                         v-model="selectedCategory.eventCategoryDescription" placeholder="Descriptionnnnn ..."></textarea><br>
-                                    <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1"
+                                    <p class="py-2">Event Duration : </p><input @input="validateEventDuration" max="480" type="number" min="1" class="border-4 border-primary"
                                         v-model="selectedCategory.eventDuration"/> <br>
                                                    <div class="modal-action">
                                                           <label
