@@ -21,5 +21,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByIdNot(Integer eventId, Pageable pageable);
     List<Event> findAllByEventStartTimeBetween(Instant d, Instant t, Pageable pageable);
     List<Event> findAllByEventCategoryIdAndEventStartTimeBetween(Integer eventCategoryid, Instant d, Instant t, Pageable pageable);
-
+    List<Event> findAllByIdNotAndEventCategoryIdAndEventStartTimeBetween(Integer eventId, Integer eventCategoryid, Instant d, Instant t,  Pageable pageable);
 }

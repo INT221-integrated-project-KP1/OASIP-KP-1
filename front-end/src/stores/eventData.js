@@ -5,6 +5,9 @@ export const events = defineStore('eventListState',() => {
     const page = ref(0); //page start 0
     const pageSize = ref(9); //default 4
     const checkLoaded = ref(true); //ดูว่า fetch ครบทุกหน้ายัง
+    const tempOverLabCheck = ref([]);
+    const boolOverlap = ref(true);
+
     const filterList = ref({
       eventCategoryId:0,
       pastOrFutureOrAll:[],
@@ -26,6 +29,7 @@ export const events = defineStore('eventListState',() => {
     
     console.log(eventList.value+"eventList");
     
+    //REET FILTER
     const resetFilter = () => {
       page.value = 0;
       eventList.value =[];
@@ -55,6 +59,7 @@ export const events = defineStore('eventListState',() => {
     }
   };
 
+  //GET FILTER MORE
   const getEventsFilteredMorePage = async () => {
     const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
     const offsetMin = new Date().getTimezoneOffset()
@@ -80,11 +85,12 @@ export const events = defineStore('eventListState',() => {
   };
 
 
-  // GET
+  // GET FILTER
   const getFilteredEvents = async () => {
-    const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
+    let date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
     const offsetMin = new Date().getTimezoneOffset()
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
@@ -101,15 +107,24 @@ export const events = defineStore('eventListState',() => {
     }
   };
 
-  // GET ALL LOAD
-const getEventsAllPageThatLoaded = async () => {
+  // GET ALL LOAD FILTER
+  const getEventsFilteredMorePageThatLoaded = async () => {
+    const date = filterList.value.date==""?"":(filterList.value.date+'T00:00:00Z')
+    const offsetMin = new Date().getTimezoneOffset()
+
+    const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled?page=0&pageSize=${(pageSize.value)*(page.value+1)}`
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `
       );
       if (res.status === 200) {
         const eventsToAdd = await res.json();
-        addNewEvent(eventsToAdd.content)
+        if(eventsToAdd.length < pageSize.value){
+          checkLoaded.value = false;
+        }
+        
+        update(eventsToAdd);
       } else {
         console.log("error, cannot get data");
       }
@@ -170,7 +185,21 @@ const createNewEvent = async (event) => {
     };
 
     //PUT
-    const updateEvent = async (startTime, notes, id) => {
+    const updateEvent = async (startTime, notes, id, duration) => {
+    try{
+    console.log("startTimeUpdate: " + startTime)
+    if(!await validateOverlab(id, 0, startTime.replace(":00", ""), duration)){
+      
+      return {error:"Overlap", status:-1}
+    }
+    if(notes.length>500){
+      
+      return {error : "note more than 500", status:-1}
+    }
+    if(!validateFutureDate(startTime)){
+      return {error: "Future time only $$",status:-1}
+    }
+    
     console.log("startTime: " + startTime)
     console.log("Notes: " + notes)
     console.log("id: " + id)
@@ -186,24 +215,33 @@ const createNewEvent = async (event) => {
     })
     if (res.status === 201) {
       const modEvent = await res.json();
+      console.log(modEvent)
       eventList.value = eventList.value.map((event) =>
         event.id === modEvent.id
           ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
           : event
       )
-  
+      
       console.log('edited successfully')
+      return {error:"", status:1};
     } else {
       console.log('error, cannot edit')
+      
+      return {error: await res.text(), status:-1};
     }
+  } catch(err){
+    console.log('catchhhhh');
+    console.log(err);
+    return {error:err, status:-1};
+  }
   }
 
   //fetch to check overlab
   ///api/scheduled/overlabcheck?eventCategoryId=5&startTime=2022-06-08T22:00:00Z
-  const getEventsForOverLab = async (eventCategoryId, startTime) => {
+  const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
         const eventsOverLab = await res.json();
@@ -211,8 +249,11 @@ const createNewEvent = async (event) => {
         eventsOverLab.forEach((e)=>{
           tempOverLabCheck.value.push(e);
         })
+        console.log("อันนี้ ๆ")
+        console.log(tempOverLabCheck.value)
         
       } else {
+        
         console.log("error, cannot get data");
       }
     } catch (err) {
@@ -220,44 +261,61 @@ const createNewEvent = async (event) => {
     }
   };
 
-  const tempOverLabCheck = ref([]);
+
   //VALIDATE TIME OVERLAB
-    function validateOverlab(categoryId, startTime, duration) {
-    getEventsForOverLab(categoryId, startTime);
+  const validateOverlab = async (eventId, categoryId, startTime, duration) => {
+    boolOverlap.value = true;
+  await getEventsForOverLab(eventId, categoryId, startTime);
     let newMilli = new Date(startTime).getTime(); //new EventStartTime in milli
     let newDurationMilli = duration * 60 * 1000;
-    let bool = ref(true);
+    
+    console.log("อันนี้ ๆ V.2")
+    console.log(tempOverLabCheck.value)
     tempOverLabCheck.value.forEach((value) => {
-        console.log("START")
-        console.log(value);
+        console.log("Loop มั้ย")
         let milli = new Date(value.eventStartTime).getTime(); // get eventStartTime in milli
         let durationMilli = value.eventDuration * 60 * 1000;
 
-        if (newMilli + newDurationMilli > milli && newMilli + newDurationMilli <= milli + durationMilli) {
+        console.log("อันน้")
+        console.log(newMilli == milli);
+        console.log(newMilli < milli + durationMilli);
+
+        if (newMilli + newDurationMilli >= milli && newMilli + newDurationMilli <= milli + durationMilli) {
           //overlab 1+4
             console.log('Overlab 1+4');
-            bool.value = false;
+            boolOverlap.value = false;
+ 
           return false; //overlab
         }
-        else if (newMilli >= milli && newMilli < milli + durationMilli) {
+        if (newMilli >= milli && newMilli < milli + durationMilli) {
             console.log('Overlab2+4');
-            bool.value = false;
+            boolOverlap.value = false;
+
             return false;
         }
-        else if (newMilli <= milli && newMilli + newDurationMilli >= milli + durationMilli) {
+        if (newMilli <= milli && newMilli + newDurationMilli >= milli + durationMilli) {
             console.log('Overlab3');
-            bool.value = false;
+            boolOverlap.value = false;
             return false;
         }
     })
-    console.log('return:' + bool.value);
-    return bool.value;
-    }
+    console.log('return:' + boolOverlap.value);
+    return boolOverlap.value;
+  
+
+}
+ 
+
+  
 
     //VALIDATE FUTURE DATE
-    const validateFutureDate = (eventToCheck) => {
+    const validateFutureDate = (startTime) => {
+    console.log("future");
+    console.log(startTime);
     let nowDate = new Date().getTime(); //time in millisecond
-    let eventDate = new Date(eventToCheck.startTime).getTime();
+    let eventDate = new Date(startTime).getTime();
+    console.log(eventDate);
+
     console.log('in Date')
     if (eventDate < nowDate) {
       console.log('future false');
@@ -282,7 +340,7 @@ const createNewEvent = async (event) => {
 
     getEvents();
 
-    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, getEventsAllPageThatLoaded, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded,color }
+    return { eventList, update, pageIncrement,pageSizeIncrement ,page, pageSize, getEvents, removeEvent, updateEvent, validateOverlab, validateFutureDate, validateEventNotes, createNewEvent, getFilteredEvents, filterList, getEventsFilteredMorePage, resetFilter, checkLoaded,color, boolOverlap, getEventsFilteredMorePageThatLoaded }
 })
 
 

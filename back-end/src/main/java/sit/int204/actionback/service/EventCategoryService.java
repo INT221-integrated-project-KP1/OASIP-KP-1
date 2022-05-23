@@ -17,6 +17,13 @@ public class EventCategoryService {
     @Autowired
     public EventCategoryRepository eventCategoryRepository;
 
+    public ResponseEntity findCategory(){
+
+        List<EventCategory> eventCategory = eventCategoryRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(eventCategory);
+    }
+
+
     public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id) {
         EventCategory eventCategory = eventCategoryRepository.findEventCategoryById(id);
 
@@ -36,6 +43,9 @@ public class EventCategoryService {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory);
     }
 
+
+
+    //Check Update Category
     public boolean checkEventDuration(Integer duration){
         if(duration >=1 && duration <= 480){
             return true;
@@ -60,4 +70,6 @@ public class EventCategoryService {
         System.out.println("Duplicate EventCategoryName");
         return false;
     }
+
+
 }

@@ -5,6 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -17,8 +18,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import java.nio.file.Paths;
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -30,7 +34,8 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatus status,
-            WebRequest request) {
+            WebRequest request
+            ) {
         List<String> errors = new ArrayList<String>();
         String e ="";
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -42,26 +47,19 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
             e = e + error.getObjectName()+ " " + error.getDefaultMessage()+";";
 
         }
-        String timeStamp = new Date().toString();
-
+        ZonedDateTime timeStamp = ZonedDateTime.now();
         ApiError apiError =
-                new ApiError(timeStamp,400,HttpStatus.BAD_REQUEST,e,ex.getNestedPath());
-        return handleExceptionInternal(
-                ex, apiError, headers, apiError.getErrors(), request);
+                new ApiError(timeStamp,400,HttpStatus.BAD_REQUEST,e,request.getDescription(false).split("=")[1]);
+        return  new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
+
     }
 
-//    @Override
-// protected ResponseEntity<Object> handleMethodArgumentNotValid(
-//        MethodArgumentNotValidException ex,
-//         HttpHeaders headers,
-//          HttpStatus status,
-//          WebRequest request) {
-//        Map<String, String> errors = new HashMap<>();
-//        ex.getBindingResult().getAllErrors().forEach((error) -> {
-//            String fieldName = "r";
-//            String errorMessage = error.getDefaultMessage();
-//            errors.put(fieldName, errorMessage);
-//        });
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
+        System.out.println("All exceptions Method getting executed!!!!");
+
+        final List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        return new ResponseEntity("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

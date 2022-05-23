@@ -13,67 +13,117 @@ const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
-  //GET BY ID
-  const getEventById = async (id) => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
-      console.log(res.status);
-      if (res.status === 200) {
-        selectedEvent.value = await res.json();
-        editNotes.value = selectedEvent.value.eventNotes
-        if(editNotes.value == null){
-          editNotes.value = "";
-        }
-        let edit = new Date(selectedEvent.value.eventStartTime);
-        editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
-        console.log(new Date().getDate());
-        console.log(edit.getDate());
-        console.log(editStartTime.value);
-      } else {
-        console.log("error, cannot get data");
+//GET BY ID
+const getEventById = async (id) => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
+    console.log(res.status);
+    if (res.status === 200) {
+      selectedEvent.value = await res.json();
+      editNotes.value = selectedEvent.value.eventNotes
+      if (editNotes.value == null) {
+        editNotes.value = "";
       }
-    } catch (err) {
-      console.log("Error: ", err.message);
+      let edit = new Date(selectedEvent.value.eventStartTime);
+      editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
+      console.log(new Date().getDate());
+      console.log(edit.getDate());
+      console.log(editStartTime.value);
+    } else {
+      console.log("error, cannot get data");
     }
-  };
+  } catch (err) {
+    console.log("Error: ", err.message);
+  }
+};
 
 
 defineEmits(["deleteEvent", "updateEvent"]);
 
-const selectedEvent = ref({ bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
+const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
 //2022-02-20T02:02
 
+function topFunction() {
+  console.log("TestTop")
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
 
 
 const numberFormat = function (number, width) {
   return new Array(+width + 1 - (number + '').length).join('0') + number;
 }
 
+// const updateEvent = async (startTime, notes, id, duration) => {
+const statusError = ref(0)
+const statusErrorText = ref("")
+const EditEvent = async (notes, startTime, id, duration) => {
 
+  const status = await myEvents.updateEvent(startTime, notes, id, duration);
+  statusErrorText.value = status.error
+  statusError.value = status.status
+  if (statusError == -1) {
+    errorInsert()
+  }
+  topFunction()
+  setTimeout(() => (statusError.value = 0), 2000);
+}
+
+const errorInsert = () => {
+  topFunction()
+  setTimeout(() => (statusError.value = 0), 2000);
+};
 
 </script>
 
 <template>
   <div class="flex justify-center">
     <div class="m-10">
-      
+
       <div id="HaveEvent">
+        <div class="p-5">
+          <div class="alert alert-success shadow-lg" v-if="statusError === 1">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Your Edit has been confirmed!</span>
+            </div>
+          </div>
+
+          <div class="alert alert-error shadow-lg" v-else-if="statusError === -1">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Error! Input Value Uncomplete {{ statusErrorText }}</span>
+            </div>
+          </div>
+        </div>
+
+
+
+
         <Fillter />
         <div v-if="myEvents.eventList.length != 0">
-          
+
           <div id="ListEvent">
             <div>
               <ol class="">
-                <div class="grid xl:grid-cols-3 lg:grid-cols-2  gap-10 justify-items-center">
-                  <li v-for="(event, index) in myEvents.eventList" :key="index" class="card w-96 bg-base-100 shadow-xl space-x-5 
-                  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+                <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-10 justify-items-center">
+                  <li v-for="(event, index) in myEvents.eventList" :key="index"
+                    class="card w-96 bg-base-100 shadow-xl space-x-5">
                     <div class="card-body bg-white">
                       <p class="card-title"> Booking Name: {{ event.bookingName }} </p>
                       <p v-if="event.bookingEmail !== undefined"> Booking Email: {{ event.bookingEmail }}</p>
-                      <p :class="myEvents.color[event.eventCategory.id-1]" class="rounded-md p-3">Event Category Name:
+                      <p :class="myEvents.color[event.eventCategory.id - 1]" class="rounded-md p-3">Event Category Name:
                         {{ event.eventCategory.eventCategoryName }}
                       </p>
                       <p>
@@ -85,8 +135,9 @@ const numberFormat = function (number, width) {
                         Event Details: {{ event.eventDetails }}
                       </p>
                       <div class="card-actions justify-end">
-                        <label @click="getEventById(event.id)" for="my-modal-6"
-                          class="modal-button duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline">Show
+                        <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
+                          ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
+                        ">Show
                           more...</label>
                         <DeleteButton class="btn btn-primary" @confirmDelete="$emit('deleteEvent', event.id)" />
                       </div>
@@ -99,26 +150,42 @@ const numberFormat = function (number, width) {
 
 
               <!-- Modal -->
-              <input type="checkbox" id="my-modal-6" class="modal-toggle " />
+              <input type="checkbox" id="my-modal-6" class="modal-toggle" />
               <div class="modal modal-bottom sm:modal-middle ">
                 <div class="modal-box bg-white">
                   <h3 class="font-bold text-lg">Booking Name: {{ selectedEvent.bookingName }}</h3>
                   <p class="py-2">Booking Email: {{ selectedEvent.bookingEmail }}</p>
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
-                  <p class="py-2">Event Start Time: <input class="border-4 border-primary" type="datetime-local"
-                      v-model="editStartTime"
-                      ></p>
-                  <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2">Event Notes: </p><textarea maxlength="500" class="border-4 border-primary" rows="4"
-                    cols="50" type="number" v-model="editNotes" placeholder="Note ..."></textarea><br>
-                    <span>{{500-editNotes.length}}</span>
-                  <div class="modal-action">
+                  <div v-if="myEvents.validateFutureDate(selectedEvent.eventStartTime)">
+                    <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time Only</span>
+                      <span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time</span>
+                    <p class="py-2">Event Start Time:
+            
+                      <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime" @change="myEvents.validateOverlab(selectedEvent.id, 0, editStartTime, selectedEvent.duration)"/>
+                    </p>
+                    <p class="py-2">Event Notes: <span v-show="editNotes.length > 500" style="color: red;">*Invalid
+                        Notes</span>
+                    
+                    </p><textarea maxlength="500" class="border-4 border-primary" rows="4" cols="50" type="number"
+                      v-model="editNotes" placeholder="Note ..."></textarea><br>
+                    <span>{{ 500 - editNotes.length }}/500</span>
+                  </div>
 
+                  <div v-else>
+                    <p class="py-2">Event Start Time:
+                      <input disabled type="datetime-local" v-model="editStartTime">
+                    </p>
+                    <p class="py-2">Event Notes : {{ selectedEvent.eventNotes }}</p>
+                  </div>
+                  <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
+
+                  <div class="modal-action">
                     <label
-                      class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
+                      :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
                       for="my-modal-6"
-                      @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id)">Update</label>
+                      @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration)">Update</label>
+                    <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                   </div>
@@ -150,5 +217,4 @@ const numberFormat = function (number, width) {
 </template>
 
 <style>
-
 </style>
