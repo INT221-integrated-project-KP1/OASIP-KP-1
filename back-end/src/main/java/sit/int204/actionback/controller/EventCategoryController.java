@@ -18,17 +18,10 @@ public class EventCategoryController {
     @Autowired
     private EventCategoryService eventCategoryService;
 
-    @GetMapping("/hello2")
-    public String home() {
-        return "Hello Docker World 2 ";
-    }
-
-    @Autowired
-    private EventCategoryRepository EventCategoryRepository;
 
     @GetMapping("")
-    public List<EventCategory> getEventCategory(){
-            return EventCategoryRepository.findAll();
+    public ResponseEntity getEventCategory(){
+            return eventCategoryService.findCategory();
     }
 
     @PutMapping("/{id}")

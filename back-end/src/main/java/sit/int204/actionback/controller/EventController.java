@@ -19,18 +19,10 @@ import javax.validation.Valid;
 @RequestMapping("api/scheduled")
 @CrossOrigin(origins = "*")
 public class EventController {
-    @GetMapping("/hello")
-    public String home() {
-        return "Hello Docker World";
-    }
+
 
     @Autowired
     private EventService eventService;
-
-    @Autowired
-    private EventRepository eventRepository;
-
-    private ApiTestException apiTestException;
 
     @GetMapping("")
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
@@ -70,9 +62,6 @@ public class EventController {
         System.out.println("postmapping");
         return eventService.create(newEvent);
     }
-
-
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.hasErrors());
 
 
     @DeleteMapping("/{id}")
