@@ -44,12 +44,13 @@ export const categorys = defineStore('categoryListState',() => {
           return 1
         } else {
           console.log('error, cannot edit')
-          return -1  
+          return -2
         }
       }
     
     
   const validateEventName = (newCategory) =>{
+    console.log("asdad"+ newCategory)
     newCategory.eventCategoryName = newCategory.eventCategoryName.trimStart();
     
     return categoryList.value
