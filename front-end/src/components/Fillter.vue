@@ -7,13 +7,13 @@ const myEvents = events()
 const myCategorys = categorys()
 
  const filterList = ref({
-      eventCategoryId:0,
+      eventCategoryId:-1,
       pastOrFutureOrAll:[],
       date:"",
   });
 
 const reset = () => {
-    filterList.value.eventCategoryId = 0;
+    filterList.value.eventCategoryId = -1;
     filterList.value.pastOrFutureOrAll = [];
     filterList.value.date = "";
     filtering();
@@ -28,7 +28,17 @@ const filtering = () => {
     myEvents.getFilteredEvents();
 }
 
+const dateOrPastFuture = ()=>{
+    if(filterList.value.pastOrFutureOrAll.length != 0){
+        filterList.value.date = "";
+    }
+}
 
+const dateOrPastFuture2 = ()=>{
+    if(filterList.value.date != ""){
+        filterList.value.pastOrFutureOrAll.length = [];
+    }
+}
 
 
 defineEmits(['Fillter'])
@@ -43,28 +53,28 @@ defineEmits(['Fillter'])
 
         <div class="form-control ">
             <div class="lg:flex lg:justify-center hidden">
-                <input type="date" class="input input-bordered" v-model="filterList.date" />
-
                 <div class="px-5">
-                    <select class="select select-bordered " v-model="filterList.eventCategoryId">
-                        <option v-if="myEvents.filterList.eventCategoryId == 0" disabled selected>Pick category</option>
-                        <option v-else-if="myEvents.filterList.eventCategoryId != 0" value=0>none</option>
-                        <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
-                            :value="eventCategory.id">
-                            {{ eventCategory.eventCategoryName }}</option>
+                    <select class="select select-bordered " v-model="filterList.eventCategoryId" >
+                        <option disabled value=-1>Pick category</option>
+                        <option value=0>none</option>
+                        <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index" :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
                     </select>
                 </div>
+
+                <input type="date" class="input input-bordered" @change="dateOrPastFuture2" v-model="filterList.date" />
+
+                
                 <label class="label cursor-pointer">
 
                     <input type="checkbox" v-model="filterList.pastOrFutureOrAll" value="past"
-                        class="checkbox checkbox-primary" />
+                        class="checkbox checkbox-primary" @change="dateOrPastFuture"/>
                     <span class="label-text p-2">Past events</span>
                 </label>
 
                 <label class="label cursor-pointer">
 
                     <input type="checkbox" v-model="filterList.pastOrFutureOrAll" value="future"
-                        class="checkbox checkbox-primary" />
+                        class="checkbox checkbox-primary" @change="dateOrPastFuture"/>
                     <span class="label-text p-2">Upcoming events</span>
                 </label>
 

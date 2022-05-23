@@ -71,9 +71,9 @@ public class EventService {
 
     public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
-            if(eventCategoryId == 0){
+            if(eventCategoryId <= 0){
                 if(pastOrFutureOrAll.equals("future")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
                 } else if (pastOrFutureOrAll.equals("past")){
                     return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
                 }
@@ -81,7 +81,7 @@ public class EventService {
             }
 
             if(pastOrFutureOrAll.equals("future")){
-                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             } else if (pastOrFutureOrAll.equals("past")){
                 return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
             }
@@ -92,10 +92,10 @@ public class EventService {
             Instant input = Instant.parse(date).plus(offsetMin, ChronoUnit.MINUTES);
             System.out.println(input);
             long dayInMilli = 86400000;
-            if(eventCategoryId != 0){
-                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli+1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            if(eventCategoryId > 0){
+                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             } else {
-                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()-dayInMilli-1), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             }
         }
 
@@ -283,7 +283,7 @@ public class EventService {
     public List<EventCheckOverDTO> getAllEventForOverLabFront(Integer eventId,Integer categoryId, String startTime){
         if(eventId != 0){
             categoryId = repository.findById(eventId).get().getEventCategory().getId();
-            System.print.out(categoryId);
+            System.out.println(categoryId);
         }
         Instant input = Instant.parse(startTime);
         long maxDuration = 480 *60 *1000;
