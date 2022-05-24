@@ -35,16 +35,16 @@ public class EventService {
     private ListMapper listMapper;
 
 
-    public EventPageDTO getEvent(int page, int pageSize) {
+    public EventPageDTO getEvents(int page, int pageSize) {
         return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
     }
 
-    public List<SimpleEventDTO> getAllEvent(){
+    public List<SimpleEventDTO> getAllEvents(){
         return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
     }
 
 
-    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
+    public List<SimpleEventDTO> getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
             if(eventCategoryId <= 0){
                 if(pastOrFutureOrAll.equals("future")){
@@ -144,7 +144,7 @@ public class EventService {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    public List<EventCheckOverDTO> getAllEventForOverLabFront(Integer eventId,Integer categoryId, String startTime){
+    public List<EventCheckOverDTO> getAllEventsForOverLabFront(Integer eventId,Integer categoryId, String startTime){
         if(eventId != 0){
             categoryId = repository.findById(eventId).get().getEventCategory().getId();
             System.out.println(categoryId);

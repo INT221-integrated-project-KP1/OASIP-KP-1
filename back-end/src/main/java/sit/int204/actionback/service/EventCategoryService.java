@@ -17,7 +17,7 @@ public class EventCategoryService {
     @Autowired
     public EventCategoryRepository eventCategoryRepository;
 
-    public ResponseEntity findCategory(){
+    public ResponseEntity findCategories(){
 
         List<EventCategory> eventCategory = eventCategoryRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(eventCategory);

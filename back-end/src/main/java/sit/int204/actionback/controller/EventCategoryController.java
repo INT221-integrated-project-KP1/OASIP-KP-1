@@ -20,8 +20,8 @@ public class EventCategoryController {
 
 
     @GetMapping("")
-    public ResponseEntity getEventCategory(){
-            return eventCategoryService.findCategory();
+    public ResponseEntity getEventCategories(){
+            return eventCategoryService.findCategories();
     }
 
     @PutMapping("/{id}")
