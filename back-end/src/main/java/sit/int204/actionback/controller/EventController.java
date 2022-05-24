@@ -47,7 +47,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filtering")
     public List<SimpleEventDTO> getEventsByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
