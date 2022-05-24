@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import DeleteButton from "../components/deleteButton.vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
@@ -77,6 +76,12 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
+const deleteFun = (id) =>{
+ let com = confirm("You want to delete a event");
+if (com) {
+  myEvents.removeEvent(id)
+  } 
+}
 </script>
 
 <template>
@@ -139,7 +144,9 @@ const errorInsert = () => {
                           ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
                         ">Show
                           more...</label>
-                        <DeleteButton class="btn btn-primary" @confirmDelete="$emit('deleteEvent', event.id)" />
+                        <label for="my-modal"
+                          class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline" @click="deleteFun(event.id)" >Delete</label>
+
                       </div>
                     </div>
                   </li>
@@ -158,15 +165,17 @@ const errorInsert = () => {
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
                   <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
                   <div v-if="myEvents.validateFutureDate(selectedEvent.eventStartTime)">
-                    <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time Only</span>
-                      <span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time</span>
+                    <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time
+                      Only</span>
+                    <span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time</span>
                     <p class="py-2">Event Start Time:
-            
-                      <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime" @change="myEvents.validateOverlab(selectedEvent.id, 0, editStartTime, selectedEvent.duration)"/>
+
+                      <input class="border-4 border-primary" type="datetime-local" v-model="editStartTime"
+                        @change="myEvents.validateOverlab(selectedEvent.id, 0, editStartTime, selectedEvent.duration)" />
                     </p>
                     <p class="py-2">Event Notes: <span v-show="editNotes.length > 500" style="color: red;">*Invalid
                         Notes</span>
-                    
+
                     </p><textarea maxlength="500" class="border-4 border-primary" rows="4" cols="50" type="number"
                       v-model="editNotes" placeholder="Note ..."></textarea><br>
                     <span>{{ 500 - editNotes.length }}/500</span>
@@ -212,6 +221,8 @@ const errorInsert = () => {
       </div>
     </div>
   </div>
+
+
 
 
 </template>
