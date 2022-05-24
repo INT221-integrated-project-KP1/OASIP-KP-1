@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/scheduled")
-@CrossOrigin(origins = "*")
+
 public class EventController {
 
 
