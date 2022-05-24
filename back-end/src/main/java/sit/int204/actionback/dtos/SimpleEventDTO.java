@@ -11,6 +11,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//ตอน Get จาก page
 public class SimpleEventDTO {
     private Integer Id;
     private Instant eventStartTime;
