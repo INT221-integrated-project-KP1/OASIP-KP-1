@@ -83,7 +83,9 @@ public class EventService {
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
-       return ResponseEntity.status(HttpStatus.OK).body(id);
+
+        repository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
 
