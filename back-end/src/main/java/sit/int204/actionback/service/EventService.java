@@ -85,6 +85,7 @@ public class EventService {
                 ));
                 repository.deleteById(id);
        return ResponseEntity.status(HttpStatus.OK).body(id);
+
     }
 
 
