@@ -18,6 +18,7 @@ import sit.int204.actionback.utils.ListMapper;
 import java.time.temporal.ChronoUnit;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -78,13 +79,16 @@ public class EventService {
     }
 
     public ResponseEntity deleteEventById(Integer id) {
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, " id " + id +
-                        "Does Not Exist !!!"
-                ));
-                repository.deleteById(id);
-       return ResponseEntity.status(HttpStatus.OK).body(id);
+//        repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, " id " + id +
+//                        "Does Not Exist !!!"
+//                ));
+
+        Optional<Event> event = repository.findById(id);
+        if(event.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
+        }
+        repository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("DELETED: " + id);
 
     }
 
