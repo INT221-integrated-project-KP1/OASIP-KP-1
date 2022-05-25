@@ -26,7 +26,7 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("")
-    public EventPageDTO getEvents(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity getEvents(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int pageSize) {
         return eventService.getEvents(page, pageSize);
     }
@@ -37,19 +37,19 @@ public class EventController {
 //    }
 
     @GetMapping("/overlabcheck")
-    public List<EventCheckOverDTO> getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
+    public ResponseEntity getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
         return eventService.getAllEventsForOverLabFront(eventId, eventCategoryId, startTime);
     }
 
     @GetMapping("/{id}")
-    public EventDetailsBaseDTO getEventById(@PathVariable Integer id) {
+    public ResponseEntity getEventById(@PathVariable Integer id) {
         return eventService.getSimpleEventById(id);
     }
 
     @GetMapping("/filtering")
-    public List<SimpleEventDTO> getEventsByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
+    public ResponseEntity getEventsByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
                                                          @RequestParam(defaultValue = "0") int offsetMin,
