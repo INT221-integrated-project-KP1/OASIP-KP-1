@@ -30,10 +30,10 @@ public class EventController {
         return eventService.getEvents(page, pageSize);
     }
 
-    @GetMapping("/all")
-    public List<SimpleEventDTO> getAllEvents() {
-        return eventService.getAllEvents();
-    }
+//    @GetMapping("/all")
+//    public List<SimpleEventDTO> getAllEvents() {
+//        return eventService.getAllEvents();
+//    }
 
     @GetMapping("/overlabcheck")
     public List<EventCheckOverDTO> getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
@@ -59,14 +59,13 @@ public class EventController {
 
     @PostMapping("")
     public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
-        System.out.println("postmapping");
         return eventService.create(newEvent);
     }
 
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable Integer id) {
-        eventService.deleteEventById(id);
+    public ResponseEntity deleteTest(@PathVariable Integer id) {
+        return eventService.deleteEventById(id);
     }
 
     @PutMapping("/{id}")

@@ -40,9 +40,7 @@ export const events = defineStore('eventListState',() => {
     const getEvents = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${pageSize.value
-        }`
-      );
+        `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${pageSize.value}`);
       if (res.status === 200) {
         const eventsToAdd = await res.json();
         // events << eventToAdd

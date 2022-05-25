@@ -100,19 +100,18 @@ public class EventService {
     }
 
     public ResponseEntity create(EventDTO newEvent) {
-           System.out.println("1");
 
         Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
-        System.out.println("2");
+
         Event e = modelMapper.map(newEvent, Event.class);
-        System.out.println("3");
+
         e.setEventDuration(newEventDuration);
-        System.out.println("3");
+
 
             repository.saveAndFlush(e);
-        System.out.println("3");
 
-        System.out.println("Created");
+
+
             return ResponseEntity.status(HttpStatus.CREATED).body(e);
     }
 
