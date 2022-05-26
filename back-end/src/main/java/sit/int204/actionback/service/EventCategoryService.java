@@ -44,7 +44,7 @@ public class EventCategoryService {
         eventCategory.get().setEventDuration(updateEventCategory.getEventDuration());
         eventCategory.get().setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
         eventCategoryRepository.saveAndFlush(eventCategory.get());
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory.get());
     }
 
 

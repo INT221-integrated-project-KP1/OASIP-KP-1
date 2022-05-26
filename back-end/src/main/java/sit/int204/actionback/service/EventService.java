@@ -127,7 +127,7 @@ public class EventService {
         if(event.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event.get(), EventDetailsBaseDTO.class));
     }
 
     public ResponseEntity create(EventDTO newEvent) {
@@ -168,7 +168,7 @@ public class EventService {
         repository.saveAndFlush(event.get());
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(event.get());
     }
 
     public ResponseEntity getAllEventsForOverLabFront(Integer eventId,Integer categoryId, String startTime){
