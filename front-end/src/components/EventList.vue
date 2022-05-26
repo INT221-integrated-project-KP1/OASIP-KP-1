@@ -151,7 +151,9 @@ if (com) {
                     </div>
                   </li>
                   <!-- //ทำเงา ๆๆๆ -->
-                  <ShadowEventVue />
+                  
+                  <ShadowEventVue v-show="myEvents.checkLoaded"/>
+                  
                 </div>
               </ol>
 
