@@ -65,7 +65,7 @@ export const events = defineStore('eventListState',() => {
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filtering?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -91,7 +91,7 @@ export const events = defineStore('eventListState',() => {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filtering?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -113,7 +113,7 @@ export const events = defineStore('eventListState',() => {
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filtering?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/scheduled/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -239,7 +239,7 @@ const createNewEvent = async (event) => {
   const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+        `${import.meta.env.VITE_BASE_URL}/scheduled/overlaping?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
         const eventsOverLab = await res.json();

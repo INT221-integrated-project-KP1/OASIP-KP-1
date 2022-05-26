@@ -36,7 +36,7 @@ public class EventController {
 //        return eventService.getAllEvents();
 //    }
 
-    @GetMapping("/overlabcheck")
+    @GetMapping("/overlaping")
     public ResponseEntity getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
@@ -48,7 +48,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filtering")
+    @GetMapping("/filtration")
     public ResponseEntity getEventsByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
@@ -59,13 +59,13 @@ public class EventController {
     }
 
     @PostMapping("")
-    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
+    public ResponseEntity create(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
         return eventService.create(newEvent);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTest(@PathVariable Integer id) {
+    public ResponseEntity delete(@PathVariable Integer id) {
         return eventService.deleteEventById(id);
     }
 
