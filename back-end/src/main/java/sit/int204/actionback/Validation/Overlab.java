@@ -6,7 +6,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.lang.annotation.*;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE,
+        ElementType.CONSTRUCTOR,
+        ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = OverlabVaildation.class)
 @Documented

@@ -38,8 +38,8 @@ public class EventController {
 
     @GetMapping("/overlapping")
     public ResponseEntity getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
-                                                                @RequestParam(defaultValue = "0") Integer eventCategoryId,
-                                                              @RequestParam String startTime) {
+                                                      @RequestParam(defaultValue = "0") Integer eventCategoryId,
+                                                      @RequestParam String startTime) {
         return eventService.getAllEventsForOverLabFront(eventId, eventCategoryId, startTime);
     }
 
@@ -55,11 +55,13 @@ public class EventController {
                                                          @RequestParam(defaultValue = "0") int offsetMin,
                                                          @RequestParam(defaultValue = "0") int page,
                                                          @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
+        return eventService.getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(
+                eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
     @PostMapping("")
-    public ResponseEntity create(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
+    public ResponseEntity create(@Valid @RequestBody EventDTO newEvent)
+            throws MethodArgumentNotValidException {
         return eventService.create(newEvent);
     }
 
