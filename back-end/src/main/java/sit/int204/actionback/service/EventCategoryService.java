@@ -25,7 +25,11 @@ public class EventCategoryService {
 
 
     public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id) {
-        EventCategory eventCategory = eventCategoryRepository.findEventCategoryById(id);
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findById(id);
+        if(eventCategory.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID FOR EventCategory NOT EXIST: "
+                    + id);
+        }
 
         if(!checkEventDuration(updateEventCategory.getEventDuration())){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid Duration");
@@ -36,10 +40,10 @@ public class EventCategoryService {
         }
         System.out.println("3");
 
-        eventCategory.setEventCategoryName(updateEventCategory.getEventCategoryName());
-        eventCategory.setEventDuration(updateEventCategory.getEventDuration());
-        eventCategory.setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
-        eventCategoryRepository.saveAndFlush(eventCategory);
+        eventCategory.get().setEventCategoryName(updateEventCategory.getEventCategoryName());
+        eventCategory.get().setEventDuration(updateEventCategory.getEventDuration());
+        eventCategory.get().setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
+        eventCategoryRepository.saveAndFlush(eventCategory.get());
         return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory);
     }
 
@@ -54,7 +58,8 @@ public class EventCategoryService {
     }
 
     public boolean checkEventCategoryName(String eventCategoryName, Integer id){
-        if(eventCategoryRepository.findAllById(id).getEventCategoryName().toLowerCase().equals(eventCategoryName.toLowerCase())){
+        if(eventCategoryRepository.findAllById(id).getEventCategoryName().toLowerCase()
+                .equals(eventCategoryName.toLowerCase())){
             //ซ้ำกับชื่อเดิม = ไม่เปลี่ยนชื่อ
             //หรืออาจจะเปลียนพิิมพ์เล็กใหญ่
             return true;
