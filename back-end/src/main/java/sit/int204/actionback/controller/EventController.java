@@ -36,7 +36,7 @@ public class EventController {
 //        return eventService.getAllEvents();
 //    }
 
-    @GetMapping("/overlaping")
+    @GetMapping("/overlapping")
     public ResponseEntity getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {

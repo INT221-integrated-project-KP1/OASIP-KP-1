@@ -239,7 +239,7 @@ const createNewEvent = async (event) => {
   const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/overlaping?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+        `${import.meta.env.VITE_BASE_URL}/event/overlapping?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
         const eventsOverLab = await res.json();
