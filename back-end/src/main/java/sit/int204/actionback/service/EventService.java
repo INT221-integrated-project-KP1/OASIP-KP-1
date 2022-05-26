@@ -18,6 +18,7 @@ import sit.int204.actionback.utils.ListMapper;
 import java.time.temporal.ChronoUnit;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -35,32 +36,47 @@ public class EventService {
     private ListMapper listMapper;
 
 
-    public EventPageDTO getEvents(int page, int pageSize) {
-        return modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
+    public ResponseEntity getEvents(int page, int pageSize) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                modelMapper.map(repository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class));
     }
 
-    public List<SimpleEventDTO> getAllEvents(){
-        return listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper);
+    public ResponseEntity getAllEvents(){
+        return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAll(), SimpleEventDTO.class,modelMapper));
     }
 
 
-    public List<SimpleEventDTO> getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
+    public ResponseEntity getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         if(date.equals("")){
             if(eventCategoryId <= 0){
                 if(pastOrFutureOrAll.equals("future")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            listMapper.mapList(repository.findAllByEventStartTimeAfter(Instant.now(),
+                                    PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())),
+                                    SimpleEventDTO.class, modelMapper));
                 } else if (pastOrFutureOrAll.equals("past")){
-                    return listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByEventStartTimeBefore(Instant.now(),
+                            PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())),
+                            SimpleEventDTO.class, modelMapper));
                 }
-                return listMapper.mapList(repository.findAllByIdNot(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByIdNot(eventCategoryId,
+                        PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())),
+                        SimpleEventDTO.class, modelMapper));
             }
 
             if(pastOrFutureOrAll.equals("future")){
-                return listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        listMapper.mapList(repository.findAllByEventStartTimeAfterAndEventCategoryId(Instant.now(), eventCategoryId,
+                                PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())),
+                                SimpleEventDTO.class, modelMapper));
             } else if (pastOrFutureOrAll.equals("past")){
-                return listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByEventStartTimeBeforeAndEventCategoryId(Instant.now(), eventCategoryId,
+                        PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())),
+                        SimpleEventDTO.class, modelMapper));
             }
-            return listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByEventCategoryId(eventCategoryId,
+                    PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())),
+                    SimpleEventDTO.class, modelMapper));
         } else {
             //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
             //offsetMin เช่น -420 = +07:00
@@ -68,9 +84,13 @@ public class EventService {
             System.out.println(input);
             long dayInMilli = 86400000;
             if(eventCategoryId > 0){
-                return listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventCategoryId,
+                        Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1),
+                        PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper));
             } else {
-                return listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()),
+                        Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1),
+                        PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper));
             }
         }
 
@@ -78,41 +98,42 @@ public class EventService {
     }
 
     public ResponseEntity deleteEventById(Integer id) {
-        repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, " id " + id +
-                        "Does Not Exist !!!"
-                ));
-                repository.deleteById(id);
-       return ResponseEntity.status(HttpStatus.OK).body(id);
+//        repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, " id " + id +
+//                        "Does Not Exist !!!"
+//                ));
+
+        Optional<Event> event = repository.findById(id);
+        if(event.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
+        }
+        repository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("DELETED: " + id);
 
     }
 
 
 
-    public EventDetailsBaseDTO getSimpleEventById(Integer id) {
-        Event event = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, " id " + id +
-                        "Does Not Exist !!!"
-                ));
-        return modelMapper.map(event, EventDetailsBaseDTO.class);
+    public ResponseEntity getSimpleEventById(Integer id) {
+        Optional<Event> event = repository.findById(id);
+        if(event.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
     }
 
     public ResponseEntity create(EventDTO newEvent) {
-           System.out.println("1");
 
         Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
-        System.out.println("2");
+
         Event e = modelMapper.map(newEvent, Event.class);
-        System.out.println("3");
+
         e.setEventDuration(newEventDuration);
-        System.out.println("3");
+
 
             repository.saveAndFlush(e);
-        System.out.println("3");
 
-        System.out.println("Created");
+
+
             return ResponseEntity.status(HttpStatus.CREATED).body(e);
     }
 
@@ -120,31 +141,37 @@ public class EventService {
     public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ) {
 
 //    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,BindingResult bindingResult)throws BindException {
-        Event event = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, " id " + id +
-                        "Does Not Exist !!!"
-                ));
+
+//        Event event = repository.findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.NOT_FOUND, " id " + id +
+//                        "Does Not Exist !!!"
+//                ));
+        Optional<Event> event = repository.findById(id);
+        if(event.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
+        }
+
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Time Future Pls");
         }
 
-        int eventDuration = event.getEventDuration();
-        EventCategory eventCategory = event.getEventCategory();
+        int eventDuration = event.get().getEventDuration();
+        EventCategory eventCategory = event.get().getEventCategory();
         if(!isOverLab(new EventOverLabDTO(editEvent.getEventStartTime(), eventCategory, eventDuration), id)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OverLaped");
         }
 
-        event.setEventStartTime(editEvent.getEventStartTime());
-        event.setEventNotes(editEvent.getEventNotes());
+        event.get().setEventStartTime(editEvent.getEventStartTime());
+        event.get().setEventNotes(editEvent.getEventNotes());
 
-        repository.saveAndFlush(event);
+        repository.saveAndFlush(event.get());
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    public List<EventCheckOverDTO> getAllEventsForOverLabFront(Integer eventId,Integer categoryId, String startTime){
+    public ResponseEntity getAllEventsForOverLabFront(Integer eventId,Integer categoryId, String startTime){
         if(eventId != 0){
             categoryId = repository.findById(eventId).get().getEventCategory().getId();
             System.out.println(categoryId);
@@ -152,7 +179,9 @@ public class EventService {
         Instant input = Instant.parse(startTime);
         long maxDuration = 480 *60 *1000;
 
-        return listMapper.mapList(repository.findAllByIdNotAndEventCategoryIdAndEventStartTimeBetween(eventId, categoryId, Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1), PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventCheckOverDTO.class, modelMapper);
+        return ResponseEntity.status(HttpStatus.OK).body(listMapper.mapList(repository.findAllByIdNotAndEventCategoryIdAndEventStartTimeBetween(eventId, categoryId,
+                Instant.ofEpochMilli(input.toEpochMilli()-maxDuration-1), Instant.ofEpochMilli(input.toEpochMilli()+maxDuration+1),
+                PageRequest.of( 0, Integer.MAX_VALUE, Sort.by("eventStartTime").descending())), EventCheckOverDTO.class, modelMapper));
     }
 
 
