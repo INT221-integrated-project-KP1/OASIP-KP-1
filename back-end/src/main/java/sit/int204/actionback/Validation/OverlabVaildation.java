@@ -3,6 +3,8 @@ package sit.int204.actionback.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
@@ -33,6 +35,10 @@ public class OverlabVaildation implements ConstraintValidator<Overlab, EventDTO 
 
     @Override
     public boolean isValid(EventDTO eventDTO, ConstraintValidatorContext constraintValidatorContext) {
+        Optional<EventCategory> eventcategory = eventCategoryRepository.findById(eventDTO.getEventCategory().getId());
+        if(eventcategory.isEmpty()){
+            return true;
+        }
         long newEventStartTimeMilli = eventDTO.getEventStartTime().toEpochMilli();
         long newDurationMilli =  eventCategoryRepository.findEventCategoryById(eventDTO.getEventCategory().getId()).getEventDuration() * 60 * 1000;
 

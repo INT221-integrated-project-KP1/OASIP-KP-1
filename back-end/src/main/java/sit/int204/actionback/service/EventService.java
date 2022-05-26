@@ -131,7 +131,7 @@ public class EventService {
     }
 
     public ResponseEntity create(EventDTO newEvent) {
-
+        System.out.println("dasdsad");
         Optional<EventCategory> eventcategory = eventCategoryRepository.findById(newEvent.getEventCategory().getId());
         if(eventcategory.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID FOR EventCategory NOT EXIST: "
@@ -146,7 +146,7 @@ public class EventService {
 
 
     public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ) {
-
+        System.out.println("dasdsad");
         Optional<Event> event = repository.findById(id);
         if(event.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);

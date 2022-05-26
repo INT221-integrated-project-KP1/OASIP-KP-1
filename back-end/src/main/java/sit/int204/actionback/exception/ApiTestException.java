@@ -54,12 +54,13 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
 
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
-        System.out.println("All exceptions Method getting executed!!!!");
-
-        final List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
-        return new ResponseEntity("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
+//        System.out.println("All exceptions Method getting executed!!!!");
+//        final List<String> details = new ArrayList<>();
+//        ZonedDateTime timeStamp = ZonedDateTime.now();
+//        ApiError apiError =
+//                new ApiError(timeStamp,400,HttpStatus.BAD_REQUEST,ex.getMessage(),request.getDescription(false).split("=")[1]);
+//        return  new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
+//    }
 }
