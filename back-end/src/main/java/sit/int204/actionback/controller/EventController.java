@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("api/scheduled")
+@RequestMapping("api/event")
 
 public class EventController {
 

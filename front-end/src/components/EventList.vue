@@ -15,7 +15,7 @@ const goBooking = () => {
 //GET BY ID
 const getEventById = async (id) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`);
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`);
     console.log(res.status);
     if (res.status === 200) {
       selectedEvent.value = await res.json();
