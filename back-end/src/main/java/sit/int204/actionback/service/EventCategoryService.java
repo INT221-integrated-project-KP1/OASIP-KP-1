@@ -32,11 +32,16 @@ public class EventCategoryService {
         }
 
         if(!checkEventDuration(updateEventCategory.getEventDuration())){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid Duration");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Duration");
         }
 
         if(!checkEventCategoryName(updateEventCategory.getEventCategoryName(), id)){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid EventCategoryName");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid EventCategoryName");
+        }
+        String name = updateEventCategory.getEventCategoryName();
+
+        if(name.length() > 100){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EventCategoryName is more than 100");
         }
         System.out.println("3");
 
