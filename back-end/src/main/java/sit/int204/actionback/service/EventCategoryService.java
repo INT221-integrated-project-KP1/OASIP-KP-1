@@ -43,6 +43,10 @@ public class EventCategoryService {
         if(name.length() > 100){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EventCategoryName is more than 100");
         }
+
+        if(updateEventCategory.getEventCategoryDescription().length() > 500){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EventCategoryDescription is more than 500");
+        }
         System.out.println("3");
 
         eventCategory.get().setEventCategoryName(updateEventCategory.getEventCategoryName());
