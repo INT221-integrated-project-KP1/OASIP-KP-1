@@ -5,7 +5,7 @@ import p1 from "../assets/AdminPNG/1.png"
 
 const myTeam = [
   {
-    'photo': 'https://scontent-kut2-2.xx.fbcdn.net/v/t39.30808-6/271129077_4438876166238753_8476312548203047623_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=T1mEev51WzYAX_wsfMl&_nc_ht=scontent-kut2-2.xx&oh=00_AT_Cms-KZhe8UwUNifEqJcEhz_Y83XSdi9RPi_QBzzaeSg&oe=62907E4A',
+    'photo': 'https://scontent.fbkk5-7.fna.fbcdn.net/v/t39.30808-6/271129077_4438876166238753_8476312548203047623_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeHPkgVJykzzL133wTM5imV830SNgvTl8DPfRI2C9OXwM0CqtwgHaAJhazDs5ZFNVJn4mURUQRqJ6CqtwVBwIqJq&_nc_ohc=yZ8s_XTQrcgAX_QygbS&_nc_ht=scontent.fbkk5-7.fna&oh=00_AT_enuvh_3ak-rb5TLMNtD7zkvxzedjJMf5JpLjHZ0hfbA&oe=62E1928A',
     'name': "Rapeepat Klamjeen",
     'role': "ยาจก",
     'phone': "085-132-XXXX",
