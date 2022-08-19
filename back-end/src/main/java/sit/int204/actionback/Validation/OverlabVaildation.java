@@ -3,6 +3,8 @@ package sit.int204.actionback.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
@@ -33,10 +35,17 @@ public class OverlabVaildation implements ConstraintValidator<Overlab, EventDTO 
 
     @Override
     public boolean isValid(EventDTO eventDTO, ConstraintValidatorContext constraintValidatorContext) {
+        Optional<EventCategory> eventcategory = eventCategoryRepository.findById(eventDTO.getEventCategory().getId());
+        if(eventcategory.isEmpty()){
+            return true;
+        }
         long newEventStartTimeMilli = eventDTO.getEventStartTime().toEpochMilli();
         long newDurationMilli =  eventCategoryRepository.findEventCategoryById(eventDTO.getEventCategory().getId()).getEventDuration() * 60 * 1000;
 
-        List<Event> eventList = repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventDTO.getEventCategory().getId(), Instant.ofEpochMilli(newEventStartTimeMilli).minus(480, ChronoUnit.MINUTES), Instant.ofEpochMilli(newEventStartTimeMilli).plus(480, ChronoUnit.MINUTES), PageRequest.of(0, Integer.MAX_VALUE));
+        List<Event> eventList = repository.findAllByEventCategoryIdAndEventStartTimeBetween(eventDTO.getEventCategory().getId(),
+                Instant.ofEpochMilli(newEventStartTimeMilli).minus(480, ChronoUnit.MINUTES),
+                Instant.ofEpochMilli(newEventStartTimeMilli).plus(480, ChronoUnit.MINUTES),
+                PageRequest.of(0, Integer.MAX_VALUE));
 
         for (int i = 0; i < eventList.size(); i++) {
             System.out.println(eventList.size());
@@ -52,17 +61,20 @@ public class OverlabVaildation implements ConstraintValidator<Overlab, EventDTO 
                 System.out.println(newEventStartTimeMilli+newDurationMilli);
 
                 System.out.println("mill" +milliSecond);
-                if(newEventStartTimeMilli+newDurationMilli > milliSecond && newEventStartTimeMilli+newDurationMilli < milliSecond+duration){
+                if(newEventStartTimeMilli+newDurationMilli > milliSecond &&
+                        newEventStartTimeMilli+newDurationMilli < milliSecond+duration){
                     System.out.println("Overlab1+4");
                     // return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                     return false;
                 }
-                else if (newEventStartTimeMilli > milliSecond && newEventStartTimeMilli < milliSecond+duration){
+                else if (newEventStartTimeMilli > milliSecond &&
+                        newEventStartTimeMilli < milliSecond+duration){
                     System.out.println("Overlab2+4");
                     return false;
                     //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");
                 }
-                else if (newEventStartTimeMilli < milliSecond && newEventStartTimeMilli+newDurationMilli > milliSecond){
+                else if (newEventStartTimeMilli < milliSecond &&
+                        newEventStartTimeMilli+newDurationMilli > milliSecond){
                     System.out.println("Overlab3");
                     return false;
                     //return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("OverLab");

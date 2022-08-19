@@ -13,15 +13,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/eventcategory")
-@CrossOrigin(origins = "*")
+
 public class EventCategoryController {
     @Autowired
     private EventCategoryService eventCategoryService;
 
 
     @GetMapping("")
-    public ResponseEntity getEventCategory(){
-            return eventCategoryService.findCategory();
+    public ResponseEntity getEventCategories(){
+            return eventCategoryService.findCategories();
     }
 
     @PutMapping("/{id}")

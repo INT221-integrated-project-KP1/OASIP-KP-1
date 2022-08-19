@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
@@ -16,8 +17,8 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("api/scheduled")
-@CrossOrigin(origins = "*")
+@RequestMapping("api/event")
+
 public class EventController {
 
 
@@ -27,13 +28,13 @@ public class EventController {
     @GetMapping("")
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getEvent(page, pageSize);
+        return eventService.getEvents(page, pageSize);
     }
 
-    @GetMapping("/all")
-    public List<SimpleEventDTO> getAllEvent() {
-        return eventService.getAllEvent();
-    }
+//    @GetMapping("/all")
+//    public List<SimpleEventDTO> getAllEvents() {
+//        return eventService.getAllEvents();
+//    }
 
     @GetMapping("/overlabcheck")
     public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
@@ -43,7 +44,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventDetailsBaseDTO getEventById(@PathVariable Integer id) {
+    public ResponseEntity getEventById(@PathVariable Integer id) {
         return eventService.getSimpleEventById(id);
     }
 
@@ -54,12 +55,14 @@ public class EventController {
                                                          @RequestParam(defaultValue = "0") int offsetMin,
                                                          @RequestParam(defaultValue = "0") int page,
                                                          @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
+        return eventService.getAllEventsFilterByEventCategoryAndPassOrFutureOrAll(
+                eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
     @PostMapping("")
-    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
-        System.out.println("postmapping");
+    public ResponseEntity create(@Valid @RequestBody EventDTO newEvent) {
+        System.out.println("dasdsaddadsdadadadad");
+
         return eventService.create(newEvent);
     }
 

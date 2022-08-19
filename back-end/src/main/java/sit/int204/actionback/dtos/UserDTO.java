@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+public class UserDTO {
 
-public class EventCategoryDTO {
-    private Integer id;
-    private String eventCategoryName;
-    private String eventCategoryDescription;
-    private Integer eventDuration;
+    private String name;
+
+    private String email;
+
+    private String role;
 }

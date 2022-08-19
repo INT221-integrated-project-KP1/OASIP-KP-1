@@ -17,7 +17,7 @@ public class EventCategoryService {
     @Autowired
     public EventCategoryRepository eventCategoryRepository;
 
-    public ResponseEntity findCategory(){
+    public ResponseEntity findCategories(){
 
         List<EventCategory> eventCategory = eventCategoryRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(eventCategory);
@@ -25,22 +25,35 @@ public class EventCategoryService {
 
 
     public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id) {
-        EventCategory eventCategory = eventCategoryRepository.findEventCategoryById(id);
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findById(id);
+        if(eventCategory.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID FOR EventCategory NOT EXIST: "
+                    + id);
+        }
 
         if(!checkEventDuration(updateEventCategory.getEventDuration())){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid Duration");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Duration");
         }
 
         if(!checkEventCategoryName(updateEventCategory.getEventCategoryName(), id)){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid EventCategoryName");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid EventCategoryName");
+        }
+        String name = updateEventCategory.getEventCategoryName();
+
+        if(name.length() > 100){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EventCategoryName is more than 100");
+        }
+
+        if(updateEventCategory.getEventCategoryDescription().length() > 500){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EventCategoryDescription is more than 500");
         }
         System.out.println("3");
 
-        eventCategory.setEventCategoryName(updateEventCategory.getEventCategoryName());
-        eventCategory.setEventDuration(updateEventCategory.getEventDuration());
-        eventCategory.setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
-        eventCategoryRepository.saveAndFlush(eventCategory);
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory);
+        eventCategory.get().setEventCategoryName(updateEventCategory.getEventCategoryName());
+        eventCategory.get().setEventDuration(updateEventCategory.getEventDuration());
+        eventCategory.get().setEventCategoryDescription(updateEventCategory.getEventCategoryDescription());
+        eventCategoryRepository.saveAndFlush(eventCategory.get());
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventCategory.get());
     }
 
 
@@ -54,7 +67,8 @@ public class EventCategoryService {
     }
 
     public boolean checkEventCategoryName(String eventCategoryName, Integer id){
-        if(eventCategoryRepository.findAllById(id).getEventCategoryName().toLowerCase().equals(eventCategoryName.toLowerCase())){
+        if(eventCategoryRepository.findAllById(id).getEventCategoryName().toLowerCase()
+                .equals(eventCategoryName.toLowerCase())){
             //ซ้ำกับชื่อเดิม = ไม่เปลี่ยนชื่อ
             //หรืออาจจะเปลียนพิิมพ์เล็กใหญ่
             return true;
