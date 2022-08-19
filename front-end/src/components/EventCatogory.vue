@@ -18,7 +18,9 @@ const getEventCategoryById = ((id) => {
   selectedCategory.value.id = temp.id
   selectedCategory.value.eventCategoryName = temp.eventCategoryName
   selectedCategory.value.eventDuration = temp.eventDuration
-  selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
+  if (temp.eventCategoryDescription != null) {
+    selectedCategory.value.eventCategoryDescription = temp.eventCategoryDescription
+  }
 })
 
 const validateEventDuration = computed(() => {
@@ -53,7 +55,7 @@ const EditCategory = async (Category) => {
     console.log("uniqueeeeeeeeeeeeeeeeeeee")
     return errorInsert()
   }
-  if(!validateEventName.value){
+  if (!validateEventName.value) {
     error.value += "categoryname Length must be < 100 $$"
     return errorInsert()
   }
@@ -129,7 +131,8 @@ function topFunction() {
                       class="card w-96 bg-base-100 shadow-xl space-x-5 
                                         transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                       <div class="card-body bg-white">
-                        <p class="card-title rounded-md p-6" :class="myEvents.color[eventCategory.id - 1]"> Event Category
+                        <p class="card-title rounded-md p-6" :class="myEvents.color[eventCategory.id - 1]"> Event
+                          Category
                           Name : {{
                               eventCategory.eventCategoryName
                           }} </p>
