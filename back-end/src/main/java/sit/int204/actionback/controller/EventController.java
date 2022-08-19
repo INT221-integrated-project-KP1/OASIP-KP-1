@@ -26,7 +26,7 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("")
-    public ResponseEntity getEvents(@RequestParam(defaultValue = "0") int page,
+    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int pageSize) {
         return eventService.getEvents(page, pageSize);
     }
@@ -36,11 +36,11 @@ public class EventController {
 //        return eventService.getAllEvents();
 //    }
 
-    @GetMapping("/overlapping")
-    public ResponseEntity getAllEventsForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
-                                                      @RequestParam(defaultValue = "0") Integer eventCategoryId,
-                                                      @RequestParam String startTime) {
-        return eventService.getAllEventsForOverLabFront(eventId, eventCategoryId, startTime);
+    @GetMapping("/overlabcheck")
+    public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
+                                                                @RequestParam(defaultValue = "0") Integer eventCategoryId,
+                                                              @RequestParam String startTime) {
+        return eventService.getAllEventForOverLabFront(eventId, eventCategoryId, startTime);
     }
 
     @GetMapping("/{id}")
@@ -48,8 +48,8 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filtration")
-    public ResponseEntity getEventsByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
+    @GetMapping("/filter")
+    public List<SimpleEventDTO> getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
                                                          @RequestParam(defaultValue = "0") int offsetMin,
@@ -68,8 +68,8 @@ public class EventController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        return eventService.deleteEventById(id);
+    public void deleteTest(@PathVariable Integer id) {
+        eventService.deleteEventById(id);
     }
 
     @PutMapping("/{id}")
