@@ -6,9 +6,11 @@
     "dev": "vite",
     "build": "vite build",
     "config": "vite --config vite.config.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
+    "cypress": "^10.6.0",
     "daisyui": "^2.14.3",
     "pinia": "^2.0.14",
     "router": "^1.3.6",

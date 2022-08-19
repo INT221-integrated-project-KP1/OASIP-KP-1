@@ -65,8 +65,8 @@ public class EventController {
 
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable Integer id) {
-        eventService.deleteEventById(id);
+    public ResponseEntity deleteTest(@PathVariable Integer id) {
+        return eventService.deleteEventById(id);
     }
 
     @PutMapping("/{id}")
