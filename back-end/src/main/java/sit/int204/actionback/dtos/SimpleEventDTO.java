@@ -1,5 +1,6 @@
 package sit.int204.actionback.dtos;
 
+import sit.int204.actionback.entities.EventCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

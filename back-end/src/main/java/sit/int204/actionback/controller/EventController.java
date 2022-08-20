@@ -37,7 +37,7 @@ public class EventController {
 //        return eventService.getAllEvents();
 //    }
 
-    @GetMapping("/overlabcheck")
+    @GetMapping("/overlapping")
     public ResponseEntity getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
@@ -49,7 +49,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filtration")
     public ResponseEntity getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
