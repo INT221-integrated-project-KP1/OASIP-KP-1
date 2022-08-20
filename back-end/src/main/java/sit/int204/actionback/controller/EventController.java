@@ -18,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/event")
+@CrossOrigin(origins = "http://localhost:3000")
 
 public class EventController {
 
@@ -26,7 +27,7 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("")
-    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity getEvent(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int pageSize) {
         return eventService.getEvents(page, pageSize);
     }
@@ -37,10 +38,10 @@ public class EventController {
 //    }
 
     @GetMapping("/overlabcheck")
-    public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
+    public ResponseEntity getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
-        return eventService.getAllEventForOverLabFront(eventId, eventCategoryId, startTime);
+        return eventService.getAllEventsForOverLabFront(eventId, eventCategoryId, startTime);
     }
 
     @GetMapping("/{id}")
@@ -49,7 +50,7 @@ public class EventController {
     }
 
     @GetMapping("/filter")
-    public List<SimpleEventDTO> getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
+    public ResponseEntity getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,
                                                          @RequestParam(defaultValue = "0") int offsetMin,

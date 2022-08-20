@@ -167,7 +167,7 @@ error.value = er
       </div>
     </div>
 
-    <DIV class ="grid lg:grid-cols-2 gap-2">
+    <dIV class ="grid lg:grid-cols-2 gap-2">
       <div class ="hidden lg:flex">
           <ul class="grid grid-rows-3 gap-2 p-4">
             <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
@@ -278,7 +278,7 @@ error.value = er
     
       </div>
     </div>
-  </DIV>
+  </div>
 </template>
 
 <style>
