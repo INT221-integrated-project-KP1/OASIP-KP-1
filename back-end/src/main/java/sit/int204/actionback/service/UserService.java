@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class UserService {
     private ListMapper listMapper;
 
     public List<User> getEvent(){
-        return userRepository.findAll();
+        return listMapper.mapList(userRepository.findAllByOrderByNameAsc(), User.class, modelMapper);
     }
 
     public ResponseEntity addUser(UserDTO user){

@@ -106,8 +106,6 @@ public class EventService {
                                 Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper));
             }
         }
-
-
     }
 
     public ResponseEntity deleteEventById(Integer id) {
@@ -127,7 +125,7 @@ public class EventService {
         if(event.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event.get(), EventDetailsBaseDTO.class));
+        return ResponseEntity.status(HttpStatus.OK).body(event.get());
     }
 
     public ResponseEntity create(EventDTO newEvent) {

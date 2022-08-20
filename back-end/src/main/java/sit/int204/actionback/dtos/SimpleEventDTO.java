@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int204.actionback.entities.EventCategory;
 
 import java.time.Instant;
 
@@ -16,7 +17,7 @@ public class SimpleEventDTO {
     private Integer Id;
     private Instant eventStartTime;
     private Integer eventDuration;
-    private EventCategoryDTO eventCategory;
+    private EventCategory eventCategory;
     private String bookingName;
     private String bookingEmail;
     private String eventNotes;
