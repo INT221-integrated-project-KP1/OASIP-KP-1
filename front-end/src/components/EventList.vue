@@ -39,7 +39,7 @@ const getEventById = async (id) => {
 
 defineEmits(["deleteEvent", "updateEvent"]);
 
-const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
+const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
@@ -164,8 +164,8 @@ if (com) {
                 <div class="modal-box bg-white">
                   <h3 class="font-bold text-lg">Booking Name: {{ selectedEvent.bookingName }}</h3>
                   <p class="py-2">Booking Email: {{ selectedEvent.bookingEmail }}</p>
-                  <p class="py-2">Event Category Name: {{ selectedEvent.eventCategoryName }}</p>
-                  <p class="py-2">Event Category Description: {{ selectedEvent.eventCategoryDescription }}</p>
+                  <p class="py-2">Event Category Name: {{ selectedEvent.eventCategory.eventCategoryName }}</p>
+                  <p class="py-2">Event Category Description: {{ selectedEvent.eventCategory.eventCategoryDescription }}</p>
                   <div v-if="myEvents.validateFutureDate(selectedEvent.eventStartTime)">
                     <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time
                       Only</span>
