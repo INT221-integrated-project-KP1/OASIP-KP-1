@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
-export const userData = defineStore('eventListState', () => {
+export const userData = defineStore('userDataState', () => {
     const userList = ref([])
 
     // POST
@@ -13,7 +13,8 @@ export const userData = defineStore('eventListState', () => {
                 },
                 body: JSON.stringify({
                     name: user.name,
-                    email: user.email
+                    email: user.email,
+                    role: user.role
                 }),
             });
             if (res.status === 201) {
@@ -35,7 +36,7 @@ export const userData = defineStore('eventListState', () => {
           const res = await fetch(
             `${import.meta.env.VITE_BASE_URL}/user`);
           if (res.status === 200) {
-            userList.value = res.json()
+            userList.value = await res.json()
           } else {
             console.log("error, cannot get data");
           }
@@ -43,7 +44,7 @@ export const userData = defineStore('eventListState', () => {
           console.log("ERROR: " + err);
         }
       };
-
+      
     // //REMOVE
     // const removeEvent = async (deleteId) => {
     //     console.log(deleteId);
@@ -114,7 +115,7 @@ export const userData = defineStore('eventListState', () => {
     //         return { error: err, status: -1 };
     //     }
     // }
-
+    getUsers();
     return { userList, createNewUser, getUsers}
 })
 

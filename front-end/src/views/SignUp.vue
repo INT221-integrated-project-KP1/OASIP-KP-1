@@ -51,9 +51,10 @@ const validateEventEmail = computed(() => {
 })
 
 const createNewEvent = async () => {
-  newUser.value.email = newUser.value.notes.trimStart().trimEnd();
+  console.log(newUser.value);
+  newUser.value.email = newUser.value.email.trimStart().trimEnd();
   newUser.value.name = newUser.value.name.trimStart().trimEnd();
-  const status = await myUserData.createNewEvent(newUser.value);
+  const status = await myUserData.createNewUser(newUser.value);
   console.log(status, 'tusCheckStauts');
   errorWarning.value = status.error
   if (status.status == 1) {
@@ -149,100 +150,8 @@ const check = async () => {
 
     <div class="grid lg:grid-cols-2 gap-2">
       <div class="grid gap-5 p-5">
-        <!-- FORM LOGIN -->
-        <!-- <div class="flex justify-center self-center z-10 "> -->
-          <div class="p-12 bg-white mx-auto rounded-2xl w-100">
-            <div class="mb-4">
-              <h3 class="font-semibold text-2xl text-gray-800">Insert Event</h3>
-              <p class="text-gray-500">Please insert event to booking.</p>
-            </div>
-            <div class="space-y-5">
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
-                </label>
-                <input maxlength="100" :class="validateEventName ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newEvent.name" /><br>
-                <span>{{ 100 - newEvent.name.length }}/100</span>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span
-                    v-show="!validateEventEmail && newEvent.email.length > 0" style="color: red;">*Invalid Email</span>
-                </label>
-                <input :class="validateEventEmail ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="newEvent.email" />
-              </div>
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Notes :
-                </label>
-                <textarea maxlength="500" :class="myEvents.validateEventNotes(newEvent) ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
-                <!-- มาร์คเเก้ -->
-                <br><span>{{ 500 - newEvent.notes.length
-                }}/500</span>
-              </div>
-
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Event Category:
-                </label>
-                <select v-model="newEvent.eventCategory"
-                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
-
-                  <option v-for="(category, index) in myCategorys.categoryList" :key="index"
-                    :value="{ id: category.id, duration: category.eventDuration }">
-                    {{ category.eventCategoryName }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent.startTime)" style="color: red;">*Future
-                    Time
-                    Only</span><span v-show="!newEvent.eventCategory.id > 0" style="color: red;">*Select Category First
-                  </span><span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time
-                  </span>
-                </label>
-
-                <input input type="datetime-local" :disabled="!newEvent.eventCategory.id > 0" :class="myEvents.validateFutureDate(newEvent.startTime) ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " v-model="newEvent.startTime"
-                  @change="myEvents.validateOverlab(0, newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)" />
-              </div>
-
-
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Event durations:
-                </label>
-                <input type="text"
-                  :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
-                  disabled v-model="newEvent.eventCategory.duration" />
-              </div>
-
-              <div>
-                <button type="submit"
-                  class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check()">Add New Event
-                </button>
-              </div>
-            </div>
-            <div class="pt-5 text-center text-gray-400 text-xs">
-              <span>
-                Donate By 037-7-384-30-0 Bangkok Bank</span>
-            </div>
-          </div>
-        </div>
-      </div>
+     </div>
+     </div>
       <div class="grid gap-5 p-5 ">
         <!-- FORM SIGN UP -->
         <div class="flex justify-center self-center z-10 ">
@@ -258,25 +167,25 @@ const check = async () => {
                 <input maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="myUserData.name" /><br>
-                <span>{{ 100 - myUserData.name.length }}/100</span>
+                " placeholder="Enter your name" v-model="newUser.name" /><br>
+                <span>{{ 100 - newUser.name.length }}/100</span>
               </div>
 
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span
-                    v-show="!validateEventEmail && myUserData.email.length > 0" style="color: red;">*Invalid Email</span>
+                    v-show="!validateEventEmail && newUser.email.length > 0" style="color: red;">*Invalid Email</span>
                 </label>
                 <input :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="myUserData.email" />
+                " placeholder="mail@gmail.com" v-model="newUser.email" />
               </div>
 
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Role:
                 </label>
-                <select v-model="myUserData.role"
+                <select v-model="newUser.role"
                   class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
                   <option v-for="(role, index) in roleList" :key="index" :value="role">
                     {{ role }}
