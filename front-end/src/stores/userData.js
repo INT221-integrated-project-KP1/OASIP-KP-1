@@ -120,5 +120,5 @@ export const userData = defineStore('eventListState', () => {
 
 
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(events, import.meta.hot))
+    import.meta.hot.accept(acceptHMRUpdate(userData, import.meta.hot))
 }

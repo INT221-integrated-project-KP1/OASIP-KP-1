@@ -299,7 +299,6 @@ const check = async () => {
 
       </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
