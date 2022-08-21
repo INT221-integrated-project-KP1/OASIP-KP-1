@@ -4,6 +4,7 @@ import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
 import { userData } from "../stores/userData.js"
+import { computed } from "@vue/reactivity";
 
 const myUserData = userData();
 
@@ -34,10 +35,7 @@ const getUserById = async (id) => {
     }
 };
 
-
-// defineEmits(["deleteUser", "updateUser"]);
-
-const selectedUser = ref({ name: '', email: '', role: '', createdOn: '', updatedOn: '' });
+const selectedUser = ref({ id: '', name: '', email: '', role: '', createdOn: '', updatedOn: '' });
 
 function topFunction() {
     console.log("TestTop")
@@ -45,25 +43,57 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 
-
 // const updateEvent = async (startTime, notes, id, duration) => {
 const statusError = ref(0)
 const statusErrorText = ref("")
 
-// const EditEvent = async (notes, startTime, id, duration) => {
+const validateNameLength = computed(() => {
+    if (selectedUser.value.name.length > 100) {
+        return false
+    }
+    return true
+})
+const validateEmailLength = computed(() => {
 
-//   const status = await myEvents.updateEvent(startTime, notes, id, duration);
-//   statusErrorText.value = status.error
-//   statusError.value = status.status
-//   if (statusError == -1) {
-//     errorInsert()
-//   }
-//   topFunction()
-//   setTimeout(() => (statusError.value = 0), 2000);
-// }
+    if (selectedUser.value.email.length > 50) {
+        return false
+    }
+    return true
+})
+
+const error = ref('')
+const editUser = async () => {
+    error.value = ``
+    if (myUserData.validateUniqueEmail(selectedUser.value.id, selectedUser.value.email)) {
+        error.value += "Unique Email only $$"
+        console.log("err emailkub");
+        return errorInsert()
+    }
+
+    if (myUserData.validateUniqueName(selectedUser.value.id, selectedUser.value.name)) {
+        error.value += "Unique Name only $$"
+        return errorInsert()
+    }
+
+    if (!validateNameLength.value) {
+        error.value += "Name Length must be < 100 $$"
+        return errorInsert()
+    }
+    if (!validateEmailLength.value) {
+        error.value += "Email Length must be < 50 $$"
+        return errorInsert()
+    }
+
+    let status = await myUserData.updateUser(selectedUser.value)
+    statusError.value = status
+    console.log(status)
+    topFunction()
+    setTimeout(() => (statusError.value = 0), 2000);
+}
 
 const errorInsert = () => {
     topFunction()
+    statusError.value = -1
     setTimeout(() => (statusError.value = 0), 2000);
 };
 
@@ -95,7 +125,7 @@ const deleteUser = (id) => {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>Error! Input Value Uncomplete {{ statusErrorText }}</span>
+                        <span>Error! Input Value Uncomplete {{ error }}</span>
                     </div>
                 </div>
             </div>
@@ -136,17 +166,44 @@ const deleteUser = (id) => {
                             <input type="checkbox" id="modalUser" class="modal-toggle" />
                             <div class="modal modal-bottom sm:modal-middle ">
                                 <div class="modal-box bg-white">
-                                    <h3 class="font-bold text-lg">Name: {{ selectedUser.name }}</h3>
-                                    <p class="py-2">Email: {{ selectedUser.email }}</p>
+                                    <div class="namekub">
+                                        <span v-show="myUserData.validateUniqueName(selectedUser.id, selectedUser.name)"
+                                            style="color: red;">*Name
+                                            unique</span>
+                                        <span v-show="!validateNameLength" style="color: red;">*Length Of
+                                            Name >
+                                            100</span>
+                                        <p class="py-2">Name : </p><input maxlength="100" :class="selectedUser.name.length <= 100 && myUserData.validateUniqueName(selectedUser.id, selectedUser.name) ?
+                                            ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                                            : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                                        " v-model="selectedUser.name" placeholder="Nameee ..." /><br>
+                                        <span>{{ 100 - selectedUser.name.length }}/100</span>
+                                    </div>
+                                    <div class="emailkub">
+                                        <span
+                                            v-show="myUserData.validateUniqueEmail(selectedUser.id, selectedUser.email)"
+                                            style="color: red;">*email unique</span>
+                                        <span v-show="!validateEmailLength" style="color: red;">*Length Of
+                                            Email >
+                                            50</span>
+                                        <p class="py-2">Email : </p><input maxlength="50" :class="selectedUser.email.length <= 50 && myUserData.validateUniqueEmail(selectedUser.id, selectedUser.email) ?
+                                            ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                                            : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                                        " v-model="selectedUser.email" placeholder="emaill ..." /><br>
+                                        <span>{{ 50 - selectedUser.email.length }}/50</span>
+                                    </div>
+
+                                    <p class="py-2">role: {{ selectedUser.role }}</p>
                                     <p class="py-2">Created On: {{ selectedUser.createdOn }}</p>
                                     <p class="py-2">updatedOn: {{ selectedUser.updatedOn }} </p>
 
                                     <div class="modal-action">
-                                        <!-- <label
-                                            :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
-                                            for="my-modal-6"
-                                            @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
-                                        <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
+                                        <label
+                                            class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
+                                            for="modalUser" @click="
+                                            editUser(selectedUser)">
+                                            Update
+                                        </label>
                                         <label for="modalUser"
                                             class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
                                     </div>

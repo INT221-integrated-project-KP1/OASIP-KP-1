@@ -32,7 +32,7 @@ function checkProperties(obj) {
   return true;
 }
 
-const validateEventName = computed(() => {
+const validateUserName = computed(() => {
   //check length type bra bra brah...
   if (newUser.value.name != undefined) {
     newUser.value.name = newUser.value.name.replace("  ", " ").trimStart();
@@ -44,13 +44,13 @@ const validateEventName = computed(() => {
   return true;
 })
 
-const validateEventEmail = computed(() => {
+const validateUserEmail = computed(() => {
   newUser.value.email = newUser.value.email.trimStart().trimEnd();
   console.log(newUser.value.email)
   return newUser.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 })
 
-const createNewEvent = async () => {
+const createNewUser = async () => {
   console.log(newUser.value);
   newUser.value.email = newUser.value.email.trimStart().trimEnd();
   newUser.value.name = newUser.value.name.trimStart().trimEnd();
@@ -83,8 +83,11 @@ const errorInsert = () => {
 
 const check = async () => {
   const bool1 = checkProperties(newUser.value);
-  const bool2 = validateEventEmail.value
-  const bool3 = validateEventName.value
+  const bool2 = validateUserEmail.value
+  const bool3 = validateUserName.value
+  const bool4 = !myUserData.validateUniqueEmail(0, newUser.value.email)
+  const bool5 = !myUserData.validateUniqueName(0, newUser.value.name)
+
   let er = ""
   if (!bool1) {
     er += "Value has null\n"
@@ -94,11 +97,15 @@ const check = async () => {
   }
   if (!bool3) {
     er += "Name > 100\n"
+  } if (!bool4) {
+    er += "Unique Email\n"
+  } if (!bool5) {
+    er += "Unique Name\n"
   }
   //ก็อปมาใช้กับ userdata 5555567566785555
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
-  if (bool1 && bool2 && bool3) {
-    createNewEvent()
+  if (bool1 && bool2 && bool3 && bool4 && bool5) {
+    createNewUser()
   } else {
     error.value = er
     errorInsert();
@@ -150,64 +157,65 @@ const check = async () => {
 
     <div class="grid lg:grid-cols-2 gap-2">
       <div class="grid gap-5 p-5">
-     </div>
-     </div>
-      <div class="grid gap-5 p-5 ">
-        <!-- FORM SIGN UP -->
-        <div class="flex justify-center self-center z-10 ">
-          <div class="p-12 bg-white mx-auto rounded-2xl w-100">
-            <div class="mb-4">
-              <h3 class="font-semibold text-2xl text-gray-800">Sign Up !!</h3>
-              <p class="text-gray-500">Please insert information.</p>
-            </div>
-            <div class="space-y-5">
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
-                </label>
-                <input maxlength="100" :class="validateEventName ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newUser.name" /><br>
-                <span>{{ 100 - newUser.name.length }}/100</span>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span
-                    v-show="!validateEventEmail && newUser.email.length > 0" style="color: red;">*Invalid Email</span>
-                </label>
-                <input :class="validateEventEmail ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="newUser.email" />
-              </div>
-
-              <div class="space-y-2">
-                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Role:
-                </label>
-                <select v-model="newUser.role"
-                  class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
-                  <option v-for="(role, index) in roleList" :key="index" :value="role">
-                    {{ role }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <button type="submit"
-                  class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check()">Register
-                </button>
-              </div>
-            </div>
-            <div class="pt-5 text-center text-gray-400 text-xs">
-              <span>
-                Donate By 037-7-384-30-0 Bangkok Bank</span>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+    <div class="grid gap-5 p-5 ">
+      <!-- FORM SIGN UP -->
+      <div class="flex justify-center self-center z-10 ">
+        <div class="p-12 bg-white mx-auto rounded-2xl w-100">
+          <div class="mb-4">
+            <h3 class="font-semibold text-2xl text-gray-800">Sign Up !!</h3>
+            <p class="text-gray-500">Please insert information.</p>
+          </div>
+          <div class="space-y-5">
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
+              </label>
+              <input maxlength="100" :class="validateUserName && myUserData.validateUniqueName(0, name) ?
+                ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+              " placeholder="Enter your name" v-model="newUser.name" /><br>
+              <span>{{ 100 - newUser.name.length }}/100</span>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span
+                  v-show="!validateUserEmail && newUser.email.length > 0 && myUserData.validateUniqueEmail(0, email)"
+                  style="color: red;">*Invalid Email</span>
+              </label>
+              <input :class="validateUserEmail && myUserData.validateUniqueEmail(0, email) ?
+                ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+              " placeholder="mail@gmail.com" v-model="newUser.email" />
+            </div>
+
+            <div class="space-y-2">
+              <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                Role:
+              </label>
+              <select v-model="newUser.role"
+                class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
+                <option v-for="(role, index) in roleList" :key="index" :value="role">
+                  {{ role }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <button type="submit"
+                class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+                @click="check()">Register
+              </button>
+            </div>
+          </div>
+          <div class="pt-5 text-center text-gray-400 text-xs">
+            <span>
+              Donate By 037-7-384-30-0 Bangkok Bank</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </template>
 
 <style scoped>

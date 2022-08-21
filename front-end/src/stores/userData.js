@@ -1,7 +1,22 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 export const userData = defineStore('userDataState', () => {
     const userList = ref([])
+
+    const validateUniqueName = (id, name) => {
+        if (id && name != undefined) {
+            return userList.value.filter((user) => user.id !== id)
+                .some((user) => user.name.toLowerCase() == name.toLowerCase())
+        }
+    }
+
+    const validateUniqueEmail = (id, email) => {
+        if (id && email != undefined) {
+            return userList.value.filter((user) => user.id !== id)
+                .some((user) => user.email.toLowerCase() == email.toLowerCase())
+        }
+    }
+
 
     // POST
     const createNewUser = async (user) => {
@@ -33,18 +48,18 @@ export const userData = defineStore('userDataState', () => {
     // GET
     const getUsers = async () => {
         try {
-          const res = await fetch(
-            `${import.meta.env.VITE_BASE_URL}/user`);
-          if (res.status === 200) {
-            userList.value = await res.json()
-          } else {
-            console.log("error, cannot get data");
-          }
+            const res = await fetch(
+                `${import.meta.env.VITE_BASE_URL}/user`);
+            if (res.status === 200) {
+                userList.value = await res.json()
+            } else {
+                console.log("error, cannot get data");
+            }
         } catch (err) {
-          console.log("ERROR: " + err);
+            console.log("ERROR: " + err);
         }
-      };
-      
+    };
+
     //REMOVE
     const removeUser = async (deleteId) => {
         console.log(deleteId);
@@ -65,58 +80,47 @@ export const userData = defineStore('userDataState', () => {
     };
 
     // //PUT
-    // const updateEvent = async (startTime, notes, id, duration) => {
-    //     try {
-    //         console.log("startTimeUpdate: " + startTime)
-    //         if (!await validateOverlab(id, 0, startTime.replace(":00", ""), duration)) {
+    const updateUser = async (updatedUser) => {
+        try {
 
-    //             return { error: "Overlap", status: -1 }
-    //         }
-    //         if (notes.length > 500) {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${updatedUser.id}`, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: updatedUser.id,
+                    name: updatedUser.name,
+                    email: updatedUser.email,
+                    role: updatedUser.role
+                })
+            })
+            if (res.status === 201) {
+                const modUser = await res.json();
+                console.log(modUser);
+                userList.value = userList.value.map((user) =>
+                    user.id === modUser.id
+                        ? { ...user, name: modUser.name, email: modUser.email, role: modUser.roll }
+                        : user
+                )
 
-    //             return { error: "note more than 500", status: -1 }
-    //         }
-    //         if (!validateFutureDate(startTime)) {
-    //             return { error: "Future time only $$", status: -1 }
-    //         }
+                console.log('edited successfully')
+                return 1;
+            } else {
+                console.log('error, cannot edit')
 
-    //         console.log("startTime: " + startTime)
-    //         console.log("Notes: " + notes)
-    //         console.log("id: " + id)
-    //         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'content-type': 'application/json'
-    //             },
-    //             body: JSON.stringify({
-    //                 eventStartTime: new Date(startTime).toISOString().replace(".000Z", "Z"),
-    //                 eventNotes: notes,
-    //             })
-    //         })
-    //         if (res.status === 201) {
-    //             const modEvent = await res.json();
-    //             console.log(modEvent)
-    //             eventList.value = eventList.value.map((event) =>
-    //                 event.id === modEvent.id
-    //                     ? { ...event, eventStartTime: modEvent.eventStartTime, eventNotes: modEvent.eventNotes }
-    //                     : event
-    //             )
+                return -1
+            }
+        } catch (err) {
+            console.log('catchhhhh');
+            console.log(err);
+            return -1
+        }
+    }
 
-    //             console.log('edited successfully')
-    //             return { error: "", status: 1 };
-    //         } else {
-    //             console.log('error, cannot edit')
 
-    //             return { error: await res.text(), status: -1 };
-    //         }
-    //     } catch (err) {
-    //         console.log('catchhhhh');
-    //         console.log(err);
-    //         return { error: err, status: -1 };
-    //     }
-    // }
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser}
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail }
 })
 
 

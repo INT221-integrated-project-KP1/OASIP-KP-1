@@ -16,7 +16,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     public void saveUser(@Param("user") User user);
 
-    @Query(value = "Alter COLUMN user (name, email, role ,updatedOn) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()},CURRENT_TIMESTAMP)", nativeQuery = true)
+    //UPDATE Customers
+    //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+    //WHERE CustomerID = 1;
+    @Query(value = "UPDATE user SET name = :#{#user.getName()} , email = :#{#user.getEmail()} , role = :#{#user.getRole()} ,updatedOn =CURRENT_TIMESTAMP where id = :#{#user.getId()} ", nativeQuery = true)
     @Modifying
     @Transactional
     public void editUser(@Param("user") User user);

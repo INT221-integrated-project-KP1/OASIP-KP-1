@@ -8,10 +8,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class UniqEmailVaildation implements ConstraintValidator<UniqEmail, String > {
+public class UniqEmailVaildation implements ConstraintValidator<UniqEmail, UserDTO > {
 
-@Autowired
-UserService userService;
+    @Autowired
+    UserService userService;
 
     @Override
     public void initialize(UniqEmail constraintAnnotation) {
@@ -19,12 +19,19 @@ UserService userService;
     }
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        if(email == null) return true;
+    public boolean isValid(UserDTO user, ConstraintValidatorContext constraintValidatorContext) {
+        if(user.getEmail() == null )  return true;
+
+        int myid = 0 ;
+        if(user.getId() == null){myid = -1;}
+        else {myid = user.getId();}
+
         List<UserDTO> allUser  = userService.getUserAll();
         for (int i = 0 ; i < allUser.size() ; i++){
-            System.out.println(allUser.get(i).getEmail().equals(email));
-            if(allUser.get(i).getEmail().equals(email)) return false;
+            if(allUser.get(i).getId() != myid){
+                if(allUser.get(i).getEmail().equals(user.getEmail())) return false;
+            }
+
         }
         return true;
     }

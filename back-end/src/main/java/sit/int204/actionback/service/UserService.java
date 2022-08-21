@@ -67,7 +67,7 @@ public class UserService {
         userRepository.editUser(user);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(editUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     public ResponseEntity getUserById(Integer id) {
