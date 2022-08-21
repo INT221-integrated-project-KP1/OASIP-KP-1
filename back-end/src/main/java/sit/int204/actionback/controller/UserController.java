@@ -29,7 +29,7 @@ public class UserController {
     private ListMapper listMapper;
 
     @GetMapping("")
-    public List<User> getUser(){
+    public List<UserDTO> getUser(){
         return userService.getEvent();
     }
 

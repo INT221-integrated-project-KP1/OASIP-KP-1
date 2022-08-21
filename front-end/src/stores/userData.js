@@ -45,24 +45,24 @@ export const userData = defineStore('userDataState', () => {
         }
       };
       
-    // //REMOVE
-    // const removeEvent = async (deleteId) => {
-    //     console.log(deleteId);
-    //     const res = await fetch(
-    //         `${import.meta.env.VITE_BASE_URL}/event/${deleteId}`,
-    //         {
-    //             method: "DELETE",
-    //         }
-    //     );
-    //     if (res.status === 200) {
-    //         eventList.value = eventList.value.filter((event) => event.id !== deleteId);
-    //         console.log("deleted successfully");
-    //         if (eventList.value.length % 9 == 8) {
-    //             getEvents();
-    //         }
+    //REMOVE
+    const removeUser = async (deleteId) => {
+        console.log(deleteId);
+        const res = await fetch(
+            `${import.meta.env.VITE_BASE_URL}/user/${deleteId}`,
+            {
+                method: "DELETE",
+            }
+        );
+        if (res.status === 200) {
+            userList.value = userList.value.filter((user) => user.id !== deleteId);
+            console.log("deleted successfully");
+            if (userList.value.length % 9 == 8) {
+                getUsers();
+            }
 
-    //     } else console.log("error, cannot delete data");
-    // };
+        } else console.log("error, cannot delete data");
+    };
 
     // //PUT
     // const updateEvent = async (startTime, notes, id, duration) => {
@@ -116,7 +116,7 @@ export const userData = defineStore('userDataState', () => {
     //     }
     // }
     getUsers();
-    return { userList, createNewUser, getUsers}
+    return { userList, createNewUser, getUsers, removeUser}
 })
 
 

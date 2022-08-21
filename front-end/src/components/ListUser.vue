@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
@@ -13,34 +13,31 @@ const goSignup = () => {
     myRouter.push({ name: 'SignUp' })
 }
 
-//GET BY ID
-// const getEventById = async (id) => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`);
-//     console.log(res.status);
-//     if (res.status === 200) {
-//       selectedEvent.value = await res.json();
-//       editNotes.value = selectedEvent.value.eventNotes
-//       if (editNotes.value == null) {
-//         editNotes.value = "";
-//       }
-//       let edit = new Date(selectedEvent.value.eventStartTime);
-//       editStartTime.value = `${edit.getFullYear()}-${numberFormat(edit.getMonth() + 1, 2)}-${numberFormat(edit.getDate(), 2)}T${edit.toLocaleTimeString('it-IT')}`
-//       console.log(new Date().getDate());
-//       console.log(edit.getDate());
-//       console.log(editStartTime.value);
-//     } else {
-//       console.log("error, cannot get data");
-//     }
-//   } catch (err) {
-//     console.log("Error: ", err.message);
-//   }
-// };
+// GET BY ID
+const getUserById = async (id) => {
+    try {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${id}`);
+        console.log(res.status);
+        if (res.status === 200) {
+            selectedUser.value = await res.json();
+
+            selectedUser.value.createdOn = new Date(selectedUser.value.createdOn);
+            selectedUser.value.updatedOn = new Date(selectedUser.value.updatedOn);
+
+
+
+        } else {
+            console.log("error, cannot get data");
+        }
+    } catch (err) {
+        console.log("Error: ", err.message);
+    }
+};
 
 
 // defineEmits(["deleteUser", "updateUser"]);
 
-// const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategoryName: '', eventCategoryDescription: '', eventStartTime: '', eventDuration: '', eventNotes: '' });
+const selectedUser = ref({ name: '', email: '', role: '', createdOn: '', updatedOn: '' });
 
 function topFunction() {
     console.log("TestTop")
@@ -70,10 +67,9 @@ const errorInsert = () => {
     setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const deleteFun = (id) => {
-    let com = confirm("You want to delete a user");
-    if (com) {
-        myUserData.removeEvent(id)
+const deleteUser = (id) => {
+    if (confirm("You want to delete a user")) {
+        myUserData.removeUser(id)
     }
 }
 </script>
@@ -109,14 +105,25 @@ const deleteFun = (id) => {
                         <div>
                             <ol class="">
                                 <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-10 justify-items-center">
+
                                     <li v-for="(user, index) in myUserData.userList" :key="index"
                                         class="card w-96 bg-base-100 shadow-xl space-x-5">
                                         <div class="card-body bg-white">
                                             <p class="card-title"> Name: {{ user.name }} </p>
-                                            <p v-if="user.email !== undefined"> Email: {{
+                                            <p class="card-title" v-if="user.email !== undefined"> Email: {{
                                                     user.email
                                             }}</p>
                                             <p class="card-title"> Role: {{ user.role }} </p>
+
+                                        </div>
+                                        <div class="card-actions justify-end">
+                                            <label @click="getUserById(user.id);" for="modalUser" :class="
+                                                ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
+                                            ">Show
+                                                more...</label>
+                                            <label for="my-modal"
+                                                class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline"
+                                                @click="deleteUser(user.id)">Delete</label>
 
                                         </div>
                                     </li>
@@ -124,6 +131,28 @@ const deleteFun = (id) => {
                                     <ShadowEventVue />
                                 </div>
                             </ol>
+
+                            <!-- Modal -->
+                            <input type="checkbox" id="modalUser" class="modal-toggle" />
+                            <div class="modal modal-bottom sm:modal-middle ">
+                                <div class="modal-box bg-white">
+                                    <h3 class="font-bold text-lg">Name: {{ selectedUser.name }}</h3>
+                                    <p class="py-2">Email: {{ selectedUser.email }}</p>
+                                    <p class="py-2">Created On: {{ selectedUser.createdOn }}</p>
+                                    <p class="py-2">updatedOn: {{ selectedUser.updatedOn }} </p>
+
+                                    <div class="modal-action">
+                                        <!-- <label
+                                            :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
+                                            for="my-modal-6"
+                                            @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
+                                        <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
+                                        <label for="modalUser"
+                                            class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

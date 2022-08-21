@@ -30,8 +30,8 @@ public class UserService {
     @Autowired
     private ListMapper listMapper;
 
-    public List<User> getEvent(){
-        return listMapper.mapList(userRepository.findAllByOrderByNameAsc(), User.class, modelMapper);
+    public List<UserDTO> getEvent(){
+        return listMapper.mapList(userRepository.findAllByOrderByNameAsc(), UserDTO.class, modelMapper);
     }
 
     public ResponseEntity addUser(UserDTO user){
