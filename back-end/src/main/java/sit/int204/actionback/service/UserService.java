@@ -30,7 +30,7 @@ public class UserService {
     @Autowired
     private ListMapper listMapper;
 
-    public List<UserDTO> getEvent(){
+    public List<UserDTO> getUserAll(){
         return listMapper.mapList(userRepository.findAllByOrderByNameAsc(), UserDTO.class, modelMapper);
     }
 
@@ -63,7 +63,7 @@ public class UserService {
 
         user.setName(editUser.getName());
         user.setEmail(editUser.getEmail());
-        user.setRole(editUser.getRole());
+        user.setRole(editUser.getRole().toString());
         userRepository.editUser(user);
 
 

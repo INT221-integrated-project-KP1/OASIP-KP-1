@@ -18,7 +18,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Overlab
 public class EventDTO {
-    @NotNull
+    @NotNull(message = "is Not Null")
     @Size(min=1,max=100)
     private String bookingName;
 

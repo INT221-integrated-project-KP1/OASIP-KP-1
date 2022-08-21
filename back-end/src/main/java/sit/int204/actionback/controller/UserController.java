@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping("")
     public List<UserDTO> getUser(){
-        return userService.getEvent();
+        return userService.getUserAll();
     }
 
     @GetMapping("/{id}")
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity addUser(@RequestBody UserDTO user){
+    public ResponseEntity addUser(@Valid @RequestBody UserDTO user){
         userService.addUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("");
     }

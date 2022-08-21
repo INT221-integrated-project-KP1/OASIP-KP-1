@@ -39,11 +39,12 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
         List<String> errors = new ArrayList<String>();
         String e ="";
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.add(error.getField() + ": " + error.getDefaultMessage());
+//            errors.add(error.getField() + ": " + error.getDefaultMessage());
             e = e + error.getField() + " " +  error.getDefaultMessage()+";";
         }
+
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
+//            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
             e = e + error.getObjectName()+ " " + error.getDefaultMessage()+";";
 
         }
