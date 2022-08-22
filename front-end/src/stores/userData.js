@@ -100,7 +100,7 @@ export const userData = defineStore('userDataState', () => {
                 console.log(modUser);
                 userList.value = userList.value.map((user) =>
                     user.id === modUser.id
-                        ? { ...user, name: modUser.name, email: modUser.email, role: modUser.roll }
+                        ? { ...user, name: modUser.name, email: modUser.email, role: modUser.role }
                         : user
                 )
 
