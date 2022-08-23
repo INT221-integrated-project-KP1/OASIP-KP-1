@@ -21,11 +21,14 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "createdOn")
+    @Column(name = "createdOn", nullable = false)
     private Instant createdOn;
 
-    @Column(name = "updatedOn")
+    @Column(name = "updatedOn", nullable = false)
     private Instant updatedOn;
+
+    @Column(name = "password", nullable = false, length = 90)
+    private String password;
 
     public Integer getId() {
         return id;
@@ -73,6 +76,14 @@ public class User {
 
     public void setUpdatedOn(Instant updatedOn) {
         this.updatedOn = updatedOn;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

@@ -17,9 +17,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@UniqName
-@UniqEmail
-public class UserDTO {
+public class UserGetDTO {
     private Integer id;
     @Size(min=1 , max=100)
     @NotNull(message = "is Not Null")
@@ -31,7 +29,4 @@ public class UserDTO {
     @EnumUser
     @NotNull(message = "is Not Null")
     private String role;
-
-    @NotNull(message = "is Not Null")
-    private String password;
 }

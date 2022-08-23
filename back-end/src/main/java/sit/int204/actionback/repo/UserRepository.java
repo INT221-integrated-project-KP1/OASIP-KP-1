@@ -7,11 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import sit.int204.actionback.entities.User;
 
-import java.time.Instant;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "insert into user (name, email, role) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()})", nativeQuery = true)
+    @Query(value = "insert into user (name, email, role, password) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()})", nativeQuery = true)
     @Modifying
     @Transactional
     public void saveUser(@Param("user") User user);
@@ -23,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     public void editUser(@Param("user") User user);
+
+    public User findByEmail(String email);
 
     public List<User> findAllByOrderByNameAsc();
 }

@@ -1,14 +1,10 @@
 package sit.int204.actionback.Validation;
 
-import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.enumfile.Role;
 
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class EnumUserVaildation implements ConstraintValidator<EnumUser, String > {
 
