@@ -5,7 +5,6 @@ export const userData = defineStore('userDataState', () => {
 
     const validateUniqueName = (id, name) => {
         if (id && name != undefined) {
-
             return userList.value.filter((user) => user.id !== id)
                 .some((user) => user.name.toLowerCase() == name.toLowerCase())
         }
@@ -30,13 +29,9 @@ export const userData = defineStore('userDataState', () => {
                 body: JSON.stringify({
                     name: user.name,
                     email: user.email,
-                    role: user.role,
-                    password: user.password
+                    role: user.role
                 }),
             });
-
-
-
             if (res.status === 201) {
                 console.log("added sucessfully");
                 return { error: "", status: 1 };
