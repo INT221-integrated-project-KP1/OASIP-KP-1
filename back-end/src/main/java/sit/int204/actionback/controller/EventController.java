@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("api/scheduled")
+@RequestMapping("api/event")
 @CrossOrigin(origins = "http://localhost:3000")
 public class EventController {
 
@@ -47,7 +47,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filtration")
     public List<SimpleEventDTO> getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,

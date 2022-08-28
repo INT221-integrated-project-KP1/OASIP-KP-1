@@ -33,15 +33,16 @@ public class UserController {
         return userService.getEvent();
     }
 
+
     @PostMapping("")
-    public ResponseEntity addUser(@RequestBody UserDTO user){
+    public ResponseEntity addUser(@Valid @RequestBody UserDTO user){
         userService.addUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("");
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTest(@PathVariable Integer id) {
-        userService.deleteUser(id);
+    public ResponseEntity deleteUser(@PathVariable Integer id) {
+        return userService.deleteUser(id);
     }
 
     @PutMapping("/{id}")

@@ -40,9 +40,7 @@ export const events = defineStore('eventListState',() => {
     const getEvents = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled?page=${page.value}&pageSize=${pageSize.value
-        }`
-      );
+        `${import.meta.env.VITE_BASE_URL}/event?page=${page.value}&pageSize=${pageSize.value}`);
       if (res.status === 200) {
         const eventsToAdd = await res.json();
         // events << eventToAdd
@@ -67,7 +65,7 @@ export const events = defineStore('eventListState',() => {
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -93,7 +91,7 @@ export const events = defineStore('eventListState',() => {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=${page.value}&pageSize=${pageSize.value}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -115,7 +113,7 @@ export const events = defineStore('eventListState',() => {
     const filterPastOrFutureOrAll = filterList.value.pastOrFutureOrAll.length!=1?"all":filterList.value.pastOrFutureOrAll[0]
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/filter?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
+        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${filterList.value.eventCategoryId}&page=0&pageSize=${(pageSize.value)*(page.value+1)}&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `
       );
       if (res.status === 200) {
@@ -136,7 +134,7 @@ export const events = defineStore('eventListState',() => {
   // POST
 const createNewEvent = async (event) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/`, {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -169,7 +167,7 @@ const createNewEvent = async (event) => {
     const removeEvent = async (deleteId) => {
     console.log(deleteId);
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/scheduled/${deleteId}`,
+      `${import.meta.env.VITE_BASE_URL}/event/${deleteId}`,
       {
         method: "DELETE",
       }
@@ -203,7 +201,7 @@ const createNewEvent = async (event) => {
     console.log("startTime: " + startTime)
     console.log("Notes: " + notes)
     console.log("id: " + id)
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/scheduled/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json'
@@ -241,7 +239,7 @@ const createNewEvent = async (event) => {
   const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/scheduled/overlabcheck?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
+        `${import.meta.env.VITE_BASE_URL}/event/overlapping?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`
       );
       if (res.status === 200) {
         const eventsOverLab = await res.json();
