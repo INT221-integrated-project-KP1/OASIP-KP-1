@@ -54,10 +54,10 @@ insert into event(booking_name,booking_email,event_notes,event_start_time,event_
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);
 
-DROP TABLE IF EXISTS `User`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `User` (
+CREATE TABLE `user` (
   `name` varchar(100) NOT NULL,
   `email` varchar(50) NOT NULL,
   `role` enum('admin','lecturer','student') NOT NULL,
