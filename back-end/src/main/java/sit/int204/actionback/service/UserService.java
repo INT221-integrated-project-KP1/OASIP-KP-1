@@ -19,6 +19,7 @@ import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -95,5 +96,11 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body("Invalid Pass");
     }
 
+    public ResponseEntity getUserById(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user.get(), User.class));     }
 }
 

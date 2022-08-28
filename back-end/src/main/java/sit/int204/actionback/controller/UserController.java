@@ -34,6 +34,10 @@ public class UserController {
         return userService.getEvent();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
+    }
 
     @PostMapping("")
     public ResponseEntity addUser(@Valid @RequestBody UserDTO user) {
