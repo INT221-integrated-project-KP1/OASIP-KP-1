@@ -35,7 +35,7 @@ const validateEventName = computed(() => {
   if (selectedCategory.eventCategoryName != undefined) {
     nselectedCategory.eventCategoryName = selectedCategory.eventCategoryName.replace("  ", " ").trimStart();
     if ((selectedCategory.eventCategoryName.length > 100)) {
-      console.log('name false');
+      console.log('name falsee');
       return false;
     }
   }
