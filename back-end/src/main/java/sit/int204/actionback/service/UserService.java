@@ -1,5 +1,7 @@
 package sit.int204.actionback.service;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.UserDTO;
+import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
@@ -30,13 +33,6 @@ public class UserService {
 
     public List<User> getEvent(){
         return userRepository.findAll();
-    }
-
-    public ResponseEntity addUser(UserDTO user){
-
-      User user_user =  modelMapper.map(user, User.class);
-        userRepository.saveUser(user_user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
     }
 
     public ResponseEntity deleteUser(Integer id) {
@@ -66,6 +62,37 @@ public class UserService {
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(editUser);
+    }
+
+    public ResponseEntity addUser(UserDTO userToAdd) {
+        User user = modelMapper.map(userToAdd, User.class);
+        // iterations = 10
+        // memory = 64m
+        // parallelism = 1
+        user.setPassword(argon2Hashing(userToAdd.getPassword()));
+      /*if (argon2.verify(hash, password)) {
+                System.out.println("Hash matches password.");
+      }*/
+        userRepository.saveUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    public String argon2Hashing(String stringToHash){
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2i, 8, 16);
+        return argon2.hash(22, 65536, 1, stringToHash); //97 length of string
+    }
+    public ResponseEntity matchPassword(UserMatchingDTO userToMatch) {
+        User user = userRepository.findByEmail(userToMatch.getEmail());
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.CREATED).body("Invalid Email");
+        }
+
+        System.out.println(userToMatch);
+        Argon2 argon2 = Argon2Factory.create();
+        if (argon2.verify(user.getPassword(), userToMatch.getPassword())) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Matched");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Invalid Pass");
     }
 
 }

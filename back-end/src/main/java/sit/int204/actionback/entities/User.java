@@ -17,6 +17,9 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
+    @Column(name = "password", nullable = false, length = 90)
+    private String password;
+
     @Lob
     @Column(name = "role", nullable = false)
     private String role;
@@ -26,6 +29,14 @@ public class User {
 
     @Column(name = "updatedOn")
     private Instant updatedOn;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Integer getId() {
         return id;

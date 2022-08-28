@@ -11,13 +11,17 @@ import java.time.Instant;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "insert into user (name, email, role) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()})", nativeQuery = true)
+    @Query(value = "insert into user (name, email, role, password) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()})", nativeQuery = true)
     @Modifying
     @Transactional
     public void saveUser(@Param("user") User user);
 
-    @Query(value = "insert into user (name, email, role ,updatedOn) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()},CURRENT_TIMESTAMP)", nativeQuery = true)
+    @Query(value = "UPDATE user SET name = :#{#user.getName()} , email = :#{#user.getEmail()} , role = :#{#user.getRole()} ,updatedOn =CURRENT_TIMESTAMP where id = :#{#user.getId()} ", nativeQuery = true)
     @Modifying
     @Transactional
     public void editUser(@Param("user") User user);
+
+    public User findByEmail(String email);
+
+
 }

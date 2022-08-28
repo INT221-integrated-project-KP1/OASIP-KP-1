@@ -7,6 +7,7 @@ import sit.int204.actionback.dtos.EventDTO;
 import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.enumfile.Role;
 import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 
@@ -19,7 +20,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.Optional;
 
-public class EnumUserVaildation implements ConstraintValidator<EnumUser, UserDTO > {
+public class EnumUserVaildation implements ConstraintValidator<EnumUser,String > {
 
     @Autowired
     private EventRepository repository;
@@ -33,8 +34,14 @@ public class EnumUserVaildation implements ConstraintValidator<EnumUser, UserDTO
     }
 
     @Override
-    public boolean isValid(UserDTO User, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String myRole, ConstraintValidatorContext constraintValidatorContext) {
+        if(myRole == null) return true;
 
+        Role roles[] = Role.values();
+        for(Role role: roles) {
+            System.out.println(role);
+            if(role.toString().equals(myRole)) return true;
+    }
 
         return false;
     }

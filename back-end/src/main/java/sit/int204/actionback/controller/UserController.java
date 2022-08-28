@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.UserDTO;
+import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.service.UserService;
 import sit.int204.actionback.utils.ListMapper;
@@ -35,18 +36,24 @@ public class UserController {
 
 
     @PostMapping("")
-    public ResponseEntity addUser(@Valid @RequestBody UserDTO user){
-        userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
+    public ResponseEntity addUser(@Valid @RequestBody UserDTO user) {
+        return userService.addUser(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable Integer id) {
-        return userService.deleteUser(id);
+    public void deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+    }
+
+    @GetMapping("/matching")
+    public ResponseEntity matchPassword(@Valid @RequestBody UserMatchingDTO user) {
+        return userService.matchPassword(user);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@Valid @RequestBody UserDTO user, @PathVariable int id) {
         return userService.editUser(user, id);
     }
+
+
 }
