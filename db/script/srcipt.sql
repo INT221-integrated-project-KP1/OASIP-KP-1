@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `name` varchar(100) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `role` enum('admin','lecturer','student') NOT NULL,
+  `role` enum('Admin','Lecturer','Student') NOT NULL,
   `createdOn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedOn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` int NOT NULL AUTO_INCREMENT,
