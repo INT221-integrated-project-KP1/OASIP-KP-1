@@ -41,6 +41,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity addUser(@Valid @RequestBody UserDTO user) {
+        System.out.println("POST MAPPING ADD USER START");
         return userService.addUser(user);
     }
 

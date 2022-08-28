@@ -66,7 +66,10 @@ public class UserService {
     }
 
     public ResponseEntity addUser(UserDTO userToAdd) {
+        System.out.println("UserService: ");
+
         User user = modelMapper.map(userToAdd, User.class);
+        System.out.println("moelMapper success to User.class");
         // iterations = 10
         // memory = 64m
         // parallelism = 1
@@ -74,7 +77,9 @@ public class UserService {
       /*if (argon2.verify(hash, password)) {
                 System.out.println("Hash matches password.");
       }*/
+        System.out.println("Hashing Password SUceess");
         userRepository.saveUser(user);
+        System.out.println("saveUser Success");
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
