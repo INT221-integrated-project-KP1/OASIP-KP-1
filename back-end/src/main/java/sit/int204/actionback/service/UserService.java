@@ -73,7 +73,12 @@ public class UserService {
         // iterations = 10
         // memory = 64m
         // parallelism = 1
-        user.setPassword(argon2Hashing(userToAdd.getPassword()));
+        System.out.println("test2222");
+        System.out.println("test2223");
+        System.out.println("test2224");
+        System.out.println("test2225");
+        System.out.println("test2226");
+        user.setPassword(argon2Hashing(user.getPassword()));
       /*if (argon2.verify(hash, password)) {
                 System.out.println("Hash matches password.");
       }*/
