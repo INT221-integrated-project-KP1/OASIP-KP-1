@@ -6,31 +6,63 @@ const myRouter = useRouter()
 
 const loginuser = ref({ email: '', password: '' });
 
-const MatchingCheck = async (loginuser) => {
-    try {
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/matching/matching`, {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify({
-                email: loginuser.email,
-                password: loginuser.password
-            }),
-        });
+const matchstatus = ref('');
 
-       let matchStatus = await res.text()
+const ValidateCheckEmail = (login) => {
+    if (!(login.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)))
+    {
+        matchstatus.value = matchstatus.value + "Email is not valid ;"
+        return true
+    }
+    return false
+}
 
-        if (res.status === 200) {
-            console.log("Check com")
-            alert(matchStatus);
-        } else {
-            alert(matchStatus);
-            console.log("error, cannot matching");
+const ValidateCheckPassword = (login) => {
+    if (login.password.length < 8 || login.password.length > 18) {
+        matchstatus.value = matchstatus.value + "Password < 0 or Password > 18 ;"
+        return true
+    }
+    return false
+}
+
+
+const MatchingCheck = async (login) => {
+    login.email = login.email.trimStart().trimEnd();
+    if ( ValidateCheckPassword(login) || ValidateCheckEmail(login) ) {
+        statusError.value = 2;
+        topFunction();
+        setTimeout(() => (statusError.value = 0), 2000);
+    }
+    else {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/matching/matching`, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: login.email,
+                    password: login.password
+                }),
+            });
+
+            matchstatus.value = await res.text()
+
+            if (res.status === 200) {
+                statusError.value = 1;
+                topFunction();
+                setTimeout(() => (statusError.value = 0), 2000);
+            } else {
+                statusError.value = 2;
+                topFunction();
+                setTimeout(() => (statusError.value = 0), 2000);
+            }
+        } catch (err) {
+            console.log(err);
+            errorInsert()
+            alert(err);
         }
-    } catch (err) {
-        console.log(err);
-        alert(err);
+
     }
 }
 
@@ -39,35 +71,88 @@ const noIsFun = () => {
 }
 
 const goSignUp = () => {
-  myRouter.push({ name: 'SignUp' });
+    myRouter.push({ name: 'SignUp' });
 }
 
 const validateEmail = computed(() => {
     loginuser.value.email = loginuser.value.email.trimStart().trimEnd();
-  console.log(loginuser.value.email)
-  return loginuser.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+    console.log(loginuser.value.email)
+    return loginuser.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 })
+
+const statusError = ref(0);
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+const errorInsert = () => {
+    statusError.value = -1;
+    topFunction();
+    setTimeout(() => (statusError.value = 0), 2000);
+};
+
+
 
 </script>
 
 <template class="antialiased bg-gradient-to-br from-green-100 to-white">
 
-<div class="container px-6 mx-auto">
+    <div class="p-5">
+        <div class="alert alert-success shadow-lg" v-if="statusError === 1">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{  matchstatus  }}</span>
+            </div>
+        </div>
+
+        <div class="alert alert-warning shadow-lg" v-else-if="statusError === 2">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Not Match : {{  matchstatus  }}</span>
+            </div>
+        </div>
+
+        <div class="alert alert-error shadow-lg" v-else-if="statusError === -1">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Error! For server {{  error  }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container px-6 mx-auto">
         <div class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center">
 
             <div class="flex flex-col w-full">
                 <div>
-                    <svg class="w-20 h-20 mx-auto md:float-left fill-stroke text-gray-800" fill="none"
+                    <svg class="w-20 h-20 mx-auto md:auto fill-stroke text-gray-800" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
                         </path>
                     </svg>
                 </div>
-                <h1 class="text-5xl text-gray-800 font-bold">Client Area</h1>
-                <p class="w-5/12 mx-auto md:mx-0 text-gray-500">
-                    Control and monitorize your website data from dashboard.
-                </p>
+                <h1 class="text-5xl text-gray-800 font-bold mx-auto md:auto">OASIP-KP1 LogIn</h1>
+               <div class="mx-auto md:auto my-10" >
+                <img src="../assets/Anya.jpg" alt ="logologin" width = 300  height = 300>
+               </div>
+               
+          
+
+
             </div>
 
 
@@ -79,8 +164,8 @@ const validateEmail = computed(() => {
                     <form action="" class="w-full">
                         <div id="input" class="flex flex-col w-full my-5">
                             <label for="email" class="text-gray-500 mb-2">Email :<span
-                    v-show="!validateEmail && loginuser.email.length > 0"
-                    style="color: red;">*Invalid Email</span>
+                                    v-show="!validateEmail && loginuser.email.length > 0" style="color: red;">*Invalid
+                                    Email</span>
                             </label>
                             <input type="text" id="username" placeholder="Please insert your email"
                                 class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg"
@@ -88,9 +173,8 @@ const validateEmail = computed(() => {
                         </div>
                         <div id="input" class="flex flex-col w-full my-5">
                             <label for="password" class="text-gray-500 mb-2">Password
-                                <span
-                    v-show="loginuser.password.length < 8 || loginuser.password.length > 18 "
-                    style="color: red;">*Invalid Password</span>
+                                <span v-show="loginuser.password.length < 8 || loginuser.password.length > 18"
+                                    style="color: red;">*Invalid Password</span>
                             </label>
                             <input type="password" id="password" placeholder="Please insert your password"
                                 class="appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg"
