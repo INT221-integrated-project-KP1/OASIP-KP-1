@@ -66,20 +66,32 @@ public class UserService {
     }
 
     public ResponseEntity addUser(UserDTO userToAdd) {
+        System.out.println("UserService: ");
+
         User user = modelMapper.map(userToAdd, User.class);
+        System.out.println("moelMapper success to User.class");
         // iterations = 10
         // memory = 64m
         // parallelism = 1
-        user.setPassword(argon2Hashing(userToAdd.getPassword()));
+        System.out.println("test2222");
+        System.out.println("test2223");
+        System.out.println("test2224");
+        System.out.println("test2225");
+        System.out.println("test2226");
+        user.setPassword(argon2Hashing(user.getPassword()));
       /*if (argon2.verify(hash, password)) {
                 System.out.println("Hash matches password.");
       }*/
+        System.out.println("Hashing Password SUceess");
         userRepository.saveUser(user);
+        System.out.println("saveUser Success");
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
     public String argon2Hashing(String stringToHash){
+        System.out.println("argon2 hasing start");
         Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2i, 8, 16);
+        System.out.println("create Object argon2");
         return argon2.hash(22, 65536, 1, stringToHash); //97 length of string
     }
 

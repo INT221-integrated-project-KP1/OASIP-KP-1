@@ -39,6 +39,7 @@ export const userData = defineStore('userDataState', () => {
 
             if (res.status === 201) {
                 console.log("added sucessfully");
+                getUsers();
                 return { error: "", status: 1 };
             } else {
                 console.log("error, cannot be added");

@@ -32,7 +32,7 @@ public class EventController {
         return eventService.getAllEvent();
     }
 
-    @GetMapping("/overlabcheck")
+    @GetMapping("/overlapping")
     public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
