@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/eventcategory")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class EventCategoryController {
     @Autowired
     private EventCategoryService eventCategoryService;
