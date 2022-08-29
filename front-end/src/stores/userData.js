@@ -22,7 +22,7 @@ export const userData = defineStore('userDataState', () => {
     // POST
     const createNewUser = async (user) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",

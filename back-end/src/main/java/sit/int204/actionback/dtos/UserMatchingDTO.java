@@ -15,5 +15,6 @@ public class UserMatchingDTO implements Serializable {
     @Size(min=1 ,max=50)
     private final String email;
     @NotNull(message = "is Not Null")
+    @Size(min=8 , max=18)
     private final String password;
 }

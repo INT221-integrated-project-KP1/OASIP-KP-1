@@ -1,14 +1,9 @@
 package sit.int204.actionback.repo;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import sit.int204.actionback.dtos.SimpleEventDTO;
-import sit.int204.actionback.entities.Event;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import sit.int204.actionback.entities.Event;
 import java.time.Instant;
 import java.util.List;
 

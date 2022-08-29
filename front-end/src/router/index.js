@@ -7,6 +7,8 @@ import AboutUs from '../views/AboutUs.vue'
 import ListCategory from '../views/ListCategory.vue'
 import SignUp from '../views/SignUp.vue'
 import ListUser from '../views/ListUser.vue'
+import SignIn from '../views/SignIn.vue'
+
 const history = createWebHistory('/kp1/')
 const routes = [
     {
@@ -46,6 +48,11 @@ const routes = [
         path: '/aboutus',
         name: 'AboutUs',
         component: AboutUs
+    },
+    {
+        path: '/SignIn',
+        name: 'SignIn',
+        component: SignIn
     }
 ]
 

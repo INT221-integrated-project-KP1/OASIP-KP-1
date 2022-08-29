@@ -44,6 +44,9 @@ const goWelcome = () => {
               <router-link :to="{ name: 'SignUp' }"> Sign Up </router-link>
             </li>
             <li>
+              <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
+            </li>
+            <li>
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
             </li>
             <li>
@@ -71,12 +74,11 @@ const goWelcome = () => {
               :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">
               List Category </router-link>
 
-            <router-link :to="{ name: 'SignUp' }"
-              :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
+            <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
               Sign Up </router-link>
-
-            <router-link :to="{ name: 'ListUser' }"
-              :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
+            <router-link :to="{ name: 'SignIn' }" :class="[$route.name == 'SignIn' ? 'tab-active' : '', 'tab']">
+              Sign In </router-link>
+            <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link>
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>

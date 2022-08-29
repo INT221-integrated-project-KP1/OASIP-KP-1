@@ -82,19 +82,7 @@ public class UserService {
         Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2i, 8, 16);
         return argon2.hash(22, 65536, 1, stringToHash); //97 length of string
     }
-    public ResponseEntity matchPassword(UserMatchingDTO userToMatch) {
-        User user = userRepository.findByEmail(userToMatch.getEmail());
-        if(user == null){
-            return ResponseEntity.status(HttpStatus.CREATED).body("Invalid Email");
-        }
 
-        System.out.println(userToMatch);
-        Argon2 argon2 = Argon2Factory.create();
-        if (argon2.verify(user.getPassword(), userToMatch.getPassword())) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Matched");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Invalid Pass");
-    }
 
     public ResponseEntity getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);

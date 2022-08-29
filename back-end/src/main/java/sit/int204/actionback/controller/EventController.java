@@ -7,17 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
-
 import java.util.List;
-
 import sit.int204.actionback.exception.ApiTestException;
-
 import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("api/event")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class EventController {
 
 
