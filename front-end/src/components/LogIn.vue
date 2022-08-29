@@ -107,12 +107,12 @@ const validateEmail = computed(() => {
                                             </path>
                                         </svg>
                                     </div>
-                                    <div class="font-bold" @click="MatchingCheck(loginuser)">Sigin</div>
+                                    <div class="font-bold" @click="MatchingCheck(loginuser)">Signin</div>
                                 </div>
                             </button>
                             <div class="flex justify-evenly mt-5">
                                 <a href="#" class="w-full text-center font-medium text-gray-500" @click="noIsFun">Recover password!</a>
-                                <a href="#" class="w-full text-center font-medium text-gray-500" @click="goSignUp">Singup!</a>
+                                <a href="#" class="w-full text-center font-medium text-gray-500" @click="goSignUp">Signup!</a>
                             </div>
                         </div>
                     </form>
