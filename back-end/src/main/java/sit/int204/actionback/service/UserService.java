@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.dtos.UserMatchingDTO;
+import sit.int204.actionback.dtos.UserModifyDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
@@ -48,7 +49,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity editUser(UserDTO editUser , int id ) {
+    public ResponseEntity editUser(UserModifyDTO editUser , int id ) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(

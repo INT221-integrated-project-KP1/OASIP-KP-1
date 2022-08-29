@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.UserDTO;
+import sit.int204.actionback.dtos.UserModifyDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.service.UserService;
 import sit.int204.actionback.utils.ListMapper;
@@ -50,7 +51,7 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody UserDTO user, @PathVariable int id) {
+    public ResponseEntity update(@Valid @RequestBody UserModifyDTO user, @PathVariable int id) {
         return userService.editUser(user, id);
     }
 

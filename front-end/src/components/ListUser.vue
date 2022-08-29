@@ -54,7 +54,7 @@ const validateNameLength = computed(() => {
     return true
 })
 const validateEmailLength = computed(() => {
-
+    
     if (selectedUser.value.email.length > 50) {
         return false
     }
@@ -64,6 +64,7 @@ const validateEmailLength = computed(() => {
 const error = ref('')
 const editUser = async () => {
     error.value = ``
+    selectedUser.value.email = selectedUser.value.email.toLocaleLowerCase();
     if (myUserData.validateUniqueEmail(selectedUser.value.id, selectedUser.value.email)) {
         error.value += "Unique Email only $$"
         console.log("err emailkub");

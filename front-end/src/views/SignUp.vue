@@ -62,6 +62,7 @@ const validatePassword = computed(() => {
 
 const validateUserEmail = computed(() => {
   newUser.value.email = newUser.value.email.trimStart().trimEnd();
+  newUser.value.email = newUser.value.email.toLocaleLowerCase();
   console.log(newUser.value.email)
   return newUser.value.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 })
@@ -155,7 +156,7 @@ const check = async () => {
 
 <template>
   <div class="relative">
-    <progress id="busy" v-if="isProgress" class=" progress progress-success h-6 w-56 absolute inset-0" :value="progress"
+    <progress id="busy" v-if="isProgress" class=" progress progress-success h-6 w-56 absolute top-1/3 left-1/2" :value="progress"
       max="100"></progress>
     <div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
       <!-- Status -->
