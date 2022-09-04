@@ -21,4 +21,12 @@ public class UserMatchingDTO implements Serializable {
     @NotNull(message = "is Not Null")
     @Size(min=8 , max=18)
     private String password;
+
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
+
+    public void setPassword(String password) {
+        this.password = password.trim();
+    }
 }

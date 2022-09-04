@@ -18,4 +18,6 @@ public class EventUpdateDTO {
 
     @Size(max=500)
     private String eventNotes;
+
+
 }

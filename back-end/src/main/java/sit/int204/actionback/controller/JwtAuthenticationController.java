@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.MatchingRepository;
 import sit.int204.actionback.service.JwtUserDetailsService;
@@ -26,6 +27,7 @@ import sit.int204.actionback.model.JwtRequest;
 import sit.int204.actionback.model.JwtResponse;
 import sit.int204.actionback.service.MatchingService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -40,17 +42,17 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
+//    @Autowired
+//    private JwtUserDetailsService userDetailsService;
 
     @Autowired
     private MatchingRepository matchingRepository;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        Optional<User> user = matchingRepository.findByEmail(authenticationRequest.getUsername());
+//        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        Optional<User> user = matchingRepository.findByEmail(authenticationRequest.getEmail());
         if(user.isEmpty()){
             return ResponseEntity.status(404).body("Dont have this Email(");
         }
@@ -59,12 +61,12 @@ public class JwtAuthenticationController {
         if (argon2.verify(user.get().getPassword(), authenticationRequest.getPassword())) {
 //            final UserDetails userDetails = userDetailsService
 //                    .loadUserByUsername(authenticationRequest.getUsername());
-            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
-            final String token = jwtTokenUtil.generateToken(userDetails);
+//            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
+            final String token = jwtTokenUtil.generateToken(user);
             return ResponseEntity.ok(new JwtResponse(token));
 
         }
-        return ResponseEntity.status(404).body("Password Invaild");
+      else  return ResponseEntity.status(404).body("Password Invaild");
 
     }
 

@@ -34,4 +34,12 @@ public class UserAddDTO {
 
     @NotNull(message = "is Not Null")
     private String password;
+
+    public void setName(String name) {
+        this.name = name.trim();
+    }
+
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 }

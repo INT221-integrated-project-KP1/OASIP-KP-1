@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import sit.int204.actionback.dtos.UserMatchingDTO;
+import sit.int204.actionback.entities.User;
 import sit.int204.actionback.model.JwtRequest;
 
 @Component
@@ -49,21 +52,26 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+    public String generateToken(Optional<User> userDetails) {
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("Email",userDetails.get().getEmail());
+        payload.put("Name",userDetails.get().getName());
+        payload.put("Role",userDetails.get().getRole());
+
+
+        return doGenerateToken(payload);
     }
+
+
 
     //while creating the token -
     //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
     //2. Sign the JWT using the HS512 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String doGenerateToken(Map<String, Object> claims) {
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
