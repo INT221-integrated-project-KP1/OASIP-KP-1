@@ -5,6 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -53,13 +54,22 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
         return  new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
 
     }
+//    @ExceptionHandler(UsernameNotFoundException.class)
+//    public ResponseEntity<Object> handleUsernameNotFoundExceptionExceptions(String msg) {
+//        System.out.println("All exceptions Method getting executed!!!!");
+//
+//        return new ResponseEntity(msg, HttpStatus.NOT_FOUND);
+//    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
         System.out.println("All exceptions Method getting executed!!!!");
 
         final List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
-        return new ResponseEntity("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        details.add(ex.getMessage());
+        return new ResponseEntity(details, HttpStatus.NOT_FOUND);
     }
+
+
 }

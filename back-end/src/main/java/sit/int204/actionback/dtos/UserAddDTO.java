@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 
 @UniqName
 @UniqEmail
-public class UserDTO {
+public class UserAddDTO {
     private Integer id;
     @Size(min=1 , max=100)
     @NotNull(message = "is Not Null")
