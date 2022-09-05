@@ -2,7 +2,6 @@ package sit.int204.actionback.Validation;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.dtos.UserModifyDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;

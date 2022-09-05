@@ -42,11 +42,7 @@ public class UniqEmailVaildation implements ConstraintValidator<UniqEmail, UserA
         if(user.getId() == null){myid = -1;}
         else {myid = user.getId();}
 
-<<<<<<< HEAD
-        List<User> allUser  = userRepository.findAll();
-=======
         List<UserAddDTO> allUser  = listMapper.mapList(userRepository.findAll(), UserAddDTO.class, modelMapper);
->>>>>>> backend
         for (int i = 0 ; i < allUser.size() ; i++){
             if(allUser.get(i).getId() != myid){
                 if(allUser.get(i).getEmail().equals(user.getEmail())) return false;

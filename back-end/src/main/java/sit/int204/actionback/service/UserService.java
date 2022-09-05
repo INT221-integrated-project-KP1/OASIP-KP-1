@@ -9,14 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
-<<<<<<< HEAD
-import sit.int204.actionback.dtos.EventPageDTO;
-import sit.int204.actionback.dtos.UserDTO;
-import sit.int204.actionback.dtos.UserMatchingDTO;
-import sit.int204.actionback.dtos.UserModifyDTO;
-=======
 import sit.int204.actionback.dtos.UserAddDTO;
->>>>>>> backend
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
@@ -51,11 +44,7 @@ public class UserService {
 
     }
 
-<<<<<<< HEAD
-    public ResponseEntity editUser(UserModifyDTO editUser , int id ) {
-=======
     public ResponseEntity editUser(UserAddDTO editUser , int id ) {
->>>>>>> backend
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
