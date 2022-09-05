@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import sit.int204.actionback.entities.User;
 
+import java.util.Optional;
+
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "insert into myuser (name, email, role, password) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()})", nativeQuery = true)
@@ -19,6 +21,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     public void editUser(@Param("user") User user);
 
-
+    Optional<User> findByEmail(String email);
 
 }

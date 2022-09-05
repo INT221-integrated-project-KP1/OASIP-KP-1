@@ -2,15 +2,12 @@ package sit.int204.actionback.controller;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import io.jsonwebtoken.Jwts;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,18 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.entities.User;
-import sit.int204.actionback.repo.MatchingRepository;
-import sit.int204.actionback.service.JwtUserDetailsService;
 
 
 import sit.int204.actionback.config.JwtTokenUtil;
-import sit.int204.actionback.model.JwtRequest;
 import sit.int204.actionback.model.JwtResponse;
-import sit.int204.actionback.service.MatchingService;
+import sit.int204.actionback.repo.UserRepository;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -44,13 +36,13 @@ public class JwtAuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private MatchingRepository matchingRepository;
+    private UserRepository userRepository;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        Optional<User> user = matchingRepository.findByEmail(authenticationRequest.getEmail());
+        Optional<User> user = userRepository.findByEmail(authenticationRequest.getEmail());
         if(user.isEmpty()){
             return ResponseEntity.status(404).body("Dont have this Email(");
         }
