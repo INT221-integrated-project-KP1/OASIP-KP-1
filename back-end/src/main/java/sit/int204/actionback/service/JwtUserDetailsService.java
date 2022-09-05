@@ -32,7 +32,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
        else {
             System.out.println("user not null");
-            UserDetails userDetails = new User(user.get().getEmail(),"",new ArrayList<>());
+            UserDetails userDetails = new User(user.get().getEmail(),user.get().getPassword(),new ArrayList<>());
 
             return userDetails;
         }
