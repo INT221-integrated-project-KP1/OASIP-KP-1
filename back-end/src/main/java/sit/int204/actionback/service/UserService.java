@@ -4,17 +4,19 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
+<<<<<<< HEAD
 import sit.int204.actionback.dtos.EventPageDTO;
 import sit.int204.actionback.dtos.UserDTO;
 import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.dtos.UserModifyDTO;
+=======
+import sit.int204.actionback.dtos.UserAddDTO;
+>>>>>>> backend
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
@@ -49,7 +51,11 @@ public class UserService {
 
     }
 
+<<<<<<< HEAD
     public ResponseEntity editUser(UserModifyDTO editUser , int id ) {
+=======
+    public ResponseEntity editUser(UserAddDTO editUser , int id ) {
+>>>>>>> backend
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -66,7 +72,7 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(editUser);
     }
 
-    public ResponseEntity addUser(UserDTO userToAdd) {
+    public ResponseEntity addUser(UserAddDTO userToAdd) {
         System.out.println("UserService: ");
 
         User user = modelMapper.map(userToAdd, User.class);

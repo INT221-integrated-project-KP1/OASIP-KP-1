@@ -1,7 +1,7 @@
 <script setup>
-import p1 from "../assets/Team/tus.jpg"
-import p2 from "../assets/Team/amorn.jpg"
-import p3 from "../assets/Team/mark.jpg"
+import p1 from "../assets/AdminPNG/1.png"
+import p2 from "../assets/AdminPNG/1.png"
+import p3 from "../assets/AdminPNG/1.png"
 
 
 
@@ -19,7 +19,7 @@ const myTeam = [
     'URLGithub': "https://github.com/tuskingcup",
     'ID': 63130500099
   }, {
-    'photo': p2,
+    'photo':  p2,
     'name': "Amornpong Duangchawee",
     'role': "Valorant $$",
     'phone': "098-XXX-4953",
@@ -54,7 +54,8 @@ const myTeam = [
     <div v-for="(team, index) in myTeam" :key="index" class=" 
     max-w-sm content-center justify-center mx-auto bg-white mt-[10vh] rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700
    transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
-      <img class="h-30 object-cover  mb-2 z-10 " :src="team.photo"  alt="logo">
+      <img class="w-30 h-30 object-cover  mb-2 z-10 " :src= "team.photo" alt="logo">
+
       <div class=" flex flex-col pl-10 pb-10 pr-10">
         <h1 class="text-3xl text-gray-900 font-semibold">{{ team.name }}</h1>
         <div class="mb-2 mt-2">

@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
+import { cookieData } from "../stores/cookieData.js"
+const cookie = cookieData()
+
+
 const { params } = useRoute()
 const myRouter = useRouter()
 
@@ -24,7 +28,7 @@ const ValidateCheckPassword = (login) => {
     return false
 }
 
-
+//login
 const MatchingCheck = async (login) => {
     login.email = login.email.trimStart().trimEnd();
     if (ValidateCheckPassword(login) || ValidateCheckEmail(login)) {
@@ -35,7 +39,7 @@ const MatchingCheck = async (login) => {
     else {
         try {
             loaderInsert();
-            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/matching/matching`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
@@ -45,14 +49,17 @@ const MatchingCheck = async (login) => {
                     password: login.password
                 }),
             });
-
-            matchstatus.value = await res.text()
             loaderEnd();
             if (res.status === 200) {
+                const objectJson = await res.json()
+                cookie.setCookie(Object.keys(objectJson)[0], Object.values(objectJson)[0], 7)
+
+                matchstatus.value = "Sucesss"
                 statusError.value = 1;
                 topFunction();
                 setTimeout(() => (statusError.value = 0), 2000);
             } else {
+                matchstatus.value = await res.text()
                 statusError.value = 2;
                 topFunction();
                 setTimeout(() => (statusError.value = 0), 2000);
@@ -100,7 +107,6 @@ const loaderInsert = () => {
     setTimeout(() => (progress.value = 20), 500);
     setTimeout(() => (progress.value = 80), 500);
 }
-
 const loaderEnd = () => {
     setTimeout(() => (progress.value = 100), 0);
     isProgress.value = false;
@@ -118,7 +124,7 @@ const loaderEnd = () => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{{  matchstatus  }}</span>
+                <span>{{ matchstatus }}</span>
             </div>
         </div>
 
@@ -129,7 +135,7 @@ const loaderEnd = () => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <span>Not Match : {{  matchstatus  }}</span>
+                <span>Not Match : {{ matchstatus }}</span>
             </div>
         </div>
 
@@ -140,7 +146,7 @@ const loaderEnd = () => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>Error! For server {{  error  }}</span>
+                <span>Error! For server {{ error }}</span>
             </div>
         </div>
     </div>
@@ -210,14 +216,14 @@ const loaderEnd = () => {
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <div class="font-bold" @click="MatchingCheck(loginuser)">Signin</div>
+                                            <div class="font-bold" @click="MatchingCheck(loginuser)">Sign in</div>
                                         </div>
                                     </button>
                                     <div class="flex justify-evenly mt-5">
                                         <a href="#" class="w-full text-center font-medium text-gray-500"
                                             @click="noIsFun">Recover password!</a>
                                         <a href="#" class="w-full text-center font-medium text-gray-500"
-                                            @click="goSignUp">Signup!</a>
+                                            @click="goSignUp">Sign up!</a>
                                     </div>
                                 </div>
                             </form>

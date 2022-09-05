@@ -19,8 +19,12 @@ import javax.validation.constraints.Size;
 
 @UniqName
 @UniqEmail
+<<<<<<< HEAD:back-end/src/main/java/sit/int204/actionback/dtos/UserDTO.java
 public class UserDTO {
 
+=======
+public class UserAddDTO {
+>>>>>>> backend:back-end/src/main/java/sit/int204/actionback/dtos/UserAddDTO.java
     private Integer id;
     @Size(min=1 , max=100)
     @NotNull(message = "is Not Null")
@@ -35,4 +39,12 @@ public class UserDTO {
 
     @NotNull(message = "is Not Null")
     private String password;
+
+    public void setName(String name) {
+        this.name = name.trim();
+    }
+
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 }
