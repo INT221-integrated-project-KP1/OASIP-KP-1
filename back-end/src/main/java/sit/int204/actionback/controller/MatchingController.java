@@ -26,7 +26,7 @@ public class MatchingController {
     @Autowired
     private ListMapper listMapper;
 
-    @PostMapping("/matching")
+    @PostMapping("")
     public ResponseEntity matchPassword(@Valid @RequestBody UserMatchingDTO user) {
         return matchingService.matchPassword(user);
     }

@@ -34,6 +34,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@RequestMapping("api/login")
 public class JwtAuthenticationController {
 
     @Autowired
@@ -42,13 +43,10 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//    @Autowired
-//    private JwtUserDetailsService userDetailsService;
-
     @Autowired
     private MatchingRepository matchingRepository;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -64,10 +62,8 @@ public class JwtAuthenticationController {
 //            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
             final String token = jwtTokenUtil.generateToken(user);
             return ResponseEntity.ok(new JwtResponse(token));
-
         }
       else  return ResponseEntity.status(404).body("Password Invaild");
-
     }
 
 
