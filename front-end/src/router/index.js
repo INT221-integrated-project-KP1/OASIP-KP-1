@@ -9,7 +9,7 @@ import SignUp from '../views/SignUp.vue'
 import ListUser from '../views/ListUser.vue'
 import SignIn from '../views/SignIn.vue'
 
-const history = createWebHistory('/kp1/')
+const history = createWebHistory('/kp1')
 const routes = [
     {
         path: '/',
