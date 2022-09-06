@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int204.actionback.entities.EventCategory;
+
 import java.time.Instant;
 
 @Getter
@@ -17,7 +19,6 @@ public class EventDetailsBaseDTO {
     private String bookingName;
     private String bookingEmail;
     private Integer id;
-    private String eventCategoryName;
-    private String eventCategoryDescription;
+    private EventCategory eventCategory;
     private String eventNotes;
 }
