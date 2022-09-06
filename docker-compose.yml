@@ -12,6 +12,7 @@ services:
       - "80:80"
     volumes:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+      - "~/certificateFiles/www-001.crt:/ssl/certificateFiles/www-001.crt:ro"
 
   db:
     container_name: db
