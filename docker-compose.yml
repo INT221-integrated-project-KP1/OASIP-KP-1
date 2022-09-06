@@ -10,6 +10,7 @@ services:
       - front
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "~/certificateFiles/www-001.crt:/ssl/www-001.crt"
