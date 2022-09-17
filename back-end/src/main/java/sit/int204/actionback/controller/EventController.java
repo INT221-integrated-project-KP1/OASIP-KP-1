@@ -7,17 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
-
 import java.util.List;
-
 import sit.int204.actionback.exception.ApiTestException;
-
 import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("api/scheduled")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/event")
+@CrossOrigin(origins = "*")
 public class EventController {
 
 
@@ -35,7 +32,7 @@ public class EventController {
         return eventService.getAllEvent();
     }
 
-    @GetMapping("/overlabcheck")
+    @GetMapping("/overlapping")
     public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,
                                                                 @RequestParam(defaultValue = "0") Integer eventCategoryId,
                                                               @RequestParam String startTime) {
@@ -47,7 +44,7 @@ public class EventController {
         return eventService.getSimpleEventById(id);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filtration")
     public List<SimpleEventDTO> getEventByFilterCategory(@RequestParam(defaultValue = "0") int eventCategoryId,
                                                          @RequestParam(defaultValue = "all") String pastOrFutureOrAll,
                                                          @RequestParam(defaultValue = "") String date,

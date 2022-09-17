@@ -5,8 +5,11 @@ import Welcome from '../views/Welcome.vue'
 import List from '../views/List.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ListCategory from '../views/ListCategory.vue'
+import SignUp from '../views/SignUp.vue'
+import ListUser from '../views/ListUser.vue'
+import SignIn from '../views/SignIn.vue'
 
-const history = createWebHistory('/kp1/')
+const history = createWebHistory('/kp1')
 const routes = [
     {
         path: '/',
@@ -32,11 +35,24 @@ const routes = [
         path: '/ListCategory',
         name: 'ListCategory',
         component: ListCategory
+    }, {
+        path: '/SignUp',
+        name: 'SignUp',
+        component: SignUp
+    }, {
+        path: '/ListUser',
+        name: 'ListUser',
+        component: ListUser
     },
     {
         path: '/aboutus',
         name: 'AboutUs',
         component: AboutUs
+    },
+    {
+        path: '/SignIn',
+        name: 'SignIn',
+        component: SignIn
     }
 ]
 

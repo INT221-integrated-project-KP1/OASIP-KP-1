@@ -10,8 +10,11 @@ services:
       - front
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "~/certificateFiles/www-001.crt:/ssl/www-001.crt"
+      - "~/certificateFiles/privatekey.key:/ssl/privatekey.key"
 
   db:
     container_name: db
@@ -50,9 +53,3 @@ services:
       - back
     volumes:
       - "./nginx-front.conf:/etc/nginx/conf.d/default.conf:ro"
-
-
-  
-
-
-

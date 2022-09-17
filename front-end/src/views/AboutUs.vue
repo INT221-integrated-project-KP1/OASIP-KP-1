@@ -1,11 +1,13 @@
 <script setup>
 import p1 from "../assets/AdminPNG/1.png"
+import p2 from "../assets/AdminPNG/1.png"
+import p3 from "../assets/AdminPNG/1.png"
 
 
 
 const myTeam = [
   {
-    'photo': 'https://scontent.fbkk5-7.fna.fbcdn.net/v/t39.30808-6/271129077_4438876166238753_8476312548203047623_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeHPkgVJykzzL133wTM5imV830SNgvTl8DPfRI2C9OXwM0CqtwgHaAJhazDs5ZFNVJn4mURUQRqJ6CqtwVBwIqJq&_nc_ohc=yZ8s_XTQrcgAX_QygbS&_nc_ht=scontent.fbkk5-7.fna&oh=00_AT_enuvh_3ak-rb5TLMNtD7zkvxzedjJMf5JpLjHZ0hfbA&oe=62E1928A',
+    'photo': p1,
     'name': "Rapeepat Klamjeen",
     'role': "ยาจก",
     'phone': "085-132-XXXX",
@@ -17,7 +19,7 @@ const myTeam = [
     'URLGithub': "https://github.com/tuskingcup",
     'ID': 63130500099
   }, {
-    'photo': 'https://scontent-kut2-1.xx.fbcdn.net/v/t1.18169-9/10492251_463085203858201_6361870020470654759_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=yqKEK4zni20AX9-Zbq1&_nc_ht=scontent-kut2-1.xx&oh=00_AT_Hiso1w1OLR4uDHMkUJ1AQwFpRDaQTqHBe8DLGFJlaMA&oe=62B21C6E',
+    'photo':  p2,
     'name': "Amornpong Duangchawee",
     'role': "Valorant $$",
     'phone': "098-XXX-4953",
@@ -31,7 +33,7 @@ const myTeam = [
 
   },
   {
-    'photo': 'https://scontent-kut2-2.xx.fbcdn.net/v/t39.30808-6/272998035_1930265093801974_3627705199021434752_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wvQFFgpbOP0AX8prhF4&_nc_ht=scontent-kut2-2.xx&oh=00_AT8_GnV7n7NOKBMoDes3jcGdHsYDkEZvcKedVGTTxsK7tQ&oe=6290EF55',
+    'photo': p3,
     'name': "Aritach Krudminburee",
     'role': "นอนดูเพื่อนทำงาน",
     'phone': "096-701-XXXX",
@@ -52,7 +54,7 @@ const myTeam = [
     <div v-for="(team, index) in myTeam" :key="index" class=" 
     max-w-sm content-center justify-center mx-auto bg-white mt-[10vh] rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700
    transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
-      <img class="w-30 h-30 object-cover  mb-2 z-10 " :src="team.photo" alt="logo">
+      <img class="w-30 h-30 object-cover  mb-2 z-10 " :src= "team.photo" alt="logo">
 
       <div class=" flex flex-col pl-10 pb-10 pr-10">
         <h1 class="text-3xl text-gray-900 font-semibold">{{ team.name }}</h1>
