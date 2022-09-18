@@ -2,8 +2,8 @@
 import { useRoute, useRouter } from 'vue-router'
 const { params } = useRoute()
 const myRouter = useRouter()
-const goHome = () => {
-  myRouter.push({ name: 'Home' });
+const signIn = () => {
+  myRouter.push({ name: 'SignIn' });
 }
 </script>
  
@@ -49,7 +49,7 @@ const goHome = () => {
           <p class="py-6">
 
           </p>
-          <button class="btn btn-primary animate-bounce   " @click="goHome">Get Started</button>
+          <button class="btn btn-primary animate-bounce   " @click="signIn">Get Log In</button>
         </div>
       </div>
 

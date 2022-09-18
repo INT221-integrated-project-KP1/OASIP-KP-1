@@ -42,7 +42,7 @@ const MatchingCheck = async (login) => {
             const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json",
+                    "content-type": "application/json"
                 },
                 body: JSON.stringify({
                     email: login.email,
@@ -150,11 +150,16 @@ const loaderEnd = () => {
             </div>
         </div>
     </div>
+    
+    {{ cookie.getCookie("token") }}
+
     <div class="relative">
         <!-- หลอดพลังรอโหลด -->
         <progress id="busy" v-if="isProgress" class=" progress progress-success h-6 w-56 absolute top-1/3 left-1/2"
             :value="progress" max="100"></progress>
-        <!-- Content -->
+        
+
+            <!-- Content -->
         <div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
             <div class="container px-6 mx-auto">
                 <div class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center">

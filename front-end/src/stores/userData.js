@@ -1,8 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
+import { cookieData } from "../stores/cookieData.js"
+
 export const userData = defineStore('userDataState', () => {
     const userList = ref([])
-
+    const cookie = cookieData()
     const validateUniqueName = (id, name) => {
         if (id && name != undefined) {
 
@@ -54,8 +56,15 @@ export const userData = defineStore('userDataState', () => {
     // GET
     const getUsers = async () => {
         try {
+            console.log(cookie.getCookie("token"));
             const res = await fetch(
-                `${import.meta.env.VITE_BASE_URL}/user`);
+                `${import.meta.env.VITE_BASE_URL}/user` , {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/json',
+                        "Authorization": "Bearer "+ cookie.getCookie("token")
+                    }
+                });
             if (res.status === 200) {
                 userList.value = await res.json()
             } else {
