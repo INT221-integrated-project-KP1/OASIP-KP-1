@@ -27,7 +27,8 @@ public class UserController {
     private ListMapper listMapper;
 
     @GetMapping("")
-    public List<User> getUser(){
+    public List<User> getUser(@RequestHeader String jwtKey){
+        System.out.println("token naa" + jwtKey);
         return userService.getEvent();
     }
 

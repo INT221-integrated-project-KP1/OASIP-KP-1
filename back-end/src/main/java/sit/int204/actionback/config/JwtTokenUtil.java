@@ -73,7 +73,8 @@ public class JwtTokenUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+//                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)) // 5 ชั่วโมง
+                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 30 นาที
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
     //validate token

@@ -19,8 +19,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<sit.int204.actionback.entities.User> user = userRepository.findByEmail(email);
-        System.out.println(user.isEmpty());
-
         if(user.isEmpty()){
             System.out.println("user is Empty");
             throw new UsernameNotFoundException("User not found with Email: " + email);

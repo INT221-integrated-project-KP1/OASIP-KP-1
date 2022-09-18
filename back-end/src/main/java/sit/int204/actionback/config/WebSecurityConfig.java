@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -64,13 +66,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
+
+
+
         // We don't need CSRF for this example
         httpSecurity.csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
-                .authorizeRequests().antMatchers("/user").permitAll()
+                .authorizeRequests().antMatchers("/api/login").permitAll()
+                .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
+                .and().authorizeRequests().antMatchers("/api/event").permitAll()
+                .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 //.antMatchers("/api/user/lecturer").hasAuthority("LECTURER")
                 // all other requests need to be authenticated
+                .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority()
                 .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
@@ -80,6 +90,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-
 }
