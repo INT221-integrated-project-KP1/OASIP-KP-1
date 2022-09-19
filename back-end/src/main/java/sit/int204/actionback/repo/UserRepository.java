@@ -21,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     public void editUser(@Param("user") User user);
 
-    Optional<User> findByEmail(String email);
+    public User findByEmail(String email);
 
+    Optional<User> findUserByEmail(String email);
 }

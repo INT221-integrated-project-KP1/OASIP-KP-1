@@ -1,13 +1,11 @@
 package sit.int204.actionback.config;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -52,15 +50,9 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
     //generate token for user
-    public String generateToken(Optional<User> userDetails) {
+    public String generateToken(UserDetails userDetails, String name) {
         HashMap<String, Object> payload = new HashMap<>();
-
-        payload.put("Email",userDetails.get().getEmail());
-        payload.put("Name",userDetails.get().getName());
-        payload.put("Role",userDetails.get().getRole().toUpperCase());
-
-
-        return doGenerateToken(payload, userDetails.get().getEmail());
+        return doGenerateToken(payload, userDetails.getUsername(), userDetails.getAuthorities(), name);
     }
 
 
@@ -70,7 +62,9 @@ public class JwtTokenUtil implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String doGenerateToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> roles, String name) {
+        claims.put("name", name);
+        claims.put("role", ((GrantedAuthority)roles.stream().findFirst().get()).toString());
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 //                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)) // 5 ชั่วโมง

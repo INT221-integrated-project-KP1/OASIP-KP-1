@@ -8,6 +8,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,23 +38,22 @@ public class JwtAuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
-
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        Optional<User> user = userRepository.findByEmail(authenticationRequest.getEmail());
-        if(user.isEmpty()){
-            return ResponseEntity.status(404).body("Dont have this Email(");
-        }
+        UserDetails user = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        String name = userRepository.findByEmail(authenticationRequest.getEmail()).getName();
 
         Argon2 argon2 = Argon2Factory.create();
-        if (argon2.verify(user.get().getPassword(), authenticationRequest.getPassword())) {
+        if (argon2.verify(user.getPassword(), authenticationRequest.getPassword())) {
 //            final UserDetails userDetails = userDetailsService
 //                    .loadUserByUsername(authenticationRequest.getUsername());
 //            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
-            final String token = jwtTokenUtil.generateToken(user);
+            final String token = jwtTokenUtil.generateToken(user, name);
             return ResponseEntity.ok(new JwtResponse(token));
         }
       else  return ResponseEntity.status(404).body("Password Invaild");

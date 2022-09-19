@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -67,8 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
-
-
+        httpSecurity.cors().disable();
 
 
         // We don't need CSRF for this example
@@ -80,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 //.antMatchers("/api/user/lecturer").hasAuthority("LECTURER")
                 // all other requests need to be authenticated
-                .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority()
+                .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN", "LECTURER", "STUDENT")
                 .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
