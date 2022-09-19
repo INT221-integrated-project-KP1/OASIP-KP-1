@@ -52,12 +52,15 @@ const MatchingCheck = async (login) => {
             loaderEnd();
             if (res.status === 200) {
                 const objectJson = await res.json()
+                ////
                 cookie.setCookie(Object.keys(objectJson)[0], Object.values(objectJson)[0], 7)
-
+                cookie.setCookie(Object.keys(objectJson)[1], Object.values(objectJson)[1], 7)
+                ////
                 matchstatus.value = "Sucesss"
                 statusError.value = 1;
                 topFunction();
                 setTimeout(() => (statusError.value = 0), 2000);
+                myRouter.push({ name: 'Home' })
             } else {
                 matchstatus.value = await res.text()
                 statusError.value = 2;
@@ -221,7 +224,7 @@ const loaderEnd = () => {
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <div class="font-bold" @click="MatchingCheck(loginuser)">Sign in</div>
+                                            <div class="font-bold" @click="MatchingCheck(loginuser);">Sign in</div>
                                         </div>
                                     </button>
                                     <div class="flex justify-evenly mt-5">

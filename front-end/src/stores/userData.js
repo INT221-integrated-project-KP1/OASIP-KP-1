@@ -82,6 +82,10 @@ export const userData = defineStore('userDataState', () => {
             `${import.meta.env.VITE_BASE_URL}/user/${deleteId}`,
             {
                 method: "DELETE",
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer "+ cookie.getCookie("token")
+                }
             }
         );
         if (res.status === 200) {
@@ -101,7 +105,8 @@ export const userData = defineStore('userDataState', () => {
             const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${updatedUser.id}`, {
                 method: 'PUT',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer "+ cookie.getCookie("token")
                 },
                 body: JSON.stringify({
                     id: updatedUser.id,

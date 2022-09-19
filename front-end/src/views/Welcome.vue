@@ -1,9 +1,13 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
+import { cookieData } from "../stores/cookieData.js"
+const cookie = cookieData()
 const { params } = useRoute()
 const myRouter = useRouter()
+
 const signIn = () => {
-  myRouter.push({ name: 'SignIn' });
+  if(cookie.getCookie('token') == "") {myRouter.push({ name: 'SignIn' });}
+  else myRouter.push({ name: 'Home' })
 }
 </script>
  
@@ -49,7 +53,7 @@ const signIn = () => {
           <p class="py-6">
 
           </p>
-          <button class="btn btn-primary animate-bounce   " @click="signIn">Get Log In</button>
+          <button class="btn btn-primary animate-bounce   " @click="signIn">Get Start</button>
         </div>
       </div>
 

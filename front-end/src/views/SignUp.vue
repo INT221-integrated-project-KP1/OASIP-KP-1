@@ -1,15 +1,17 @@
 <script setup>
 import { ref, computed, onBeforeMount } from "vue";
 import { userData } from "../stores/userData.js"
+import { useRouter } from 'vue-router'
 
 
+const myRouter = useRouter()
 
 const myUserData = userData()
 
 const error = ref();
 const errorWarning = ref();
 const newUser = ref({ name: '', email: '', role: '', password: '', password2: '' });
-const roleList = ['Admin', 'Lecturer', 'Student']
+const roleList = ['ADMIN', 'LECTURER', 'STUDENT']
 //role: lecturer admin student
 
 //ระเบิด 01
@@ -152,6 +154,9 @@ const check = async () => {
     errorInsert();
   }
 }
+
+
+
 </script>
 
 <template>
@@ -262,7 +267,7 @@ const check = async () => {
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check()">Register
+                  @click="check();  myRouter.push({ name: 'SignIn' })">Register
                 </button>
               </div>
             </div>

@@ -1,14 +1,19 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
+import { cookieData } from "./stores/cookieData.js"
 
-
+const cookie = cookieData()
 const myRouter = useRouter()
 
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
 }
 
+const logoutFun = () => {
+  cookie.setCookie("token", "", -1)
+  myRouter.push({ name: 'Welcome' })
+}
 
 
 </script>
@@ -18,8 +23,10 @@ const goWelcome = () => {
 
 
   <div>
-    <div class="navbar bg-white" v-show="$route.name !== 'Welcome'">
+    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' || $route.name === 'SignUp' || $route.name === 'SignIn') ">
       <div class="navbar-start">
+
+
         <div class="dropdown">
           <label tabindex="0" class="btn btn-ghost lg:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -57,6 +64,10 @@ const goWelcome = () => {
 
 
         <a class="btn btn-ghost normal-case text-xl" @click="goWelcome">Daiimod</a>
+        <div class="px-10">
+          <Clock />
+        </div>
+
       </div>
 
       <div class="navbar-center hidden lg:flex">
@@ -78,16 +89,32 @@ const goWelcome = () => {
               Sign Up </router-link>
             <router-link :to="{ name: 'SignIn' }" :class="[$route.name == 'SignIn' ? 'tab-active' : '', 'tab']">
               Sign In </router-link> -->
-              
+
             <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link>
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>
           </div>
+
         </ul>
       </div>
+
       <div class="navbar-end">
-        <Clock />
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-50 rounded-full">
+              <img src="./assets/AdminPNG/2.png" />
+            </div>
+          </label>
+          <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+            <li>
+              <a class="justify-between">
+                User : {{ cookie.getCookie('name') }}
+              </a>
+            </li>
+            <li><a @click="logoutFun" >Logout</a></li>
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -102,4 +129,5 @@ const goWelcome = () => {
 </template>
 
 <style scoped>
+
 </style>
