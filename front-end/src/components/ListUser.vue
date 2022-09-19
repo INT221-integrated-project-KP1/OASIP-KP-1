@@ -5,7 +5,8 @@ import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
 import { userData } from "../stores/userData.js"
 import { computed } from "@vue/reactivity";
-
+import { cookieData } from "../stores/cookieData.js"
+const cookie = cookieData()
 const myUserData = userData();
 
 console.log(myUserData.userList);
@@ -17,7 +18,12 @@ const goSignup = () => {
 // GET BY ID
 const getUserById = async (id) => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${id}`, {
+            headers: {
+                'content-type': 'application/json',
+                "Authorization": "Bearer " + cookie.getCookie("token")
+            }
+        })
         console.log(res.status);
         if (res.status === 200) {
             selectedUser.value = await res.json();
@@ -54,7 +60,7 @@ const validateNameLength = computed(() => {
     return true
 })
 const validateEmailLength = computed(() => {
-    
+
     if (selectedUser.value.email.length > 50) {
         return false
     }
@@ -142,7 +148,7 @@ const deleteUser = (id) => {
                                         <div class="card-body bg-white">
                                             <p class="card-title"> Name: {{ user.name }} </p>
                                             <p class="card-title" v-if="user.email !== undefined"> Email: {{
-                                                    user.email
+                                            user.email
                                             }}</p>
                                             <p class="card-title"> Role: {{ user.role }} </p>
 
@@ -236,4 +242,5 @@ const deleteUser = (id) => {
 </template>
 
 <style>
+
 </style>
