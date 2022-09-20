@@ -70,16 +70,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
 //        httpSecurity.cors().disable();
         //on local ใช้อันนี้แก้ cor
+        //บนคอมใช้อันนี้
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "IsRefreshToken"));
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
-
+        //ถึงอันนี้ //
 
         // We don't need CSRF for this example
                 //onserver ใช้อันเก่า
-//        httpSecurity.csrf().disable()
+//        httpSecurity.csrf().disable() //ถ้าขึ้น server ใช้อันนี้
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
