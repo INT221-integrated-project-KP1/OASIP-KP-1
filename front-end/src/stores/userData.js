@@ -73,6 +73,7 @@ export const userData = defineStore('userDataState', () => {
                     //ได้ละ
                     console.log("real");
                     refreshToken()
+                    getUsers();
                 }
             }
 
@@ -180,7 +181,14 @@ export const userData = defineStore('userDataState', () => {
                 ////
                 console.log("setcookie test");
                 cookie.setCookie("token", objectJson.token, 7)
-            } else {
+            } else if (res.status === 205) {
+                let resJson = await res.json();
+                if (resJson.message.toUpperCase().match("cannot refresh token. need to login again".toUpperCase)) {
+                    alert("cannot refresh token. need to login again")
+                }
+            }
+
+            else {
                 console.log("error, cannot get data");
             }
         } catch (err) {

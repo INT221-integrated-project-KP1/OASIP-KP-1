@@ -4,6 +4,7 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +27,8 @@ import sit.int204.actionback.repo.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -80,11 +83,18 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+        System.out.println(claims);
+        int oneDayInMilli = 24 * 60 * 60 * 1000;
+
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+
+        if(claims.getExpiration().toInstant().toEpochMilli() + oneDayInMilli <= Instant.now().toEpochMilli()){
+            objectToResponse.put("message", "cannot refresh token. need to login again");
+            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(objectToResponse);
+        }
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-
-        HashMap<String, String> objectToResponse = new HashMap<String, String>();
         objectToResponse.put("token", token);
         return ResponseEntity.ok(objectToResponse);
     }
