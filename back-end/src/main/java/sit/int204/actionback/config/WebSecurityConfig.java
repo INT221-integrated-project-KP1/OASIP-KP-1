@@ -67,12 +67,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+//        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
 //        httpSecurity.cors().disable();
+        //on local ใช้อันนี้แก้ cor
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "IsRefreshToken"));
+        httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
 
 
         // We don't need CSRF for this example
-        httpSecurity.csrf().disable()
+                //onserver ใช้อันเก่า
+//        httpSecurity.csrf().disable()
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/api/login").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
