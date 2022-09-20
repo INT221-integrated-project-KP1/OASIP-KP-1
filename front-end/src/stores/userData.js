@@ -58,16 +58,25 @@ export const userData = defineStore('userDataState', () => {
         try {
             console.log(cookie.getCookie("token"));
             const res = await fetch(
-                `${import.meta.env.VITE_BASE_URL}/user` , {
-                    method: 'GET',
-                    headers: {
-                        'content-type': 'application/json',
-                        "Authorization": "Bearer "+ cookie.getCookie("token")
-                    }
-                });
+                `${import.meta.env.VITE_BASE_URL}/user`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token")
+                }
+            });
             if (res.status === 200) {
                 userList.value = await res.json()
-            } else {
+            } else if (res.status === 401) {
+                let resText = await res.text();
+                if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                    //ได้ละ
+                    console.log("real");
+                    refreshToken()
+                }
+            }
+
+            else {
                 console.log("error, cannot get data");
             }
         } catch (err) {
@@ -84,7 +93,7 @@ export const userData = defineStore('userDataState', () => {
                 method: "DELETE",
                 headers: {
                     'content-type': 'application/json',
-                    "Authorization": "Bearer "+ cookie.getCookie("token")
+                    "Authorization": "Bearer " + cookie.getCookie("token")
                 }
             }
         );
@@ -95,7 +104,14 @@ export const userData = defineStore('userDataState', () => {
                 getUsers();
             }
 
-        } else console.log("error, cannot delete data");
+        } else if (res.status === 401) {
+            let resText = await res.text();
+            if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                //ได้ละ
+                console.log("real");
+                refreshToken()
+            }
+        } else { console.log("error, cannot delete data"); }
     };
 
     // //PUT
@@ -106,7 +122,7 @@ export const userData = defineStore('userDataState', () => {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
-                    "Authorization": "Bearer "+ cookie.getCookie("token")
+                    "Authorization": "Bearer " + cookie.getCookie("token")
                 },
                 body: JSON.stringify({
                     id: updatedUser.id,
@@ -126,7 +142,15 @@ export const userData = defineStore('userDataState', () => {
 
                 console.log('edited successfully')
                 return 1;
-            } else {
+            } else if (res.status === 401) {
+                let resText = await res.text();
+                if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                    //ได้ละ
+                    console.log("real");
+                    refreshToken()
+                }
+            }
+            else {
                 console.log('error, cannot edit')
 
                 return -1
@@ -137,10 +161,36 @@ export const userData = defineStore('userDataState', () => {
             return -1
         }
     }
+    //refreshtoken
+
+    const refreshToken = async () => {
+        try {
+            console.log(cookie.getCookie("token"));
+            const res = await fetch(
+                `${import.meta.env.VITE_BASE_URL}/jwt/refreshtoken`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token"),
+                    "isRefreshToken": true
+                }
+            });
+            if (res.status === 200) {
+                const objectJson = await res.json()
+                ////
+                console.log("setcookie test");
+                cookie.setCookie("token", objectJson.token, 7)
+            } else {
+                console.log("error, cannot get data");
+            }
+        } catch (err) {
+            console.log("ERROR: " + err);
+        }
+    };
 
 
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail }
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken }
 })
 
 

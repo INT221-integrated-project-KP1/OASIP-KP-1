@@ -2,6 +2,7 @@ package sit.int204.actionback.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,12 +48,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
             }
-        } else {
+            catch (IllegalArgumentException e) {
+                System.out.println("Unable to get JWT Token");
+            }
+            catch (ExpiredJwtException ex) {
+                System.out.println("JWT Token has expired");
+                request.setAttribute("message", "TOKENEXPIRED");
+
+                String isRefreshToken = request.getHeader("isRefreshToken");
+                String requestURL = request.getRequestURL().toString();
+                System.out.println("kwweaw");
+                // allow for Refresh Token creation if following conditions are true.
+                if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
+                    System.out.println("asd2");
+                    allowForRefreshToken(ex, request);
+            }
+
+            }}
+        else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
         // Once we get the token validate it.
@@ -79,4 +93,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
+    private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
+        System.out.println("allowToken");
+        // create a UsernamePasswordAuthenticationToken with null values.
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                null, null, null);
+        // After setting the Authentication in the context, we specify
+        // that the current user is authenticated. So it passes the
+        // Spring Security Configurations successfully.
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        // Set the claims so that in controller we will be using it to create
+        // new JWT
+        request.setAttribute("claims", ex.getClaims());
+
+    }
 }

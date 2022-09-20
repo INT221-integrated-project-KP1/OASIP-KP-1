@@ -39,7 +39,7 @@ const MatchingCheck = async (login) => {
     else {
         try {
             loaderInsert();
-            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/jwt/login`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json"

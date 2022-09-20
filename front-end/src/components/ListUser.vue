@@ -33,6 +33,13 @@ const getUserById = async (id) => {
 
 
 
+        } else if (res.status === 401) {
+            let resText = await res.text();
+            if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                //ได้ละ
+                console.log("real");
+                myUserData.refreshToken()
+            }
         } else {
             console.log("error, cannot get data");
         }

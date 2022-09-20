@@ -2,6 +2,7 @@ package sit.int204.actionback.controller;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +24,15 @@ import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.model.JwtResponse;
 import sit.int204.actionback.repo.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("api/login")
+@RequestMapping("api/jwt")
 public class JwtAuthenticationController {
 
     @Autowired
@@ -43,7 +46,7 @@ public class JwtAuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         UserDetails user = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
@@ -63,10 +66,6 @@ public class JwtAuthenticationController {
       else  return ResponseEntity.status(404).body("Password Invaild");
     }
 
-
-
-
-
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -75,5 +74,26 @@ public class JwtAuthenticationController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    @RequestMapping(value = "/refreshtoken", method = RequestMethod.GET)
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+        // From the HttpRequest get the claims
+        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+
+        Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
+        String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+        objectToResponse.put("token", token);
+        return ResponseEntity.ok(objectToResponse);
+    }
+
+    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
+        Map<String, Object> expectedMap = new HashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+            expectedMap.put(entry.getKey(), entry.getValue());
+        }
+        return expectedMap;
     }
 }
