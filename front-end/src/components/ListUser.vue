@@ -116,9 +116,13 @@ const deleteUser = (id) => {
         myUserData.removeUser(id)
     }
 }
+
+myUserData.getUsers();
 </script>
 
 <template>
+
+
     <div class="flex justify-center">
         <div class="m-10">
             <div class="p-5">

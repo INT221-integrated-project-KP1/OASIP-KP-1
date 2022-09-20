@@ -154,7 +154,6 @@ const loaderEnd = () => {
         </div>
     </div>
     
-    {{ cookie.getCookie("token") }}
 
     <div class="relative">
         <!-- หลอดพลังรอโหลด -->
@@ -190,7 +189,7 @@ const loaderEnd = () => {
                     <div class="w-full md:w-full lg:w-9/12 mx-auto md:mx-0">
                         <div class="bg-white p-10 flex flex-col w-full shadow-xl rounded-xl">
                             <h2 class="text-2xl font-bold text-gray-800 text-left mb-5">
-                                Sigin
+                                Sign In
                             </h2>
                             <form action="" class="w-full">
                                 <div id="input" class="flex flex-col w-full my-5">

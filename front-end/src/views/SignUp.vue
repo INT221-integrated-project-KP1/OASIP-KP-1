@@ -149,6 +149,7 @@ const check = async () => {
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
   if (bool1 && bool2 && bool3 && bool4 && bool5 && bool6) {
     createNewUser()
+    alert('Sign up complete')
   } else {
     error.value = er
     errorInsert();

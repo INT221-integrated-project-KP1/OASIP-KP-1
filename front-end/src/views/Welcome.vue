@@ -5,10 +5,10 @@ const cookie = cookieData()
 const { params } = useRoute()
 const myRouter = useRouter()
 
-const signIn = () => {
-  if(cookie.getCookie('token') == "") {myRouter.push({ name: 'SignIn' });}
-  else myRouter.push({ name: 'Home' })
-}
+// const signIn = () => {
+//   if(cookie.getCookie('token') == "") {myRouter.push({ name: 'SignIn' });}
+//   else myRouter.push({ name: 'Home' })
+// }
 </script>
  
 <template>
@@ -53,7 +53,7 @@ const signIn = () => {
           <p class="py-6">
 
           </p>
-          <button class="btn btn-primary animate-bounce   " @click="signIn">Get Start</button>
+          <button class="btn btn-primary animate-bounce  " @click="myRouter.push({ name: 'Home' })">Get Start</button>
         </div>
       </div>
 
