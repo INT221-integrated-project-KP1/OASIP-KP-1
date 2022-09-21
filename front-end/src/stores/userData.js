@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { cookieData } from "../stores/cookieData.js"
 
 export const userData = defineStore('userDataState', () => {
+    const permissions = ref()
     const userList = ref([])
     const cookie = cookieData()
     const validateUniqueName = (id, name) => {
@@ -77,7 +78,7 @@ export const userData = defineStore('userDataState', () => {
                 }
             } else if (res.status === 403){
                 console.log("only admin wtf dog");
-                return "403"
+                permissions.value = 403
             }
 
             else {
@@ -201,7 +202,7 @@ export const userData = defineStore('userDataState', () => {
 
 
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken }
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken ,permissions}
 })
 
 

@@ -3,8 +3,8 @@ import { ref, onBeforeMount } from "vue";
 import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
-import { userData } from "../stores/userData.js"
 import { computed } from "@vue/reactivity";
+import { userData } from "../stores/userData.js"
 
 const myUserData = userData();
 

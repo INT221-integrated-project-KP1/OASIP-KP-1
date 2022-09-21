@@ -2,7 +2,10 @@
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 import { cookieData } from "../stores/cookieData.js"
+import { userData } from "../stores/userData.js"
+
 const cookie = cookieData()
+const userStore = userData()
 
 
 const { params } = useRoute()
@@ -60,6 +63,8 @@ const MatchingCheck = async (login) => {
                 statusError.value = 1;
                 topFunction();
                 setTimeout(() => (statusError.value = 0), 2000);
+                userStore.userList = []
+                userStore.getUsers()
                 myRouter.push({ name: 'Home' })
             } else {
                 matchstatus.value = await res.text()

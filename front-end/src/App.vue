@@ -2,7 +2,10 @@
 import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import { cookieData } from "./stores/cookieData.js"
+import { userData } from "./stores/userData.js"
+
 import { ref , computed } from "vue";
+const myuserData = userData()
 
 const cookie = cookieData()
 const myRouter = useRouter()
@@ -15,6 +18,7 @@ const goWelcome = () => {
 const logoutFun = () => {
   cookie.setCookie("token", "", -1)
   cookie.setCookie("name", "", -1)
+  myuserData.permissions = 0
   myRouter.push({ name: 'Welcome' })
 }
 // const signIn = () => {
@@ -106,7 +110,7 @@ const checkToken = () =>{
             <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link> -->
 
-              <router-link v-show = "cookie.getCookie('token') == '' ? false : true" 
+              <router-link v-show = "cookie.getCookie('token') == '' || myuserData.permissions === 403 ? false : true" 
               :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User </router-link>
 
 
