@@ -2,9 +2,11 @@
 import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import { cookieData } from "./stores/cookieData.js"
+import { ref , computed } from "vue";
 
 const cookie = cookieData()
 const myRouter = useRouter()
+const statusToken = ref()
 
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
@@ -12,9 +14,19 @@ const goWelcome = () => {
 
 const logoutFun = () => {
   cookie.setCookie("token", "", -1)
+  cookie.setCookie("name", "", -1)
   myRouter.push({ name: 'Welcome' })
 }
-
+// const signIn = () => {
+//   console.log(cookie.getCookie('token'))
+//   if(cookie.getCookie('token') == ""  ) {myRouter.push({ name: 'SignIn' });}
+//   else myRouter.push({ name: 'ListUser' })
+// }
+const checkToken = () =>{
+  console.log(cookie.getCookie('token')== "")
+  if(cookie.getCookie('token') == "") {return true}
+ else return  false
+}
 
 </script>
 
@@ -53,8 +65,9 @@ const logoutFun = () => {
             <li>
               <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
             </li> -->
-            <li>
+            <li v-show = "cookie.getCookie('token') == '' ? false : true">
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
+              <!-- <p @click="signIn"> List User </p> -->
             </li>
             <li>
               <router-link :to="{ name: 'AboutUs' }"> About US </router-link>
@@ -89,9 +102,14 @@ const logoutFun = () => {
               Sign Up </router-link>
             <router-link :to="{ name: 'SignIn' }" :class="[$route.name == 'SignIn' ? 'tab-active' : '', 'tab']">
               Sign In </router-link> -->
-
+<!-- 
             <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
-              List User </router-link>
+              List User </router-link> -->
+
+              <router-link v-show = "cookie.getCookie('token') == '' ? false : true" 
+              :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User </router-link>
+
+
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>
           </div>
@@ -100,7 +118,15 @@ const logoutFun = () => {
       </div>
 
       <div class="navbar-end">
-        <div class="dropdown dropdown-end">
+        <div v-if= "cookie.getCookie('token') == '' ? true : false">
+          <label tabindex="0" class="btn btn-ghost btn-circle">
+            <div class="w-50">
+              <p @click="myRouter.push({ name: 'SignIn' });">login</p>
+            </div>
+          </label>     
+        </div>
+        
+        <div v-else class="dropdown dropdown-end">
           <label tabindex="0" class="btn btn-ghost btn-circle avatar">
             <div class="w-50 rounded-full">
               <img src="./assets/AdminPNG/2.png" />
@@ -115,6 +141,8 @@ const logoutFun = () => {
             <li><a @click="logoutFun" >Logout</a></li>
           </ul>
         </div>
+
+
       </div>
 
     </div>
