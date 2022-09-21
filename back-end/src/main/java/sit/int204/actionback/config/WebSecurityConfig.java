@@ -88,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 //.antMatchers("/api/user/lecturer").hasAuthority("LECTURER")
                 // all other requests need to be authenticated
-                .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN", "LECTURER", "STUDENT")
+                .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.

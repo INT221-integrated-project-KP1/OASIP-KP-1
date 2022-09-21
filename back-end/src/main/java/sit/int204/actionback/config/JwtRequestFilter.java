@@ -64,8 +64,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     System.out.println("asd2");
                     allowForRefreshToken(ex, request);
             }
+            }
 
-            }}
+        }
         else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
@@ -105,6 +106,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Set the claims so that in controller we will be using it to create
         // new JWT
         request.setAttribute("claims", ex.getClaims());
-
     }
 }

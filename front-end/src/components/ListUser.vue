@@ -118,6 +118,9 @@ const deleteUser = (id) => {
 }
 
 myUserData.getUsers();
+
+
+
 </script>
 
 <template>

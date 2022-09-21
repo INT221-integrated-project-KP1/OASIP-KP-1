@@ -75,6 +75,9 @@ export const userData = defineStore('userDataState', () => {
                     refreshToken()
                     getUsers();
                 }
+            } else if (res.status === 403){
+                console.log("only admin wtf dog");
+                return "403"
             }
 
             else {
