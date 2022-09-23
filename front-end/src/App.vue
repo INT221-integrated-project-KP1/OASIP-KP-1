@@ -1,15 +1,36 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
+import { cookieData } from "./stores/cookieData.js"
+import { userData } from "./stores/userData.js"
 
+import { ref , computed } from "vue";
+const myuserData = userData()
 
+const cookie = cookieData()
 const myRouter = useRouter()
+const statusToken = ref()
 
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
 }
 
-
+const logoutFun = () => {
+  cookie.setCookie("token", "", -1)
+  cookie.setCookie("name", "", -1)
+  myuserData.permissions = 0
+  myRouter.push({ name: 'Welcome' })
+}
+// const signIn = () => {
+//   console.log(cookie.getCookie('token'))
+//   if(cookie.getCookie('token') == ""  ) {myRouter.push({ name: 'SignIn' });}
+//   else myRouter.push({ name: 'ListUser' })
+// }
+const checkToken = () =>{
+  console.log(cookie.getCookie('token')== "")
+  if(cookie.getCookie('token') == "") {return true}
+ else return  false
+}
 
 </script>
 
@@ -18,8 +39,10 @@ const goWelcome = () => {
 
 
   <div>
-    <div class="navbar bg-white" v-show="$route.name !== 'Welcome'">
+    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' || $route.name === 'SignUp' || $route.name === 'SignIn') ">
       <div class="navbar-start">
+
+
         <div class="dropdown">
           <label tabindex="0" class="btn btn-ghost lg:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -40,14 +63,15 @@ const goWelcome = () => {
             <li>
               <router-link :to="{ name: 'ListCategory' }"> List Category </router-link>
             </li>
-            <li>
+            <!-- <li>
               <router-link :to="{ name: 'SignUp' }"> Sign Up </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
-            </li>
-            <li>
+            </li> -->
+            <li v-show = "cookie.getCookie('token') == '' ? false : true">
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
+              <!-- <p @click="signIn"> List User </p> -->
             </li>
             <li>
               <router-link :to="{ name: 'AboutUs' }"> About US </router-link>
@@ -57,6 +81,10 @@ const goWelcome = () => {
 
 
         <a class="btn btn-ghost normal-case text-xl" @click="goWelcome">Daiimod</a>
+        <div class="px-10">
+          <Clock />
+        </div>
+
       </div>
 
       <div class="navbar-center hidden lg:flex">
@@ -74,19 +102,51 @@ const goWelcome = () => {
               :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">
               List Category </router-link>
 
-            <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
+            <!-- <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
               Sign Up </router-link>
             <router-link :to="{ name: 'SignIn' }" :class="[$route.name == 'SignIn' ? 'tab-active' : '', 'tab']">
-              Sign In </router-link>
+              Sign In </router-link> -->
+<!-- 
             <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
-              List User </router-link>
+              List User </router-link> -->
+
+              <router-link v-show = "cookie.getCookie('token') == '' || myuserData.permissions === 403 ? false : true" 
+              :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User </router-link>
+
+
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>
           </div>
+
         </ul>
       </div>
+
       <div class="navbar-end">
-        <Clock />
+        <div v-if= "cookie.getCookie('token') == '' ? true : false">
+          <label tabindex="0" class="btn btn-ghost btn-circle">
+            <div class="w-50">
+              <p @click="myRouter.push({ name: 'SignIn' });">login</p>
+            </div>
+          </label>     
+        </div>
+        
+        <div v-else class="dropdown dropdown-end">
+          <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-50 rounded-full">
+              <img src="./assets/AdminPNG/2.png" />
+            </div>
+          </label>
+          <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+            <li>
+              <a class="justify-between">
+                User : {{ cookie.getCookie('name') }}
+              </a>
+            </li>
+            <li><a @click="logoutFun" >Logout</a></li>
+          </ul>
+        </div>
+
+
       </div>
 
     </div>
@@ -101,4 +161,5 @@ const goWelcome = () => {
 </template>
 
 <style scoped>
+
 </style>

@@ -45,7 +45,7 @@ let editStartTime = ref('')
 let editNotes = ref('')
 //2022-02-20T02:02
 
-function topFunction() {wwwwwwwwwwww
+function topFunction() {
   console.log("TestTop")
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;

@@ -1,8 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
-export const userData = defineStore('userDataState', () => {
-    const userList = ref([])
+import { cookieData } from "../stores/cookieData.js"
 
+export const userData = defineStore('userDataState', () => {
+    const permissions = ref()
+    const userList = ref([])
+    const cookie = cookieData()
     const validateUniqueName = (id, name) => {
         if (id && name != undefined) {
 
@@ -54,11 +57,31 @@ export const userData = defineStore('userDataState', () => {
     // GET
     const getUsers = async () => {
         try {
+            console.log(cookie.getCookie("token"));
             const res = await fetch(
-                `${import.meta.env.VITE_BASE_URL}/user`);
+                `${import.meta.env.VITE_BASE_URL}/user`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token")
+                }
+            });
             if (res.status === 200) {
                 userList.value = await res.json()
-            } else {
+            } else if (res.status === 401) {
+                let resText = await res.text();
+                if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                    //ได้ละ
+                    console.log("real");
+                    refreshToken()
+                    getUsers();
+                }
+            } else if (res.status === 403){
+                console.log("only admin wtf dog");
+                permissions.value = 403
+            }
+
+            else {
                 console.log("error, cannot get data");
             }
         } catch (err) {
@@ -73,6 +96,10 @@ export const userData = defineStore('userDataState', () => {
             `${import.meta.env.VITE_BASE_URL}/user/${deleteId}`,
             {
                 method: "DELETE",
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token")
+                }
             }
         );
         if (res.status === 200) {
@@ -82,7 +109,14 @@ export const userData = defineStore('userDataState', () => {
                 getUsers();
             }
 
-        } else console.log("error, cannot delete data");
+        } else if (res.status === 401) {
+            let resText = await res.text();
+            if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                //ได้ละ
+                console.log("real");
+                refreshToken()
+            }
+        } else { console.log("error, cannot delete data"); }
     };
 
     // //PUT
@@ -92,7 +126,8 @@ export const userData = defineStore('userDataState', () => {
             const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${updatedUser.id}`, {
                 method: 'PUT',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token")
                 },
                 body: JSON.stringify({
                     id: updatedUser.id,
@@ -112,7 +147,15 @@ export const userData = defineStore('userDataState', () => {
 
                 console.log('edited successfully')
                 return 1;
-            } else {
+            } else if (res.status === 401) {
+                let resText = await res.text();
+                if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                    //ได้ละ
+                    console.log("real");
+                    refreshToken()
+                }
+            }
+            else {
                 console.log('error, cannot edit')
 
                 return -1
@@ -123,10 +166,43 @@ export const userData = defineStore('userDataState', () => {
             return -1
         }
     }
+    //refreshtoken
+
+    const refreshToken = async () => {
+        try {
+            console.log(cookie.getCookie("token"));
+            const res = await fetch(
+                `${import.meta.env.VITE_BASE_URL}/jwt/refreshtoken`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": "Bearer " + cookie.getCookie("token"),
+                    "isRefreshToken": true
+                }
+            });
+            if (res.status === 200) {
+                const objectJson = await res.json()
+                ////
+                console.log("setcookie test");
+                cookie.setCookie("token", objectJson.token, 7)
+            } else if (res.status === 205) {
+                let resJson = await res.json();
+                if (resJson.message.toUpperCase().match("cannot refresh token. need to login again".toUpperCase)) {
+                    alert("cannot refresh token. need to login again")
+                }
+            }
+
+            else {
+                console.log("error, cannot get data");
+            }
+        } catch (err) {
+            console.log("ERROR: " + err);
+        }
+    };
 
 
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail }
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken ,permissions}
 })
 
 

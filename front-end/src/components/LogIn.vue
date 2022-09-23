@@ -2,7 +2,10 @@
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 import { cookieData } from "../stores/cookieData.js"
+import { userData } from "../stores/userData.js"
+
 const cookie = cookieData()
+const userStore = userData()
 
 
 const { params } = useRoute()
@@ -39,10 +42,10 @@ const MatchingCheck = async (login) => {
     else {
         try {
             loaderInsert();
-            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/jwt/login`, {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json",
+                    "content-type": "application/json"
                 },
                 body: JSON.stringify({
                     email: login.email,
@@ -52,12 +55,17 @@ const MatchingCheck = async (login) => {
             loaderEnd();
             if (res.status === 200) {
                 const objectJson = await res.json()
+                ////
                 cookie.setCookie(Object.keys(objectJson)[0], Object.values(objectJson)[0], 7)
-
+                cookie.setCookie(Object.keys(objectJson)[1], Object.values(objectJson)[1], 7)
+                ////
                 matchstatus.value = "Sucesss"
                 statusError.value = 1;
                 topFunction();
                 setTimeout(() => (statusError.value = 0), 2000);
+                userStore.userList = []
+                userStore.getUsers()
+                myRouter.push({ name: 'Home' })
             } else {
                 matchstatus.value = await res.text()
                 statusError.value = 2;
@@ -150,11 +158,15 @@ const loaderEnd = () => {
             </div>
         </div>
     </div>
+    
+
     <div class="relative">
         <!-- หลอดพลังรอโหลด -->
         <progress id="busy" v-if="isProgress" class=" progress progress-success h-6 w-56 absolute top-1/3 left-1/2"
             :value="progress" max="100"></progress>
-        <!-- Content -->
+        
+
+            <!-- Content -->
         <div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
             <div class="container px-6 mx-auto">
                 <div class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center">
@@ -182,7 +194,7 @@ const loaderEnd = () => {
                     <div class="w-full md:w-full lg:w-9/12 mx-auto md:mx-0">
                         <div class="bg-white p-10 flex flex-col w-full shadow-xl rounded-xl">
                             <h2 class="text-2xl font-bold text-gray-800 text-left mb-5">
-                                Sigin
+                                Sign In
                             </h2>
                             <form action="" class="w-full">
                                 <div id="input" class="flex flex-col w-full my-5">
@@ -216,7 +228,7 @@ const loaderEnd = () => {
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <div class="font-bold" @click="MatchingCheck(loginuser)">Sign in</div>
+                                            <div class="font-bold" @click="MatchingCheck(loginuser);">Sign in</div>
                                         </div>
                                     </button>
                                     <div class="flex justify-evenly mt-5">

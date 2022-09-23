@@ -18,11 +18,9 @@ public class UserModifyDTO implements Serializable {
 
     private final Integer id;
 
-
     @Size(min=1 , max=100)
     @NotNull(message = "is Not Null")
     private final String name;
-
 
     @Email(message = "is not email")
     @NotNull(message = "is Not Null")
