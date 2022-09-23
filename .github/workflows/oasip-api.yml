@@ -1,9 +1,9 @@
 name: oasip-kp1 
 on:
   push:
-    branches: [ main,testAction,hotfix ]
+    branches: [ main,dev,hotfix ]
   pull_request:
-    branches: [ main,testAction,hotfix ]
+    branches: [ main,dev,hotfix ]
 jobs: 
 # BACK STATE
   # install-back-dependencies:
