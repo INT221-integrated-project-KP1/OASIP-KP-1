@@ -23,7 +23,7 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 30 * 60 * 1000; // 30mins
 
-    private int refreshExpirationDateInMs = 1800000;
+    private int refreshExpirationDateInMs;
 
     @Value("${jwt.secret}")
     private String secret;
