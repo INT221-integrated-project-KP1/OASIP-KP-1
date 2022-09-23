@@ -185,7 +185,8 @@ export const userData = defineStore('userDataState', () => {
                 ////
                 console.log("setcookie test");
                 cookie.setCookie("token", objectJson.token, 7)
-            } else if (res.status === 205) {
+            } else if (res.status === 401) {
+                //refresh ไม่ได้ ให้ login ใหม่ครับ
                 let resJson = await res.json();
                 if (resJson.message.toUpperCase().match("cannot refresh token. need to login again".toUpperCase)) {
                     alert("cannot refresh token. need to login again")

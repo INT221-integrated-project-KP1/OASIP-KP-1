@@ -90,7 +90,7 @@ public class JwtAuthenticationController {
 
         if(claims.getExpiration().toInstant().toEpochMilli() + oneDayInMilli <= Instant.now().toEpochMilli()){
             objectToResponse.put("message", "cannot refresh token. need to login again");
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(objectToResponse);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(objectToResponse);
         }
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
