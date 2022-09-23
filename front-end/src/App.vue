@@ -123,9 +123,9 @@ const checkToken = () =>{
 
       <div class="navbar-end">
         <div v-if= "cookie.getCookie('token') == '' ? true : false">
-          <label tabindex="0" class="btn btn-ghost btn-circle">
+          <label tabindex="0" class="btn btn-ghost btn-circle" @click="myRouter.push({ name: 'SignIn' });">
             <div class="w-50">
-              <p @click="myRouter.push({ name: 'SignIn' });">login</p>
+              <p >login</p>
             </div>
           </label>     
         </div>
