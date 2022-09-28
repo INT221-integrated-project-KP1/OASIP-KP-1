@@ -79,20 +79,11 @@ public class JwtAuthenticationController {
         }
     }
 
-    @RequestMapping(value = "/refreshtoken", method = RequestMethod.GET)
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-        System.out.println(claims);
-        int oneDayInMilli = 24 * 60 * 60 * 1000;
-
         HashMap<String, String> objectToResponse = new HashMap<String, String>();
-
-        if(claims.getExpiration().toInstant().toEpochMilli() + oneDayInMilli <= Instant.now().toEpochMilli()){
-            objectToResponse.put("message", "cannot refresh token. need to login again");
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(objectToResponse);
-        }
-
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
         objectToResponse.put("token", token);

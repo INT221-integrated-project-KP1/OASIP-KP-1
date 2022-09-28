@@ -1,8 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue'
 import { cookieData } from "../stores/cookieData.js"
-
+import { useRoute, useRouter } from 'vue-router'
 export const userData = defineStore('userDataState', () => {
+    const myRouter = useRouter()
+    const permissions = ref()
     const userList = ref([])
     const cookie = cookieData()
     const validateUniqueName = (id, name) => {
@@ -75,9 +77,14 @@ export const userData = defineStore('userDataState', () => {
                     refreshToken()
                     getUsers();
                 }
-            } else if (res.status === 403){
+                if (resText.toUpperCase().match("cannot refresh token. need to login again".toUpperCase())) {
+                    cookie.setCookie("token", "", -1)
+                    cookie.setCookie("name", "", -1)
+                }
+
+            } else if (res.status === 403) {
                 console.log("only admin wtf dog");
-                return "403"
+                permissions.value = 403
             }
 
             else {
@@ -114,6 +121,10 @@ export const userData = defineStore('userDataState', () => {
                 //ได้ละ
                 console.log("real");
                 refreshToken()
+            }
+            if (resText.toUpperCase().match("cannot refresh token. need to login again".toUpperCase())) {
+                cookie.setCookie("token", "", -1)
+                cookie.setCookie("name", "", -1)
             }
         } else { console.log("error, cannot delete data"); }
     };
@@ -153,6 +164,10 @@ export const userData = defineStore('userDataState', () => {
                     console.log("real");
                     refreshToken()
                 }
+                if (resText.toUpperCase().match("cannot refresh token. need to login again".toUpperCase())) {
+                    cookie.setCookie("token", "", -1)
+                    cookie.setCookie("name", "", -1)
+                }
             }
             else {
                 console.log('error, cannot edit')
@@ -171,7 +186,7 @@ export const userData = defineStore('userDataState', () => {
         try {
             console.log(cookie.getCookie("token"));
             const res = await fetch(
-                `${import.meta.env.VITE_BASE_URL}/jwt/refreshtoken`, {
+                `${import.meta.env.VITE_BASE_URL}/jwt/refresh`, {
                 method: 'GET',
                 headers: {
                     'content-type': 'application/json',
@@ -184,7 +199,8 @@ export const userData = defineStore('userDataState', () => {
                 ////
                 console.log("setcookie test");
                 cookie.setCookie("token", objectJson.token, 7)
-            } else if (res.status === 205) {
+            } else if (res.status === 401) {
+                //refresh ไม่ได้ ให้ login ใหม่ครับ
                 let resJson = await res.json();
                 if (resJson.message.toUpperCase().match("cannot refresh token. need to login again".toUpperCase)) {
                     alert("cannot refresh token. need to login again")
@@ -201,7 +217,7 @@ export const userData = defineStore('userDataState', () => {
 
 
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken }
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken, permissions }
 })
 
 
