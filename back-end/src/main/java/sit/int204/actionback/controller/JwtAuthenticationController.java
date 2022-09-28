@@ -61,8 +61,10 @@ public class JwtAuthenticationController {
 //                    .loadUserByUsername(authenticationRequest.getUsername());
 //            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
             final String token = jwtTokenUtil.generateToken(user, name);
+            final String token2 = jwtTokenUtil.generateRefreshToken(user, name);
             HashMap<String, String> objectToResponse = new HashMap<String, String>();
             objectToResponse.put("token", token);
+            objectToResponse.put("refreshtoken", token2);
             objectToResponse.put("name", name);
             return ResponseEntity.ok(objectToResponse);
         }

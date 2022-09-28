@@ -71,7 +71,7 @@ export const userData = defineStore('userDataState', () => {
                 userList.value = await res.json()
             } else if (res.status === 401) {
                 let resText = await res.text();
-                if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                if (resText.toLowerCase().match("please send refresh token to /refresh to refresh token")) {
                     //ได้ละ
                     console.log("real");
                     refreshToken()
@@ -190,7 +190,7 @@ export const userData = defineStore('userDataState', () => {
                 method: 'GET',
                 headers: {
                     'content-type': 'application/json',
-                    "Authorization": "Bearer " + cookie.getCookie("token"),
+                    "Authorization": "Bearer " + cookie.getCookie("refreshtoken"),
                     "isRefreshToken": true
                 }
             });
@@ -203,6 +203,9 @@ export const userData = defineStore('userDataState', () => {
                 //refresh ไม่ได้ ให้ login ใหม่ครับ
                 let resJson = await res.json();
                 if (resJson.message.toUpperCase().match("cannot refresh token. need to login again".toUpperCase)) {
+                    cookie.setCookie("token", "", -1)
+                    cookie.setCookie("refreshtoken", "", -1)
+                    cookie.setCookie("name", "", -1)
                     alert("cannot refresh token. need to login again")
                 }
             }

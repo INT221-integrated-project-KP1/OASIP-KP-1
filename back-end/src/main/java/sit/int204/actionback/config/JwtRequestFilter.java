@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,7 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,23 +54,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
+                String isRefreshToken = request.getHeader("isRefreshToken");
+                String requestURL = request.getRequestURL().toString();
+                // allow for Refresh Token creation if following conditions are true.
+                Claims claims = getAllClaimsFromToken(jwtToken);
+                if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
+                    allowForRefreshToken(claims, request);
+                }
+
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException ex) {
-                if (ex.getClaims().getExpiration().getTime() + 86400000 <= Instant.now().toEpochMilli()) {
-                    System.out.println("JWT Token has expired");
+                if (ex.getClaims().getExpiration().getTime() - ex.getClaims().getIssuedAt().getTime() > 1790000) {
+                    System.out.println("JWT Refresh Token has expired");
                     request.setAttribute("message", "cannot refresh token. need to login again");
 
                 } else {
                     System.out.println("JWT Token has expired");
-                    request.setAttribute("message", "TOKENEXPIRED");
-
-                    String isRefreshToken = request.getHeader("isRefreshToken");
-                    String requestURL = request.getRequestURL().toString();
-                    // allow for Refresh Token creation if following conditions are true.
-                    if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
-                        allowForRefreshToken(ex, request);
-                    }
+                    request.setAttribute("message", "please send refresh token to /refresh to refresh token");
                 }
             }
 
@@ -96,7 +103,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
+    private void allowForRefreshToken(Claims claims, HttpServletRequest request) {
         System.out.println("allowToken");
         // create a UsernamePasswordAuthenticationToken with null values.
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -107,6 +114,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         // Set the claims so that in controller we will be using it to create
         // new JWT
-        request.setAttribute("claims", ex.getClaims());
+        request.setAttribute("claims", claims);
+    }
+    @Value("${jwt.secret}")
+    private String secret;
+    private Claims getAllClaimsFromToken(String token) {
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            claims = null;
+        }
+        return claims;
     }
 }

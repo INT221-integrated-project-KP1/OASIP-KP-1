@@ -58,6 +58,7 @@ const MatchingCheck = async (login) => {
                 ////
                 cookie.setCookie(Object.keys(objectJson)[0], Object.values(objectJson)[0], 7)
                 cookie.setCookie(Object.keys(objectJson)[1], Object.values(objectJson)[1], 7)
+                cookie.setCookie(Object.keys(objectJson)[2], Object.values(objectJson)[2], 7)
                 ////
                 matchstatus.value = "Sucesss"
                 statusError.value = 1;

@@ -21,7 +21,8 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 30 * 60 * 1000; // 30mins
+    public static final long JWT_TOKEN_30MINS = 30 * 60 * 1000; // 30mins
+    public static final long JWT_TOKEN_ONEDAY = 30 * 60 * 1000; // 30mins
 
     private int refreshExpirationDateInMs;
 
@@ -54,9 +55,13 @@ public class JwtTokenUtil implements Serializable {
     //generate token for user
     public String generateToken(UserDetails userDetails, String name) {
         HashMap<String, Object> payload = new HashMap<>();
-        return doGenerateToken(payload, userDetails.getUsername(), userDetails.getAuthorities(), name);
+        return doGenerateToken(payload, userDetails.getUsername(), userDetails.getAuthorities(), name , 0);
     }
 
+    public String generateRefreshToken(UserDetails userDetails, String name) {
+        HashMap<String, Object> payload = new HashMap<>();
+        return doGenerateToken(payload, userDetails.getUsername(), userDetails.getAuthorities(), name, 1);
+    }
 
 
     //while creating the token -
@@ -64,13 +69,19 @@ public class JwtTokenUtil implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> roles, String name) {
+    private String doGenerateToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> roles, String name, long time) {
+        if(time == 1){
+            time = JWT_TOKEN_ONEDAY;
+        } else {
+//            time = 30 * 60 * 1000;
+            time = JWT_TOKEN_30MINS;
+        }
         claims.put("name", name);
         claims.put("role", ((GrantedAuthority)roles.stream().findFirst().get()).toString());
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 //                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)) // 5 ชั่วโมง
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY)) // 30 นาที
+                .setExpiration(new Date(System.currentTimeMillis() + time)) // 30 นาที or 1 day
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
@@ -82,7 +93,7 @@ public class JwtTokenUtil implements Serializable {
 
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationDateInMs))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_30MINS))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
