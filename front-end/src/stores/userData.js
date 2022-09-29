@@ -207,6 +207,7 @@ export const userData = defineStore('userDataState', () => {
                     cookie.setCookie("refreshtoken", "", -1)
                     cookie.setCookie("name", "", -1)
                     alert("cannot refresh token. need to login again")
+                    myRouter.push({ name: 'Welcome' })
                 }
             }
 
