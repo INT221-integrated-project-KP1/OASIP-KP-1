@@ -48,8 +48,7 @@ export const events = defineStore("eventListState", () => {
   const getEvents = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/all
-        }`,
+        `${import.meta.env.VITE_BASE_URL}/event/all`,
         {
           method: "GET",
           headers: {
@@ -65,7 +64,7 @@ export const events = defineStore("eventListState", () => {
         // events ของที่แสดงอยู่
         // เอาอันที่โหลดเพิ่มมาใส่
         //ตัสแก้
-        addNewEvent(eventsToAdd.content);
+        addNewEvent(eventsToAdd);
       } else if (res.status === 401) {
         let resText = await res.text();
         if (resText.toUpperCase().match("TOKENEXPIRED")) {
