@@ -52,8 +52,9 @@ public class EventController {
                                                          @RequestParam(defaultValue = "") String date,
                                                          @RequestParam(defaultValue = "0") int offsetMin,
                                                          @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
+                                                         @RequestParam(defaultValue = "4") int pageSize,
+                                                         HttpServletRequest request) {
+        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(request, eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
     @PostMapping("")

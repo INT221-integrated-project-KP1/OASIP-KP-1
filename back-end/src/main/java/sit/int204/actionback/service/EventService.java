@@ -54,13 +54,13 @@ public class EventService {
 //            System.out.println(myRole.equals((Role.STUDENT).toString()));
 //            System.out.println(email);
 //            if(myRole.equals((Role.STUDENT).toString())){
-//                List<Event> te = eventRepository.findAllByBookingEmail(email);
+//                List<Event> te = eventRepository.findAllByBookingEmail(email, PageRequest.of(page, pageSize));
 //                System.out.println("test " + te.get(0).getBookingName());
 //
-//                return modelMapper.map(te, EventPageDTO.class);
+//                return listMapper.mapList(te, EventPageDTO.class, modelMapper);
 //            }
 //        }
-//        return modelMapper.map(eventRepository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
+//        return listMapper.mapList(eventRepository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
 //    }
 
     public List<SimpleEventDTO> getAllEvent(HttpServletRequest request){
@@ -79,7 +79,47 @@ public class EventService {
     }
 
 
-    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
+    public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(HttpServletRequest request, Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
+        String requestTokenHeader = request.getHeader("Authorization");
+        String myRole = "";
+        String email = "";
+        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+            String header = requestTokenHeader.substring(7);
+            email = jwtTokenUtil.getUsernameFromToken(header);
+            myRole = userRepository.findByEmail(email).getRole();
+        }
+        if(myRole.equals((Role.STUDENT).toString())){
+            if(date.equals("")){
+                if(eventCategoryId <= 0){
+                    if(pastOrFutureOrAll.equals("future")){
+                        return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventStartTimeAfter(email, Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                    } else if (pastOrFutureOrAll.equals("past")){
+                        return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventStartTimeBefore(email, Instant.now(), PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                    }
+                    return listMapper.mapList(eventRepository.findAllByBookingEmailAndIdNot(email, eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                }
+
+                if(pastOrFutureOrAll.equals("future")){
+                    return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventStartTimeAfterAndEventCategoryId(email, Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                } else if (pastOrFutureOrAll.equals("past")){
+                    return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventStartTimeBeforeAndEventCategoryId(email, Instant.now(), eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+                }
+                return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventCategoryId(email, eventCategoryId, PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), SimpleEventDTO.class, modelMapper);
+            } else {
+                //UTC To GMT แปลง UTC จากทั้งคู่เป็น GMT แล้วเช็คด้วย GMT ทั้งคู่
+                //offsetMin เช่น -420 = +07:00
+                Instant input = Instant.parse(date).plus(offsetMin, ChronoUnit.MINUTES);
+                System.out.println(input);
+                long dayInMilli = 86400000;
+                if(eventCategoryId > 0){
+                    return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventCategoryIdAndEventStartTimeBetween(email, eventCategoryId, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                } else {
+                    return listMapper.mapList(eventRepository.findAllByBookingEmailAndEventStartTimeBetween(email, Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
+                }
+            }
+        }
+        //==========================================================
+
         if(date.equals("")){
             if(eventCategoryId <= 0){
                 if(pastOrFutureOrAll.equals("future")){
@@ -108,6 +148,9 @@ public class EventService {
                 return listMapper.mapList(eventRepository.findAllByEventStartTimeBetween(Instant.ofEpochMilli(input.toEpochMilli()), Instant.ofEpochMilli(input.toEpochMilli()+dayInMilli-1), PageRequest.of(page, pageSize, Sort.by("eventStartTime").ascending())), SimpleEventDTO.class, modelMapper);
             }
         }
+
+
+
 
 
     }
