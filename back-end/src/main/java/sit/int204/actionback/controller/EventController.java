@@ -23,11 +23,11 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("")
-    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "4") int pageSize ,HttpServletRequest request) {
-        return eventService.getEvent(page, pageSize ,request);
-    }
+//    @GetMapping("")
+//    public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
+//                                 @RequestParam(defaultValue = "4") int pageSize ,HttpServletRequest request) {
+//        return eventService.getEvent(page, pageSize ,request);
+//    }
 
     @GetMapping("/all")
     public List<SimpleEventDTO> getAllEvent(HttpServletRequest request) {

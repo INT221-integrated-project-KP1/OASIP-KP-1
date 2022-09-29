@@ -2,6 +2,7 @@ package sit.int204.actionback.repo;
 
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
@@ -19,6 +20,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByEventCategoryIdAndEventStartTimeBetween(Integer eventCategoryid, Instant d, Instant t, Pageable pageable);
     List<Event> findAllByIdNotAndEventCategoryIdAndEventStartTimeBetween(Integer eventId, Integer eventCategoryid, Instant d, Instant t,  Pageable pageable);
     List<Event> findAllByBookingEmail(String bookingEmail, Pageable pageable);
-    List<Event> findAllByBookingEmail(String bookingEmail);
-
+    List<Event> findAllByBookingEmail(String bookingEmail , Sort sort);
+    List<Event> findAll(Sort sort);
 }

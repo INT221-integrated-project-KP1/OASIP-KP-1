@@ -44,20 +44,24 @@ public class EventService {
     @Autowired
     private UserRepository userRepository;
 
-    public EventPageDTO getEvent(int page, int pageSize,HttpServletRequest request) {
-        String requestTokenHeader = request.getHeader("Authorization");
-        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
-            String header = requestTokenHeader.substring(7);
-            String email = jwtTokenUtil.getUsernameFromToken(header);
-            String myRole = userRepository.findByEmail(email).getRole();
-            System.out.println(myRole.equals((Role.STUDENT).toString()));
-            System.out.println(email);
-            if(myRole.equals((Role.STUDENT).toString())){
-                return modelMapper.map(eventRepository.findAllByBookingEmail(email,PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
-            }
-        }
-        return modelMapper.map(eventRepository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
-    }
+//    public EventPageDTO getEvent(int page, int pageSize,HttpServletRequest request) {
+//        String requestTokenHeader = request.getHeader("Authorization");
+//        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
+//            String header = requestTokenHeader.substring(7);
+//            String email = jwtTokenUtil.getUsernameFromToken(header);
+//            String myRole = userRepository.findByEmail(email).getRole();
+//            System.out.println(myRole);
+//            System.out.println(myRole.equals((Role.STUDENT).toString()));
+//            System.out.println(email);
+//            if(myRole.equals((Role.STUDENT).toString())){
+//                List<Event> te = eventRepository.findAllByBookingEmail(email);
+//                System.out.println("test " + te.get(0).getBookingName());
+//
+//                return modelMapper.map(te, EventPageDTO.class);
+//            }
+//        }
+//        return modelMapper.map(eventRepository.findAll(PageRequest.of(page, pageSize, Sort.by("eventStartTime").descending())), EventPageDTO.class);
+//    }
 
     public List<SimpleEventDTO> getAllEvent(HttpServletRequest request){
         String requestTokenHeader = request.getHeader("Authorization");
@@ -68,10 +72,10 @@ public class EventService {
             System.out.println(myRole.equals((Role.STUDENT).toString()));
             System.out.println(email);
             if(myRole.equals((Role.STUDENT).toString())){
-            return listMapper.mapList(eventRepository.findAllByBookingEmail(email), SimpleEventDTO.class,modelMapper);
+            return listMapper.mapList(eventRepository.findAllByBookingEmail(email ,Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
         }
         }
-        return listMapper.mapList(eventRepository.findAll(), SimpleEventDTO.class,modelMapper);
+        return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
     }
 
 

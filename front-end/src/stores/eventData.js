@@ -48,8 +48,7 @@ export const events = defineStore("eventListState", () => {
   const getEvents = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event?page=${page.value}&pageSize=${
-          pageSize.value
+        `${import.meta.env.VITE_BASE_URL}/event/all
         }`,
         {
           method: "GET",
