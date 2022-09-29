@@ -102,6 +102,7 @@ if (com) {
   myEvents.removeEvent(id)
   } 
 }
+// myEvents.getEvents()
 </script>
 
 <template>

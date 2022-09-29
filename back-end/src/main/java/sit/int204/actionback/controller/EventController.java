@@ -9,6 +9,8 @@ import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
 import java.util.List;
 import sit.int204.actionback.exception.ApiTestException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
@@ -23,13 +25,13 @@ public class EventController {
 
     @GetMapping("")
     public EventPageDTO getEvent(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getEvent(page, pageSize);
+                                 @RequestParam(defaultValue = "4") int pageSize ,HttpServletRequest request) {
+        return eventService.getEvent(page, pageSize ,request);
     }
 
     @GetMapping("/all")
-    public List<SimpleEventDTO> getAllEvent() {
-        return eventService.getAllEvent();
+    public List<SimpleEventDTO> getAllEvent(HttpServletRequest request) {
+        return eventService.getAllEvent(request);
     }
 
     @GetMapping("/overlapping")
