@@ -18,6 +18,7 @@ const goWelcome = () => {
 const logoutFun = () => {
   cookie.setCookie("token", "", -1)
   cookie.setCookie("name", "", -1)
+  cookie.setCookie("refreshtoken", "", -1)
   myuserData.permissions = 0
   myRouter.push({ name: 'Welcome' })
 }

@@ -4,19 +4,28 @@ import ShadowEventVue from "./ShadowEvent.vue";
 import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
-
+import { cookieData } from "../stores/cookieData.js"
 const myEvents = events()
-
+const myCookie = cookieData()
 const myRouter = useRouter()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
 
+
+
 //GET BY ID
 const getEventById = async (id) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`);
-    console.log(res.status);
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/${id}`, {
+      method: "GET",
+      headers: {
+        'content-type': 'application/json',
+        "Authorization": "Bearer " + myCookie.getCookie("token")
+      }
+    }
+    );
+
     if (res.status === 200) {
       selectedEvent.value = await res.json();
       editNotes.value = selectedEvent.value.eventNotes
@@ -28,9 +37,20 @@ const getEventById = async (id) => {
       console.log(new Date().getDate());
       console.log(edit.getDate());
       console.log(editStartTime.value);
-    } else {
-      console.log("error, cannot get data");
     }
+    else if (res.status === 401) {
+      let resText = await res.text();
+      if (resText.toUpperCase().match("TOKENEXPIRED")) {
+        //ได้ละ
+        console.log("real");
+        refreshToken()
+      }
+      if (resText.toUpperCase().match("cannot refresh token. need to login again".toUpperCase())) {
+        cookie.setCookie("token", "", -1)
+        cookie.setCookie("name", "", -1)
+      }
+    } else { console.log("error, cannot delete data"); };
+    console.log(res.status);
   } catch (err) {
     console.log("Error: ", err.message);
   }
