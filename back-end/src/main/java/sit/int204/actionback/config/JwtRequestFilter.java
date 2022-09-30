@@ -61,7 +61,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 Claims claims = getAllClaimsFromToken(jwtToken);
                 if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
                     if(claims.getExpiration().getTime() - claims.getIssuedAt().getTime() == 86400000){
-                        allowForRefreshToken(claims, request);
+                        if(claims.getExpiration().getTime() > Instant.now().toEpochMilli()) {
+                            allowForRefreshToken(claims, request);
+                        }
                     }
                 }
 
