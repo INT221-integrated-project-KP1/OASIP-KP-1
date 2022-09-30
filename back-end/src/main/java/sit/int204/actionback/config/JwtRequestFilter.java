@@ -66,7 +66,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException ex) {
-                if (ex.getClaims().getExpiration().getTime() - ex.getClaims().getIssuedAt().getTime() > 1790000) {
+                if (ex.getClaims().getExpiration().getTime() - ex.getClaims().getIssuedAt().getTime() > 1800000) {
                     System.out.println("JWT Refresh Token has expired");
                     request.setAttribute("message", "cannot refresh token. need to login again");
 
