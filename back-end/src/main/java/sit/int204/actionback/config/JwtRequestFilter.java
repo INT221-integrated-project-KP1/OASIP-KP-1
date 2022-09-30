@@ -60,7 +60,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 // allow for Refresh Token creation if following conditions are true.
                 Claims claims = getAllClaimsFromToken(jwtToken);
                 if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
-                    allowForRefreshToken(claims, request);
+                    if(claims.getExpiration().getTime() - claims.getIssuedAt().getTime() == 86400000){
+                        allowForRefreshToken(claims, request);
+                    }
                 }
 
             } catch (IllegalArgumentException e) {
