@@ -58,20 +58,20 @@ public class EventController {
     }
 
     @PostMapping("")
-    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
+    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent, HttpServletRequest request) throws MethodArgumentNotValidException {
         System.out.println("postmapping");
-        return eventService.create(newEvent);
+        return eventService.create(newEvent, request);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTest(@PathVariable Integer id) {
-        return eventService.deleteEventById(id);
+    public ResponseEntity deleteTest(@PathVariable Integer id, HttpServletRequest request) {
+        return eventService.deleteEventById(id, request);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody EventUpdateDTO update, @PathVariable int id) {
-        return eventService.editEvent(update, id);
+    public ResponseEntity update(@Valid @RequestBody EventUpdateDTO update, @PathVariable int id, HttpServletRequest request) {
+        return eventService.editEvent(update, id, request);
     }
 
 }

@@ -1,5 +1,6 @@
 package sit.int204.actionback.service;
 
+import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -155,12 +156,20 @@ public class EventService {
 
     }
 
-    public ResponseEntity deleteEventById(Integer id) {
-        eventRepository.findById(id)
+    public ResponseEntity deleteEventById(Integer id, HttpServletRequest request) {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
+        if(!event.getBookingEmail().equals(email)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
+        }
+
+
         eventRepository.deleteById(id);
        return ResponseEntity.status(HttpStatus.OK).body(id);
 
@@ -177,9 +186,15 @@ public class EventService {
         return modelMapper.map(event, EventDetailsBaseDTO.class);
     }
 
-    public ResponseEntity create(EventDTO newEvent) {
-           System.out.println("1");
+    public ResponseEntity create(EventDTO newEvent, HttpServletRequest request) {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        if(!email.equals(newEvent.getBookingEmail())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
+        }
 
+        System.out.println("1");
         Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
         System.out.println("2");
         Event e = modelMapper.map(newEvent, Event.class);
@@ -195,14 +210,22 @@ public class EventService {
     }
 
 
-    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ) {
-
-//    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,BindingResult bindingResult)throws BindException {
+    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,HttpServletRequest request) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
+
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        if(!event.getBookingEmail().equals(email)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
+        }
+
+//    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,BindingResult bindingResult)throws BindException {
+
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Time Future Pls");
         }
