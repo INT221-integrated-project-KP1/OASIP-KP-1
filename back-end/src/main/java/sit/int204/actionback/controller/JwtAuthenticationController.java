@@ -83,9 +83,13 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+        if(claims == null){
+            return ResponseEntity.status(403).body("Claims == null, Can't Refresh");
+        }
+
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
         objectToResponse.put("token", token);

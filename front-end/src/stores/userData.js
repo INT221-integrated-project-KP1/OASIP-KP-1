@@ -195,10 +195,12 @@ export const userData = defineStore('userDataState', () => {
                 }
             });
             if (res.status === 200) {
+                
                 const objectJson = await res.json()
                 ////
                 console.log("setcookie test");
                 cookie.setCookie("token", objectJson.token, 7)
+                return true;
             } else if (res.status === 401) {
                 //refresh ไม่ได้ ให้ login ใหม่ครับ
                 let resJson = await res.json();
@@ -209,6 +211,7 @@ export const userData = defineStore('userDataState', () => {
                     alert("cannot refresh token. need to login again")
                     myRouter.push({ name: 'Welcome' })
                 }
+                return false;
             }
 
             else {
@@ -219,9 +222,31 @@ export const userData = defineStore('userDataState', () => {
         }
     };
 
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    };
+
+    const isLogin = (() => {
+        let token = cookie.getCookie("token")
+        let refreshTokenn = cookie.getCookie("refreshtoken")
+        if(new Date(parseJwt(token).exp * 1000 > new Date())){
+            return true
+        } else if(new Date(parseJwt(refreshTokenn).exp * 1000 > new Date())){
+            if(refreshToken()){
+                return true;
+            }
+        }
+        return false;
+    })
+
 
     getUsers();
-    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken, permissions }
+    return { userList, createNewUser, getUsers, removeUser, updateUser, validateUniqueName, validateUniqueEmail, refreshToken, permissions, parseJwt, isLogin}
 })
 
 
