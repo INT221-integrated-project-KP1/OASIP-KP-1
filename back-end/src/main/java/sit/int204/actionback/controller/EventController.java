@@ -52,25 +52,26 @@ public class EventController {
                                                          @RequestParam(defaultValue = "") String date,
                                                          @RequestParam(defaultValue = "0") int offsetMin,
                                                          @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "4") int pageSize) {
-        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
+                                                         @RequestParam(defaultValue = "4") int pageSize,
+                                                         HttpServletRequest request) {
+        return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(request, eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
     @PostMapping("")
-    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent) throws MethodArgumentNotValidException {
+    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent, HttpServletRequest request) throws MethodArgumentNotValidException {
         System.out.println("postmapping");
-        return eventService.create(newEvent);
+        return eventService.create(newEvent, request);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTest(@PathVariable Integer id) {
-        return eventService.deleteEventById(id);
+    public ResponseEntity deleteTest(@PathVariable Integer id, HttpServletRequest request) {
+        return eventService.deleteEventById(id, request);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody EventUpdateDTO update, @PathVariable int id) {
-        return eventService.editEvent(update, id);
+    public ResponseEntity update(@Valid @RequestBody EventUpdateDTO update, @PathVariable int id, HttpServletRequest request) {
+        return eventService.editEvent(update, id, request);
     }
 
 }
