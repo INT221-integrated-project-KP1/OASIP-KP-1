@@ -53,19 +53,20 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         UserDetails user = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-        String name = userRepository.findByEmail(authenticationRequest.getEmail()).getName();
+        User myUser = userRepository.findByEmail(authenticationRequest.getEmail());
 
         Argon2 argon2 = Argon2Factory.create();
         if (argon2.verify(user.getPassword(), authenticationRequest.getPassword())) {
 //            final UserDetails userDetails = userDetailsService
 //                    .loadUserByUsername(authenticationRequest.getUsername());
 //            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
-            final String token = jwtTokenUtil.generateToken(user, name);
-            final String token2 = jwtTokenUtil.generateRefreshToken(user, name);
+            final String token = jwtTokenUtil.generateToken(user, myUser.getName());
+            final String token2 = jwtTokenUtil.generateRefreshToken(user, myUser.getName());
             HashMap<String, String> objectToResponse = new HashMap<String, String>();
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
-            objectToResponse.put("name", name);
+            objectToResponse.put("name", myUser.getName());
+            objectToResponse.put("role", myUser.getRole());
             return ResponseEntity.ok(objectToResponse);
         }
       else  return ResponseEntity.status(404).body("Password Invaild");

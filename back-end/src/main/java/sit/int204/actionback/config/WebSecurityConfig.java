@@ -84,7 +84,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
-                .and().authorizeRequests().antMatchers("/api/event").permitAll()
+//                .and().authorizeRequests().antMatchers("/api/event").permitAll()
+               // add
+                .and().authorizeRequests().antMatchers("/api/event/all").permitAll()
+
+                //mark add
+//                .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
+//                .and().authorizeRequests().antMatchers("/api/event/overlapping").permitAll()
+//                .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/event").permitAll()
+
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 //.antMatchers("/api/user/lecturer").hasAuthority("LECTURER")
                 // all other requests need to be authenticated

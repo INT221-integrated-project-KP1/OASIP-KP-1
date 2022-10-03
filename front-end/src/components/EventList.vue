@@ -102,6 +102,8 @@ if (com) {
   myEvents.removeEvent(id)
   } 
 }
+myEvents.getEvents();
+
 </script>
 
 <template>
@@ -159,14 +161,15 @@ if (com) {
                       <p v-if="event.eventDetails !== undefined">
                         Event Details: {{ event.eventDetails }}
                       </p>
+                      <div v-if = "myCookie.getCookie('token') !== ''">
                       <div class="card-actions justify-end">
                         <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
                           ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
                         ">Show
-                          more...</label>
+                          more... </label>
                         <label for="my-modal"
                           class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline" @click="deleteFun(event.id)" >Delete</label>
-
+                        </div>
                       </div>
                     </div>
                   </li>
