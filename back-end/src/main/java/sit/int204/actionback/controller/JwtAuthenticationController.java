@@ -65,8 +65,6 @@ public class JwtAuthenticationController {
             HashMap<String, String> objectToResponse = new HashMap<String, String>();
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
-            objectToResponse.put("name", myUser.getName());
-            objectToResponse.put("role", myUser.getRole());
             return ResponseEntity.ok(objectToResponse);
         }
       else  return ResponseEntity.status(404).body("Password Invaild");

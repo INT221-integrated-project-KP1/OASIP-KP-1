@@ -59,6 +59,11 @@ const MatchingCheck = async (login) => {
                 for (let i in Object.keys(objectJson)) {
                     cookie.setCookie(Object.keys(objectJson)[i], Object.values(objectJson)[i], 7)
                 }
+                let jsonFromToken = userStore.parseJwt(cookie.getCookie("token"))
+                cookie.setCookie("name", jsonFromToken.name, 7)
+                cookie.setCookie("role", jsonFromToken.role, 7)
+                cookie.setCookie("email", jsonFromToken.sub, 7)
+
                 ////
                 matchstatus.value = "Sucesss"
                 statusError.value = 1;
