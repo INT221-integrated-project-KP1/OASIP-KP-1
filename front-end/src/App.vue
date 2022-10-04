@@ -4,7 +4,7 @@ import Clock from "./components/Clock.vue"
 import { cookieData } from "./stores/cookieData.js"
 import { userData } from "./stores/userData.js"
 
-import { ref , computed } from "vue";
+import { ref, computed } from "vue";
 const myuserData = userData()
 
 const cookie = cookieData()
@@ -27,10 +27,10 @@ const logoutFun = () => {
 //   if(cookie.getCookie('token') == ""  ) {myRouter.push({ name: 'SignIn' });}
 //   else myRouter.push({ name: 'ListUser' })
 // }
-const checkToken = () =>{
-  console.log(cookie.getCookie('token')== "")
-  if(cookie.getCookie('token') == "") {return true}
- else return  false
+const checkToken = () => {
+  console.log(cookie.getCookie('token') == "")
+  if (cookie.getCookie('token') == "") { return true }
+  else return false
 }
 
 </script>
@@ -40,7 +40,8 @@ const checkToken = () =>{
 
 
   <div>
-    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' || $route.name === 'SignUp' || $route.name === 'SignIn') ">
+    <div class="navbar bg-white"
+      v-show="!($route.name === 'Welcome' || ($route.name === 'SignUp' && myuserData.permissions === 403 ) || $route.name === 'SignIn' ) ">
       <div class="navbar-start">
 
 
@@ -70,7 +71,7 @@ const checkToken = () =>{
             <li>
               <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
             </li> -->
-            <li v-show = "cookie.getCookie('token') == '' ? false : true">
+            <li v-show="cookie.getCookie('token') == '' ? false : true">
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
               <!-- <p @click="signIn"> List User </p> -->
             </li>
@@ -96,9 +97,11 @@ const checkToken = () =>{
             </router-link>
             <router-link :to="{ name: 'List' }" :class="[$route.name == 'List' ? 'tab-active' : '', 'tab']">List All
             </router-link>
-            <router-link :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
-              Add
-              event </router-link>
+            <div v-if="cookie.getCookie('token') !== ''">
+                <router-link :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
+                Add event </router-link>
+            </div>
+
             <router-link :to="{ name: 'ListCategory' }"
               :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">
               List Category </router-link>
@@ -107,12 +110,18 @@ const checkToken = () =>{
               Sign Up </router-link>
             <router-link :to="{ name: 'SignIn' }" :class="[$route.name == 'SignIn' ? 'tab-active' : '', 'tab']">
               Sign In </router-link> -->
-<!-- 
-            <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
+            <!-- 
+  <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link> -->
 
-              <router-link v-show = "cookie.getCookie('token') == '' || myuserData.permissions === 403 ? false : true" 
-              :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User </router-link>
+            <div v-if="myuserData.permissions !== 403">
+              <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
+                Sign Up </router-link>
+            </div>
+
+            <router-link v-show="cookie.getCookie('token') == '' || myuserData.permissions === 403 ? false : true"
+              :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User
+            </router-link>
 
 
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
@@ -123,14 +132,14 @@ const checkToken = () =>{
       </div>
 
       <div class="navbar-end">
-        <div v-if= "cookie.getCookie('token') == '' ? true : false">
+        <div v-if="cookie.getCookie('token') == '' ? true : false">
           <label tabindex="0" class="btn btn-ghost btn-circle" @click="myRouter.push({ name: 'SignIn' });">
             <div class="w-50">
-              <p >login</p>
+              <p>login</p>
             </div>
-          </label>     
+          </label>
         </div>
-        
+
         <div v-else class="dropdown dropdown-end">
           <label tabindex="0" class="btn btn-ghost btn-circle avatar">
             <div class="w-50 rounded-full">
@@ -143,7 +152,12 @@ const checkToken = () =>{
                 User : {{ cookie.getCookie('name') }}
               </a>
             </li>
-            <li><a @click="logoutFun" >Logout</a></li>
+            <li>
+              <a class="justify-between">
+                Role : {{ cookie.getCookie('role') }}
+              </a>
+            </li>
+            <li><a @click="logoutFun">Logout</a></li>
           </ul>
         </div>
 

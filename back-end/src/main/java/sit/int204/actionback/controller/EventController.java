@@ -31,6 +31,7 @@ public class EventController {
 
     @GetMapping("/all")
     public List<SimpleEventDTO> getAllEvent(HttpServletRequest request) {
+        System.out.println("Test 2 ");
         return eventService.getAllEvent(request);
     }
 

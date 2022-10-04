@@ -73,10 +73,15 @@ public class EventService {
             System.out.println(myRole.equals((Role.STUDENT).toString()));
             System.out.println(email);
             if(myRole.equals((Role.STUDENT).toString())){
-            return listMapper.mapList(eventRepository.findAllByBookingEmail(email ,Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+                return listMapper.mapList(eventRepository.findAllByBookingEmail(email ,Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+            }
+            else if (myRole.equals((Role.ADMIN).toString())){
+                return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+            }  else
+                return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
         }
-        }
-        return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+        else
+          return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
     }
 
 
@@ -165,10 +170,13 @@ public class EventService {
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
-        if(!event.getBookingEmail().equals(email)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
-        }
 
+        String myRole = userRepository.findByEmail(email).getRole();
+        if(!myRole.equals((Role.ADMIN).toString())){
+            if(!email.equals(event.getBookingEmail())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
+            }
+        }
 
         eventRepository.deleteById(id);
        return ResponseEntity.status(HttpStatus.OK).body(id);
@@ -190,10 +198,12 @@ public class EventService {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-        if(!email.equals(newEvent.getBookingEmail())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
+        String myRole = userRepository.findByEmail(email).getRole();
+        if(!myRole.equals((Role.ADMIN).toString())){
+            if(!email.equals(newEvent.getBookingEmail())){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
+            }
         }
-
         System.out.println("1");
         Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
         System.out.println("2");

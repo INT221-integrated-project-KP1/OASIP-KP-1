@@ -47,6 +47,7 @@ export const events = defineStore("eventListState", () => {
   // GET ทำเเล้ว
   const getEvents = async () => {
     try {
+      eventList.value = []
       const res = await fetch(
         `${import.meta.env.VITE_BASE_URL}/event/all`,
         {
@@ -476,7 +477,6 @@ export const events = defineStore("eventListState", () => {
     "bg-accent-focus",
   ];
 
-  getEvents();
 
   return {
     eventList,
