@@ -1,6 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { ref } from "vue";
 import { cookieData } from "../stores/cookieData.js";
+import { userData } from "../stores/userData.js";
 
 export const events = defineStore("eventListState", () => {
   const eventList = ref([]);
@@ -10,6 +11,7 @@ export const events = defineStore("eventListState", () => {
   const tempOverLabCheck = ref([]);
   const boolOverlap = ref(true);
   const myCookie = cookieData();
+  const myUserData = userData();
   const filterList = ref({
     eventCategoryId: 0,
     pastOrFutureOrAll: [],
@@ -58,6 +60,7 @@ export const events = defineStore("eventListState", () => {
           },
         }
       );
+      console.log(res.status)
       if (res.status === 200) {
         const eventsToAdd = await res.json();
         // events << eventToAdd
@@ -68,11 +71,12 @@ export const events = defineStore("eventListState", () => {
         addNewEvent(eventsToAdd);
       } else if (res.status === 401) {
         let resText = await res.text();
-        if (resText.toUpperCase().match("TOKENEXPIRED")) {
+        // if (resText.toUpperCase().match("TOKENEXPIRED")) {
           //ได้ละ
           console.log("real");
           myUserData.refreshToken();
-        }
+        // }
+         
       } else {
         console.log("error, cannot get data");
       }
@@ -223,7 +227,7 @@ export const events = defineStore("eventListState", () => {
   // POST
   const createNewEvent = async (event) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/adding`, {
         method: "POST",
         headers: {
           "content-type": "application/json",

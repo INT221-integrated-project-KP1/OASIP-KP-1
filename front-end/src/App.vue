@@ -95,12 +95,14 @@ const checkToken = () => {
           <div class="tabs tabs-boxed">
             <router-link :to="{ name: 'Home' }" :class="[$route.name == 'Home' ? 'tab-active' : '', 'tab']">Home
             </router-link>
-            <router-link :to="{ name: 'List' }" :class="[$route.name == 'List' ? 'tab-active' : '', 'tab']">List All
-            </router-link>
             <div v-if="cookie.getCookie('token') !== ''">
+              <router-link :to="{ name: 'List' }" :class="[$route.name == 'List' ? 'tab-active' : '', 'tab']">List All
+            </router-link>
+          </div>
+       
+           
                 <router-link :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
                 Add event </router-link>
-            </div>
 
             <router-link :to="{ name: 'ListCategory' }"
               :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">

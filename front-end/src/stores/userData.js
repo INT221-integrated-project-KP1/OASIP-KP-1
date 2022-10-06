@@ -1,9 +1,11 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { computed, ref } from "vue";
 import { cookieData } from "../stores/cookieData.js";
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router'
+import router from "../router/index.js"; 
+
 export const userData = defineStore("userDataState", () => {
-  const myRouter = useRouter();
+  const myRouter = router;
   const permissions = ref();
   const userList = ref([]);
   const cookie = cookieData();
@@ -42,6 +44,8 @@ export const userData = defineStore("userDataState", () => {
       if (res.status === 201) {
         console.log("added sucessfully");
         getUsers();
+        alert('Sign up complete')
+        router.push('/Home')
         return { error: "", status: 1 };
       } else {
         console.log("error, cannot be added");
@@ -231,7 +235,6 @@ export const userData = defineStore("userDataState", () => {
           cookie.setCookie("name", "", -1);
           cookie.setCookie("role", "", -1);
           alert("cannot refresh token. need to login again");
-          myRouter.push({ name: "Welcome" });
         }
         return false;
       } else {
@@ -239,6 +242,7 @@ export const userData = defineStore("userDataState", () => {
       }
     } catch (err) {
       console.log("ERROR: " + err);
+
     }
   };
 

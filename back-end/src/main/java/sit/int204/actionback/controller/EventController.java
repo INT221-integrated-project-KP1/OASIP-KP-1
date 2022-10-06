@@ -43,8 +43,8 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventDetailsBaseDTO getEventById(@PathVariable Integer id) {
-        return eventService.getSimpleEventById(id);
+    public ResponseEntity getEventById(@PathVariable Integer id , HttpServletRequest request) {
+        return eventService.getSimpleEventById(id , request);
     }
 
     @GetMapping("/filtration")
@@ -58,7 +58,7 @@ public class EventController {
         return eventService.getAllEventFilterByEventCategoryAndPassOrFutureOrAll(request, eventCategoryId, pastOrFutureOrAll, date, offsetMin, page, pageSize);
     }
 
-    @PostMapping("")
+    @PostMapping("/adding")
     public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent, HttpServletRequest request) throws MethodArgumentNotValidException {
         System.out.println("postmapping");
         return eventService.create(newEvent, request);
