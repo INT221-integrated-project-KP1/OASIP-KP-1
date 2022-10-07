@@ -83,11 +83,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        httpSecurity.csrf().disable() //ถ้าขึ้น server ใช้อันนี้
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
+                .and().authorizeRequests().antMatchers("/api/jwt/refresh").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
 //                .and().authorizeRequests().antMatchers("/api/event").permitAll()
                // add
-                .and().authorizeRequests().antMatchers("/api/event/all").permitAll()
+//                .and().authorizeRequests().antMatchers("/api/event/all").permitAll()
 
+                .and().authorizeRequests().antMatchers("/api/event/all").hasAnyAuthority("ADMIN","STUDENT","LECTURER")
+                .and().authorizeRequests().antMatchers("/api/event/adding").permitAll()
+                .and().authorizeRequests().antMatchers("/api/event/overlapping").permitAll()
+                .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
                 //mark add
 //                .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
 //                .and().authorizeRequests().antMatchers("/api/event/overlapping").permitAll()
