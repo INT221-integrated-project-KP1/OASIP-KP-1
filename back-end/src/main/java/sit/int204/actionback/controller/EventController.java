@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.EventService;
+
+import java.io.IOException;
 import java.util.List;
 import sit.int204.actionback.exception.ApiTestException;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -59,7 +62,7 @@ public class EventController {
     }
 
     @PostMapping("/adding")
-    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent, HttpServletRequest request) throws MethodArgumentNotValidException {
+    public ResponseEntity createTest(@Valid @RequestBody EventDTO newEvent, HttpServletRequest request) throws MethodArgumentNotValidException, MessagingException, IOException {
         System.out.println("postmapping");
         return eventService.create(newEvent, request);
     }

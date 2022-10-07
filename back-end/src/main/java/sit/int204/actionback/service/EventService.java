@@ -20,10 +20,19 @@ import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class EventService {
@@ -208,7 +217,7 @@ public class EventService {
     }
 
 
-    public ResponseEntity create(EventDTO newEvent, HttpServletRequest request) {
+    public ResponseEntity create(EventDTO newEvent, HttpServletRequest request) throws MessagingException, IOException {
 
         String requestTokenHeader = request.getHeader("Authorization");
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
@@ -221,20 +230,55 @@ public class EventService {
                 }
             }
         }
-        System.out.println("1");
         Integer newEventDuration = eventCategoryRepository.findEventCategoryById(newEvent.getEventCategory().getId()).getEventDuration();
-        System.out.println("2");
         Event e = modelMapper.map(newEvent, Event.class);
-        System.out.println("3");
         e.setEventDuration(newEventDuration);
-        System.out.println("3");
 
         eventRepository.saveAndFlush(e);
-        System.out.println("3");
+        Event event2Send = eventRepository.findById(e.getId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, " id " +
+                        "Does Not Exist !!!"
+                ));
+        sendmail(event2Send);
 
         System.out.println("Created");
         return ResponseEntity.status(HttpStatus.CREATED).body(e);
+
     }
+
+    private void sendmail(Event event) throws AddressException, MessagingException, IOException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("amornpong.213@gmail.com", "vrplkwnpfhpqhldt");
+            }
+        });
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm").withZone(ZoneId.of("UTC"));
+
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress("amornpong.213@gmail.com", false));
+
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(event.getBookingEmail()));
+        msg.setSubject("Your booking is complete.");
+        msg.setContent("Your booking name : " + event.getBookingName() +
+                        "<br> Event category : " + event.getEventCategory() +
+                        "<br>Start date and time : " + formatter.format(event.getEventStartTime()) +
+                        "<br>Event duration : " + event.getEventDuration() + " minitues"+
+                        "<br>Event note : " + event.getEventNotes()
+                , "text/html; charset=utf-8");
+        msg.setSentDate(new Date());
+
+        Transport.send(msg);
+    }
+
+
+
 
 
     public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,HttpServletRequest request) {
