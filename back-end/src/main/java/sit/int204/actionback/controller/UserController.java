@@ -56,8 +56,6 @@ public class UserController {
         return userService.editUser(user, id);
     }
 
-
-
     @GetMapping("/lecturer")
     public ResponseEntity getGay(){
         return ResponseEntity.ok().body("Gay");
