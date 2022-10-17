@@ -75,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedOrigins(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "IsRefreshToken"));
-        httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration).and()
+        httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration.applyPermitDefaultValues()).and()
         //ถึงอันนี้ //
 
         // We don't need CSRF for this example
@@ -85,26 +85,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
                 .and().authorizeRequests().antMatchers("/api/jwt/refresh").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
-//                .and().authorizeRequests().antMatchers("/api/event").permitAll()
-               // add
-//                .and().authorizeRequests().antMatchers("/api/event/all").permitAll()
 
                 .and().authorizeRequests().antMatchers("/api/event/all").hasAnyAuthority("ADMIN","STUDENT","LECTURER")
                 .and().authorizeRequests().antMatchers("/api/event/adding").permitAll()
                 .and().authorizeRequests().antMatchers("/api/event/overlapping").permitAll()
                 .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
-                //mark add
-//                .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
-//                .and().authorizeRequests().antMatchers("/api/event/overlapping").permitAll()
-//                .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/event").permitAll()
 
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
-                //.antMatchers("/api/user/lecturer").hasAuthority("LECTURER")
-                // all other requests need to be authenticated
+
                 .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated().and().
-                // make sure we use stateless session; session won't be used to
-                // store user's state.
+
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
