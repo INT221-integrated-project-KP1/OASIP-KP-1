@@ -3,6 +3,7 @@ package sit.int204.actionback.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.service.EventCategoryService;
 import javax.validation.Valid;
 

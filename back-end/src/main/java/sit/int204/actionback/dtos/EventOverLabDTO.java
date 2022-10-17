@@ -1,6 +1,7 @@
 package sit.int204.actionback.dtos;
 
 import lombok.*;
+import sit.int204.actionback.entities.EventCategory;
 
 import java.time.Instant;
 

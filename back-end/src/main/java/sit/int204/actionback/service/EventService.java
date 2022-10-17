@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.entities.Event;
+import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.enumfile.Role;
 import sit.int204.actionback.repo.EventCategoryRepository;
