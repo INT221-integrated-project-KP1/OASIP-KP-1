@@ -4,8 +4,14 @@ package sit.int204.actionback.repo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.entities.Event;
+import sit.int204.actionback.entities.User;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -32,4 +38,11 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByBookingEmail(String bookingEmail, Pageable pageable);
     List<Event> findAllByBookingEmail(String bookingEmail , Sort sort);
     List<Event> findAll(Sort sort);
+
+    //หาตาม lecturer
+    @Query(value = "select e.* from event e join event_category_owner eco on e.eventCategory = eco.eventCategory_id where eco.user_id = :lecturer_id order by e.eventStartTime desc", nativeQuery = true)
+    List<Event> findAllEventByLecturerCategory(Integer lecturer_id);
+
+    @Query(value = "select e.* from event e join event_category_owner eco on e.eventCategory = eco.eventCategory_id where eco.user_id = :lecturer_id and e.event_id = :event_id order by e.eventStartTime desc", nativeQuery = true)
+    Event findEventByLecturerCategory(Integer lecturer_id, Integer event_id);
 }

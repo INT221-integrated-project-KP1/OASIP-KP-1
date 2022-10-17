@@ -1,6 +1,5 @@
 package sit.int204.actionback.service;
 
-import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.entities.Event;
-import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.entities.User;
 import sit.int204.actionback.enumfile.Role;
-import sit.int204.actionback.exception.ApiTestException;
 import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.repo.UserRepository;
@@ -78,18 +76,20 @@ public class EventService {
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
             String header = requestTokenHeader.substring(7);
             String email = jwtTokenUtil.getUsernameFromToken(header);
-            String myRole = userRepository.findByEmail(email).getRole();
+            User user = userRepository.findByEmail(email);
+            String myRole = user.getRole();
+
             System.out.println(myRole.equals((Role.STUDENT).toString()));
             System.out.println(email);
-            if(myRole.equals((Role.STUDENT).toString())){
+            if(myRole.equals(Role.STUDENT.toString())){
                 return listMapper.mapList(eventRepository.findAllByBookingEmail(email ,Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+            } else if (myRole.equals(Role.ADMIN.toString())){
+                return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
+            } else if(myRole.equals(Role.LECTURER.toString())) {
+                int leuturerId = user.getId();
+                return listMapper.mapList(eventRepository.findAllEventByLecturerCategory(leuturerId), SimpleEventDTO.class, modelMapper);
             }
-            else if (myRole.equals((Role.ADMIN).toString())){
-                return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
-            }  else
-                return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
         }
-        else
           return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
     }
 
