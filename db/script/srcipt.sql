@@ -72,6 +72,25 @@ CREATE TABLE `myuser` (
 
 
 
+CREATE TABLE IF NOT EXISTS `mydb`.`event_category_owner` (
+  `user_id` INT NULL,
+  `event_category_id` INT NOT NULL,
+  `event_category_owner_id` INT NOT NULL,
+  INDEX `fk_myuser_has_eventcategory_eventcategory1_idx` (`event_category_id` ASC) VISIBLE,
+  INDEX `fk_myuser_has_eventcategory_myuser1_idx` (`user_id` ASC) VISIBLE,
+  PRIMARY KEY (`event_category_owner_id`),
+  CONSTRAINT `fk_myuser_has_eventcategory_myuser1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`myuser` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_myuser_has_eventcategory_eventcategory1`
+    FOREIGN KEY (`event_category_id`)
+    REFERENCES `mydb`.`eventcategory` (`event_category_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 
