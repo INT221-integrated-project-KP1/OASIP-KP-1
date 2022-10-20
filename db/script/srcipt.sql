@@ -71,7 +71,6 @@ CREATE TABLE `myuser` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3;
 
 
-
 CREATE TABLE IF NOT EXISTS `mydb`.`event_category_owner` (
   `user_id` INT NULL,
   `event_category_id` INT NOT NULL,
@@ -91,7 +90,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`event_category_owner` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
-
 
 
 CREATE USER IF NOT EXISTS  'dev'@'%' IDENTIFIED BY '123';
