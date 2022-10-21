@@ -2,7 +2,9 @@
 
 import ListUser from "../components/ListUser.vue";
 import { userData } from "../stores/userData.js"
+import { cookieData } from "../stores/cookieData"
 
+const cookie = cookieData();
 const myUserData = userData();
 
 
@@ -10,7 +12,7 @@ const myUserData = userData();
 
 <template>
   <div>
-    <div v-if="myUserData.permissions == 403" class="grid justify-items-center m-10 p-5">
+    <div v-if="cookie.getCookie('role') !== 'ADMIN'" class="grid justify-items-center m-10 p-5">
       <div class="card w-96 glass">
         <figure><img src="../assets/AdminPNG/nope.jpg" alt="gif2"></figure>
         <div class="card-body">

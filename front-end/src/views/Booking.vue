@@ -2,6 +2,7 @@
 import { ref, computed, onBeforeMount } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
+import { cookieData } from "../stores/cookieData"
 
 
 
@@ -10,10 +11,11 @@ myEvents.boolOverlap = true;
 
 
 const myCategorys = categorys()
+const cookie = cookieData()
 
 const error = ref();
 const errorWarning = ref();
-const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
+const newEvent = ref({ name: cookie.getCookie('name'), notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" } });
 
 
 
@@ -195,7 +197,9 @@ error.value = er
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <input maxlength="100" :class="validateEventName ?
+                <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
+
+                <input  v-else maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your name" v-model="newEvent.name" /><br>
@@ -206,11 +210,16 @@ error.value = er
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail && newEvent.email.length > 0"
                     style="color: red;">*Invalid Email</span>
                 </label>
-                <input :class="validateEventEmail ?
+<!-- else student -->
+              <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
+                 <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="mail@gmail.com" v-model="newEvent.email" />
               </div>
+
+
+
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Notes :

@@ -6,7 +6,6 @@ import router from "../router/index.js";
 
 export const userData = defineStore("userDataState", () => {
   const myRouter = router;
-  const permissions = ref();
   const userList = ref([]);
   const cookie = cookieData();
   const validateUniqueName = (id, name) => {
@@ -93,11 +92,10 @@ export const userData = defineStore("userDataState", () => {
           }
         } else if (res.status === 403) {
           console.log("only admin wtf dog");
-          permissions.value = 403;
         } else {
           console.log("error, cannot get data");
         }
-      } else permissions.value = 403;
+      }
     } catch (err) {
       console.log("ERROR: " + err);
     }
@@ -284,7 +282,6 @@ export const userData = defineStore("userDataState", () => {
     validateUniqueName,
     validateUniqueEmail,
     refreshToken,
-    permissions,
     parseJwt,
     isLogin,
   };

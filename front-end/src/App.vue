@@ -9,7 +9,6 @@ const myuserData = userData()
 
 const cookie = cookieData()
 const myRouter = useRouter()
-const statusToken = ref()
 
 const goWelcome = () => {
   myRouter.push({ name: 'Welcome' })
@@ -18,8 +17,9 @@ const goWelcome = () => {
 const logoutFun = () => {
   cookie.setCookie("token", "", -1)
   cookie.setCookie("name", "", -1)
+  cookie.setCookie("role", "", -1)
+  cookie.setCookie("email", "", -1)
   cookie.setCookie("refreshtoken", "", -1)
-  myuserData.permissions = 0
   myRouter.push({ name: 'Welcome' })
 }
 // const signIn = () => {
@@ -41,7 +41,7 @@ const checkToken = () => {
 
   <div>
     <div class="navbar bg-white"
-      v-show="!($route.name === 'Welcome' || ($route.name === 'SignUp' && myuserData.permissions === 403 ) || $route.name === 'SignIn' ) ">
+      v-show="!($route.name === 'Welcome' || $route.name === 'SignIn' ) ">
       <div class="navbar-start">
 
 
@@ -101,7 +101,7 @@ const checkToken = () => {
           </div>
        
            
-                <router-link :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
+                <router-link  v-show="cookie.getCookie('role') !== 'LECTURER'||cookie.getCookie('token') == ''" :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
                 Add event </router-link>
 
             <router-link :to="{ name: 'ListCategory' }"
@@ -116,12 +116,12 @@ const checkToken = () => {
   <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link> -->
 
-            <div v-if="myuserData.permissions !== 403">
+            <div v-show="cookie.getCookie('role') === 'ADMIN'||cookie.getCookie('token') == ''" >
               <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
                 Sign Up </router-link>
             </div>
 
-            <router-link v-show="cookie.getCookie('token') == '' || myuserData.permissions === 403 ? false : true"
+            <router-link  v-show="cookie.getCookie('role') === 'ADMIN' "
               :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User
             </router-link>
 
