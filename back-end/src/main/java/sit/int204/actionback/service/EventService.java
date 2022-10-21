@@ -99,11 +99,19 @@ public class EventService {
         String requestTokenHeader = request.getHeader("Authorization");
         String myRole = "";
         String email = "";
+        int leuturerId = 0;
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             String header = requestTokenHeader.substring(7);
             email = jwtTokenUtil.getUsernameFromToken(header);
             myRole = userRepository.findByEmail(email).getRole();
+            User user = userRepository.findByEmail(email);
+            leuturerId = user.getId();
         }
+        if(leuturerId != 0){
+            List<Event> event = eventRepository.findAllEventByLecturerCategory(leuturerId);
+            return listMapper.mapList(event, SimpleEventDTO.class, modelMapper);
+        }
+
         if(myRole.equals((Role.STUDENT).toString())){
             if(date.equals("")){
                 if(eventCategoryId <= 0){

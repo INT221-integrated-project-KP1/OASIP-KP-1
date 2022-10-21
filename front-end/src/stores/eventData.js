@@ -11,6 +11,7 @@ export const events = defineStore("eventListState", () => {
   const tempOverLabCheck = ref([]);
   const boolOverlap = ref(true);
   const myCookie = cookieData();
+  
   const myUserData = userData();
   const filterList = ref({
     eventCategoryId: 0,
@@ -159,7 +160,22 @@ export const events = defineStore("eventListState", () => {
         }
       );
       if (res.status === 200) {
-        const eventsToAdd = await res.json();
+        let eventsToAdd = await res.json();
+          //filter in front
+          if(filterPastOrFutureOrAll == "future"){
+            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime) > new Date())
+          }
+          if(filterPastOrFutureOrAll == "past"){
+            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime) < new Date())
+          }
+          if(date != ""){
+            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime).getDate() == new Date(date).getDate() && new Date(a.eventStartTime).getMonth() == new Date(date).getMonth() && new Date(a.eventStartTime).getFullYear() == new Date(date).getFullYear())
+          }
+          if(filterList.value.eventCategoryId != 0){
+            eventsToAdd = eventsToAdd.filter((a)=> a.eventCategory.id == filterList.value.eventCategoryId)
+          }
+        
+
         update(eventsToAdd);
       } else if (res.status === 401) {
         let resText = await res.text();
@@ -207,6 +223,9 @@ export const events = defineStore("eventListState", () => {
         if (eventsToAdd.length < pageSize.value) {
           checkLoaded.value = false;
         }
+        console.log("asdadasdasd");
+
+
 
         update(eventsToAdd);
       } else if (res.status === 401) {
