@@ -226,7 +226,7 @@ export const userData = defineStore("userDataState", () => {
         if (
           resJson.message
             .toUpperCase()
-            .match("cannot refresh token. need to login again".toUpperCase)
+            .match("cannot refresh token. need to login again".toUpperCase) || resJson.message.toUpperCase().match("Claims == null, Cant't Refresh".toUpperCase())
         ) {
           cookie.setCookie("token", "", -1);
           cookie.setCookie("refreshtoken", "", -1);
