@@ -22,7 +22,8 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private EventCategoryOwnerService eventCategoryOwnerService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -40,6 +41,7 @@ public class UserService {
                         "Does Not Exist !!!"
                 ));
         ;
+        eventCategoryOwnerService.deleteForOwner(id);
         userRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
 
