@@ -9,12 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.dtos.UserAddDTO;
 import sit.int204.actionback.dtos.UserModifyDTO;
 import sit.int204.actionback.entities.User;
+import sit.int204.actionback.enumfile.Role;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +29,8 @@ public class UserService {
     private EventCategoryOwnerService eventCategoryOwnerService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private ListMapper listMapper;
 
@@ -34,14 +38,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public ResponseEntity deleteUser(Integer id) {
+    public ResponseEntity deleteUser(Integer id , HttpServletRequest request) {
         userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
-        ;
-        eventCategoryOwnerService.deleteForOwner(id);
+        String requestTokenHeader = request.getHeader("Authorization");
+        String header = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(header);
+        String myRole = userRepository.findByEmail(email).getRole();
+        if(myRole.equals(Role.LECTURER.toString())){
+            eventCategoryOwnerService.deleteForOwner(id);
+        }
         userRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
 

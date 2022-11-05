@@ -10,6 +10,8 @@ import sit.int204.actionback.dtos.UserModifyDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.service.UserService;
 import sit.int204.actionback.utils.ListMapper;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -44,8 +46,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
+    public void deleteUser(@PathVariable Integer id , HttpServletRequest request) {
+        userService.deleteUser(id,request);
     }
 
 
