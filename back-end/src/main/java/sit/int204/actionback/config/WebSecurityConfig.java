@@ -87,8 +87,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
                 //delete put post
                 .and().authorizeRequests().antMatchers("/api/event/all").hasAnyAuthority("ADMIN","STUDENT","LECTURER")
-                .and().authorizeRequests().antMatchers("/api/event/adding").hasAnyAuthority("ADMIN", "STUDENT", null, "")
-                .and().authorizeRequests().antMatchers("/api/event/overlapping").hasAnyAuthority("ADMIN", "STUDENT", null, "")
+                .and().authorizeRequests().antMatchers("/api/event/adding").hasAnyAuthority("ADMIN", "STUDENT")
+                .and().authorizeRequests().antMatchers("/api/event/overlapping").hasAnyAuthority("ADMIN", "STUDENT")
                 .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
 
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()

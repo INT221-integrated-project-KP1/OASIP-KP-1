@@ -110,5 +110,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("THIS ID NOT EXIST: " + id);
         }
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user.get(), User.class));     }
+
+
 }
 

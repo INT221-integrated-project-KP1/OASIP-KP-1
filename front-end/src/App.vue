@@ -56,22 +56,22 @@ const checkToken = () => {
             <li>
               <router-link :to="{ name: 'Home' }">Home </router-link>
             </li>
-            <li>
+            <li  v-if="cookie.getCookie('token') !== ''">
               <router-link :to="{ name: 'List' }"> List Event All </router-link>
             </li>
-            <li>
+            <li  v-show="cookie.getCookie('role') === 'ADMIN' || cookie.getCookie('role') === 'STUDENT' ">
               <router-link :to="{ name: 'Booking' }"> Add event </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'ListCategory' }"> List Category </router-link>
             </li>
-            <!-- <li>
+            <li v-show="cookie.getCookie('role') === 'ADMIN'||cookie.getCookie('token') == ''">
               <router-link :to="{ name: 'SignUp' }"> Sign Up </router-link>
             </li>
-            <li>
+            <!-- <li>
               <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
             </li> -->
-            <li v-show="cookie.getCookie('token') == '' ? false : true">
+            <li v-show="cookie.getCookie('role') === 'ADMIN' ">
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
               <!-- <p @click="signIn"> List User </p> -->
             </li>
@@ -101,7 +101,7 @@ const checkToken = () => {
           </div>
        
            
-                <router-link  v-show="cookie.getCookie('role') !== 'LECTURER'||cookie.getCookie('token') == ''" :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
+                <router-link  v-show="cookie.getCookie('role') === 'ADMIN' || cookie.getCookie('role') === 'STUDENT' " :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
                 Add event </router-link>
 
             <router-link :to="{ name: 'ListCategory' }"

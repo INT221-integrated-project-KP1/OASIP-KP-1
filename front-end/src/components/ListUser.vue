@@ -14,6 +14,7 @@ const myRouter = useRouter()
 const goSignup = () => {
     myRouter.push({ name: 'SignUp' })
 }
+const roleList = ['ADMIN', 'LECTURER', 'STUDENT']
 
 // GET BY ID
 const getUserById = async (id) => {
@@ -162,7 +163,7 @@ myUserData.getUsers();
                                         <div class="card-body bg-white">
                                             <p class="card-title"> Name: {{ user.name }} </p>
                                             <p class="card-title" v-if="user.email !== undefined"> Email: {{
-                                            user.email
+                                                    user.email
                                             }}</p>
                                             <p class="card-title"> Role: {{ user.role }} </p>
 
@@ -213,8 +214,15 @@ myUserData.getUsers();
                                         " v-model="selectedUser.email" placeholder="emaill ..." /><br>
                                         <span>{{ 50 - selectedUser.email.length }}/50</span>
                                     </div>
-
-                                    <p class="py-2">role: {{ selectedUser.role }}</p>
+                                    <p class="py-2">
+                                        <select v-model="selectedUser.role"
+                                            class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-400">
+                                            <option v-for="(role, index) in roleList" :key="index" :value="role">
+                                                {{ role }}
+                                            </option>
+                                        </select>
+                                    </p>
+                                    <!-- <p class="py-2">role: {{ selectedUser.role }}</p> -->
                                     <p class="py-2">Created On: {{ selectedUser.createdOn }}</p>
                                     <p class="py-2">updatedOn: {{ selectedUser.updatedOn }} </p>
 
@@ -236,7 +244,7 @@ myUserData.getUsers();
                 </div>
 
 
-                
+
                 <div v-else class="grid justify-items-center">
                     <div class="card w-96 glass">
                         <figure><img src="../assets/gif2.gif" alt="gif2"></figure>
