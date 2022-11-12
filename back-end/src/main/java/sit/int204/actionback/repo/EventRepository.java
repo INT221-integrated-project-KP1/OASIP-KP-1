@@ -39,10 +39,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findAllByBookingEmail(String bookingEmail , Sort sort);
     List<Event> findAll(Sort sort);
 
+    Event findEventByAttachment(String attachment);
+
     //หาตาม lecturer
     @Query(value = "select e.* from event e join eventCategory ec on e.event_category_id = ec.event_category_id join event_category_owner eco on ec.event_category_id = eco.event_category_id where eco.user_id = :lecturer_id order by e.event_start_time desc", nativeQuery = true)
     List<Event> findAllEventByLecturerCategory(Integer lecturer_id);
 
 //    @Query(value = "select e.* from event e join event_category_owner eco on e.eventCategory = eco.eventCategory_id where eco.user_id = :lecturer_id and e.event_id = :event_id order by e.eventStartTime desc", nativeQuery = true)
 //    Event findEventByLecturerCategory(Integer lecturer_id, Integer event_id);
+
+    @Query(value = "update event set attachment = :eAttachment where event_id = :eId",nativeQuery = true)
+    @Transactional
+    @Modifying
+    void updateAttachment(@Param("eId") Integer id, @Param("eAttachment") String attachment);
 }
