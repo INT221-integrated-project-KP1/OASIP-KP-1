@@ -13,7 +13,7 @@ const myCategorys = categorys()
 
 const error = ref();
 const errorWarning = ref();
-const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } });
+const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } ,file:new FormData() });
 
 
 
@@ -67,7 +67,7 @@ const createNewEvent = async () => {
     errorWarning.value = status.error
   if (status.status == 1) {
     myEvents.getEventsFilteredMorePageThatLoaded();
-    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } };
+    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" },file: new FormData() };
   }
   statusError.value = status.status
   error.value = status.error
@@ -89,6 +89,37 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
+const fileError = () =>{
+  if (newEvent.file.files[0].size > 10485760){
+    alert("File is too big!");
+    newEvent.file = "";
+    return false
+  }
+  return true 
+}
+
+const upload = (e) =>{
+            e.preventDefault();
+            let files = this.$$.avatar.files;
+            let data = new FormData();
+            // for single file
+            data.append('avatar', files[0]);
+           // Or for multiple files you can also do
+            //  _.each(files, function(v, k){
+            //    data.append('avatars['+k+']', v);
+           // });
+
+           
+}
+
+const onChangeFile = (event) => {
+  event.preventDefault();
+  let files = this.$$.avatar.files;
+      let data = new FormData();
+      data.append('avatar', files[0]);
+      newEvent.file = data
+      alert(data)
+}
 const check = async () => {
   const bool1 = checkProperties(newEvent.value);
   const bool2 = validateEventEmail.value
@@ -96,6 +127,11 @@ const check = async () => {
   const bool4 = myEvents.validateEventNotes(newEvent.value)
   const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
   const bool6 = myEvents.boolOverlap
+  let bool7 = true
+  if(newEvent.file != null) {
+    bool7 = fileError()
+  }
+
 let er=""
 if(!bool1){
 er += "Value has null\n"
@@ -115,16 +151,19 @@ if(!bool2){
     if(!bool6){
       er += "Time is OverLap\n"
     }
+    if(!bool7){
+      er += "File is too big\n"
+    }
 
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
-  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6){
+  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6 && bool7){
     createNewEvent()
   }else{
 error.value = er    
     errorInsert();
   }
 
-  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6
+  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6 && bool7
 
 }
 </script>
@@ -260,6 +299,16 @@ error.value = er
                 <input type="text"
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                   disabled v-model="newEvent.eventCategory.duration" />
+              </div>
+              
+              <div class="space-y-2">
+                <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                  File:
+                </label>
+                <input type="file"
+                  :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
+                  id="avatar" name="avatar" @change="onChangeFile"  />
+                  
               </div>
 
               <div>
