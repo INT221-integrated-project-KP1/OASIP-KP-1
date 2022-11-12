@@ -3,6 +3,7 @@ import { ref, computed, onBeforeMount } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
 import { cookieData } from "../stores/cookieData"
+import { fileData } from "../stores/fileData.js";
 
 
 
@@ -12,7 +13,7 @@ myEvents.boolOverlap = true;
 
 const myCategorys = categorys()
 const cookie = cookieData()
-
+const file = fileData()
 const error = ref();
 const errorWarning = ref();
 const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } ,file:"" });
@@ -67,7 +68,7 @@ const createNewEvent = async () => {
   console.log("filename === "+newEvent.value.file)
   if(newEvent.value.file.length > 0){
     alert('Test')
-  uploadFile()
+    file.uploadFile(newEvent)
   }
 
 
@@ -98,14 +99,7 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const fileError = () =>{
-  if (newEvent.file.files[0].size > 10485760){
-    alert("File is too big!");
-    newEvent.file = "";
-    return false
-  }
-  return true 
-}
+
 
 // const upload = (e) =>{
 //             e.preventDefault();
@@ -126,43 +120,7 @@ const checkFile = () => {
   alert(newEvent.value.file)
 }
 
-//upfile นะ
-const uploadFile = async () => {
 
-  if( 
-      !(document.getElementById("fileupload").files[0].size /1024/1024 > 10) 
-      ){
-      let data = new FormData();
-      data.append(
-      "file",document.getElementById("fileupload").files[0],newEvent.value.file
-      )
-      alert(newEvent.value.file)
-    
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/upload`,{
-        method: "POST", 
-        headers: {
-            Authorization: "Bearer " + cookie.getCookie("token"),
-          },
-        body: data
-      })
-      alert(res.status)
-      if (res.status === 200) {
-        alert("uploaded");
-      } else if (res.status === 404) {
-        let resText = await res.text();
-        if (resText.toUpperCase().match("TOKENEXPIRED")) {
-          //ได้ละ
-          console.log("real");
-          myUserData.refreshToken();
-        } else {
-        console.log("cant upload");
-      }
-      }   
-    } else {
-        alert("File is too big!");
-      }
- 
-};
 
 
 const check = async () => {
