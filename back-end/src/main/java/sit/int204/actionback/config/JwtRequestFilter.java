@@ -60,13 +60,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 // allow for Refresh Token creation if following conditions are true.
                 Claims claims = getAllClaimsFromToken(jwtToken);
                 if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
-                    allowForRefreshToken(claims, request);
+                    if(claims.getExpiration().getTime() - claims.getIssuedAt().getTime() == 86400000){
+                        if(claims.getExpiration().getTime() > Instant.now().toEpochMilli()) {
+                            allowForRefreshToken(claims, request);
+                        }
+                    }
                 }
 
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException ex) {
-                if (ex.getClaims().getExpiration().getTime() - ex.getClaims().getIssuedAt().getTime() > 1790000) {
+                if (ex.getClaims().getExpiration().getTime() - ex.getClaims().getIssuedAt().getTime() > 1800000) {
                     System.out.println("JWT Refresh Token has expired");
                     request.setAttribute("message", "cannot refresh token. need to login again");
 
@@ -100,6 +104,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+        System.out.println("Test");
         chain.doFilter(request, response);
     }
 

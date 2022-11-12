@@ -1,11 +1,16 @@
 package sit.int204.actionback.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.Instant;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "event")
 public class Event {
     @Id
@@ -34,59 +39,7 @@ public class Event {
     @Max(480)
     private Integer eventDuration;
 
-    public Integer getEventDuration() {
-        return eventDuration;
-    }
+    @Column(name = "attachment")
+    private String attachment;
 
-    public void setEventDuration(Integer eventDuration) {
-        this.eventDuration = eventDuration;
-    }
-
-    public EventCategory getEventCategory() {
-        return eventCategory;
-    }
-
-    public void setEventCategory(EventCategory eventCategory) {
-        this.eventCategory = eventCategory;
-    }
-
-    public Instant getEventStartTime() {
-        return eventStartTime;
-    }
-
-    public void setEventStartTime(Instant eventStartTime) {
-        this.eventStartTime = eventStartTime;
-    }
-
-    public String getEventNotes() {
-        return eventNotes;
-    }
-
-    public void setEventNotes(String eventNotes) {
-        this.eventNotes = eventNotes;
-    }
-
-    public String getBookingEmail() {
-        return bookingEmail;
-    }
-
-    public void setBookingEmail(String bookingEmail) {
-        this.bookingEmail = bookingEmail;
-    }
-
-    public String getBookingName() {
-        return bookingName;
-    }
-
-    public void setBookingName(String bookingName) {
-        this.bookingName = bookingName;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }

@@ -2,6 +2,7 @@
 import { ref, computed, onBeforeMount } from "vue";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
+import { cookieData } from "../stores/cookieData"
 
 
 
@@ -10,10 +11,11 @@ myEvents.boolOverlap = true;
 
 
 const myCategorys = categorys()
+const cookie = cookieData()
 
 const error = ref();
 const errorWarning = ref();
-const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } ,file:new FormData() });
+const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } ,file:"" });
 
 
 
@@ -62,12 +64,19 @@ const validateEventEmail = computed(() => {
 const createNewEvent = async () => {
   newEvent.value.notes = newEvent.value.notes.trimStart().trimEnd();
   newEvent.value.name = newEvent.value.name.trimEnd();
+  console.log("filename === "+newEvent.value.file)
+  if(newEvent.value.file.length > 0){
+    alert('Test')
+  uploadFile()
+  }
+
+
   const status = await myEvents.createNewEvent(newEvent.value);
   console.log(status, 'tusCheckStauts');
     errorWarning.value = status.error
   if (status.status == 1) {
     myEvents.getEventsFilteredMorePageThatLoaded();
-    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" },file: new FormData() };
+    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" },file: "" };
   }
   statusError.value = status.status
   error.value = status.error
@@ -98,28 +107,64 @@ const fileError = () =>{
   return true 
 }
 
-const upload = (e) =>{
-            e.preventDefault();
-            let files = this.$$.avatar.files;
-            let data = new FormData();
-            // for single file
-            data.append('avatar', files[0]);
-           // Or for multiple files you can also do
-            //  _.each(files, function(v, k){
-            //    data.append('avatars['+k+']', v);
-           // });
+// const upload = (e) =>{
+//             e.preventDefault();
+//             let files = this.$$.avatar.files;
+//             let data = new FormData();
+//             // for single file
+//             data.append('avatar', files[0]);
+//            // Or for multiple files you can also do
+//             //  _.each(files, function(v, k){
+//             //    data.append('avatars['+k+']', v);
+//            // });
 
            
+// }
+const checkFile = () => {
+  let time = new Date(new Date().toISOString()).getTime();
+  newEvent.value.file = time + "_" + document.getElementById("fileupload").files[0].name
+  alert(newEvent.value.file)
 }
 
-const onChangeFile = (event) => {
-  event.preventDefault();
-  let files = this.$$.avatar.files;
+//upfile นะ
+const uploadFile = async () => {
+
+  if( 
+      !(document.getElementById("fileupload").files[0].size /1024/1024 > 10) 
+      ){
       let data = new FormData();
-      data.append('avatar', files[0]);
-      newEvent.file = data
-      alert(data)
-}
+      data.append(
+      "file",document.getElementById("fileupload").files[0],newEvent.value.file
+      )
+      alert(newEvent.value.file)
+    
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/upload`,{
+        method: "POST", 
+        headers: {
+            Authorization: "Bearer " + cookie.getCookie("token"),
+          },
+        body: data
+      })
+      alert(res.status)
+      if (res.status === 200) {
+        alert("uploaded");
+      } else if (res.status === 404) {
+        let resText = await res.text();
+        if (resText.toUpperCase().match("TOKENEXPIRED")) {
+          //ได้ละ
+          console.log("real");
+          myUserData.refreshToken();
+        } else {
+        console.log("cant upload");
+      }
+      }   
+    } else {
+        alert("File is too big!");
+      }
+ 
+};
+
+
 const check = async () => {
   const bool1 = checkProperties(newEvent.value);
   const bool2 = validateEventEmail.value
@@ -127,10 +172,6 @@ const check = async () => {
   const bool4 = myEvents.validateEventNotes(newEvent.value)
   const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
   const bool6 = myEvents.boolOverlap
-  let bool7 = true
-  if(newEvent.file != null) {
-    bool7 = fileError()
-  }
 
 let er=""
 if(!bool1){
@@ -151,19 +192,18 @@ if(!bool2){
     if(!bool6){
       er += "Time is OverLap\n"
     }
-    if(!bool7){
-      er += "File is too big\n"
-    }
+    
+
 
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
-  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6 && bool7){
-    createNewEvent()
+  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6 ){
+    createNewEvent();
   }else{
 error.value = er    
     errorInsert();
   }
 
-  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6 && bool7
+  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6 
 
 }
 </script>
@@ -234,7 +274,9 @@ error.value = er
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <input maxlength="100" :class="validateEventName ?
+                <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
+
+                <input  v-else maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your name" v-model="newEvent.name" /><br>
@@ -245,11 +287,16 @@ error.value = er
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail && newEvent.email.length > 0"
                     style="color: red;">*Invalid Email</span>
                 </label>
-                <input :class="validateEventEmail ?
+<!-- else student -->
+              <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
+                 <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="mail@gmail.com" v-model="newEvent.email" />
               </div>
+
+
+
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Notes :
@@ -307,7 +354,7 @@ error.value = er
                 </label>
                 <input type="file"
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
-                  id="avatar" name="avatar" @change="onChangeFile"  />
+                  id="fileupload" @change="checkFile" />
                   
               </div>
 

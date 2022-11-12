@@ -62,14 +62,14 @@ public class ApiTestException extends ResponseEntityExceptionHandler{
 //    }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
-        System.out.println("All exceptions Method getting executed!!!!");
-
-        final List<String> details = new ArrayList<>();
-        details.add(ex.getMessage());
-        return new ResponseEntity(details, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
+//        System.out.println("All exceptions Method getting executed!!!!");
+//
+//        final List<String> details = new ArrayList<>();
+//        details.add(ex.getMessage());
+//        return new ResponseEntity(details, HttpStatus.NOT_FOUND);
+//    }
 
 
 }

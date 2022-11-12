@@ -56,9 +56,14 @@ const MatchingCheck = async (login) => {
             if (res.status === 200) {
                 const objectJson = await res.json()
                 ////
-                cookie.setCookie(Object.keys(objectJson)[0], Object.values(objectJson)[0], 7)
-                cookie.setCookie(Object.keys(objectJson)[1], Object.values(objectJson)[1], 7)
-                cookie.setCookie(Object.keys(objectJson)[2], Object.values(objectJson)[2], 7)
+                for (let i in Object.keys(objectJson)) {
+                    cookie.setCookie(Object.keys(objectJson)[i], Object.values(objectJson)[i], 7)
+                }
+                let jsonFromToken = userStore.parseJwt(cookie.getCookie("token"))
+                cookie.setCookie("name", jsonFromToken.name, 7)
+                cookie.setCookie("role", jsonFromToken.role, 7)
+                cookie.setCookie("email", jsonFromToken.sub, 7)
+
                 ////
                 matchstatus.value = "Sucesss"
                 statusError.value = 1;
@@ -75,7 +80,7 @@ const MatchingCheck = async (login) => {
             }
         } catch (err) {
             console.log(err);
-            errorInsert()
+            // errorInsert()
             alert(err);
         }
 
@@ -159,15 +164,15 @@ const loaderEnd = () => {
             </div>
         </div>
     </div>
-    
+
 
     <div class="relative">
         <!-- หลอดพลังรอโหลด -->
         <progress id="busy" v-if="isProgress" class=" progress progress-success h-6 w-56 absolute top-1/3 left-1/2"
             :value="progress" max="100"></progress>
-        
 
-            <!-- Content -->
+
+        <!-- Content -->
         <div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
             <div class="container px-6 mx-auto">
                 <div class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center">
@@ -249,4 +254,5 @@ const loaderEnd = () => {
 </template>
  
 <style>
+
 </style>

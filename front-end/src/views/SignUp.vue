@@ -149,7 +149,6 @@ const check = async () => {
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
   if (bool1 && bool2 && bool3 && bool4 && bool5 && bool6) {
     createNewUser()
-    alert('Sign up complete')
   } else {
     error.value = er
     errorInsert();
@@ -268,7 +267,7 @@ const check = async () => {
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-                  @click="check();  myRouter.push({ name: 'SignIn' })">Register
+                  @click="check();">Register
                 </button>
               </div>
             </div>

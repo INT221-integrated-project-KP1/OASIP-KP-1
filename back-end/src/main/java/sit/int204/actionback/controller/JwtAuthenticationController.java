@@ -53,19 +53,18 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
 //        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         UserDetails user = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-        String name = userRepository.findByEmail(authenticationRequest.getEmail()).getName();
+        User myUser = userRepository.findByEmail(authenticationRequest.getEmail());
 
         Argon2 argon2 = Argon2Factory.create();
         if (argon2.verify(user.getPassword(), authenticationRequest.getPassword())) {
 //            final UserDetails userDetails = userDetailsService
 //                    .loadUserByUsername(authenticationRequest.getUsername());
 //            UserDetails userDetails = new org.springframework.security.core.userdetails.User(authenticationRequest.getUsername(), authenticationRequest.getPassword(), new ArrayList<>());
-            final String token = jwtTokenUtil.generateToken(user, name);
-            final String token2 = jwtTokenUtil.generateRefreshToken(user, name);
+            final String token = jwtTokenUtil.generateToken(user, myUser.getName());
+            final String token2 = jwtTokenUtil.generateRefreshToken(user, myUser.getName());
             HashMap<String, String> objectToResponse = new HashMap<String, String>();
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
-            objectToResponse.put("name", name);
             return ResponseEntity.ok(objectToResponse);
         }
       else  return ResponseEntity.status(404).body("Password Invaild");
@@ -83,9 +82,13 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+        if(claims == null){
+            return ResponseEntity.status(403).body("Claims == null, Can't Refresh");
+        }
+
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
         objectToResponse.put("token", token);
