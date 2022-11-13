@@ -39,16 +39,19 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
+        System.out.println(fileName);
         return ResponseEntity.status(HttpStatus.OK).body(fileName + " uploaded!");
     }
 
     @DeleteMapping("/{filename:.+}")
-    public String deleteFile(@PathVariable String filename) {
+    public ResponseEntity deleteFile(@PathVariable String filename) {
         Event event = eventRepository.findEventByAttachment(filename);
         if(event != null){
             eventRepository.updateAttachment(event.getId(),null);
         }
-        return fileStorageService.deleteFile(filename);
+        String ans = fileStorageService.deleteFile(filename);
+        return ResponseEntity.status(HttpStatus.OK).body(ans);
+
     }
 
     @GetMapping("/get/{fileName:.+}")

@@ -2,6 +2,7 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 import { ref } from "vue";
 import { cookieData } from "../stores/cookieData.js";
 import { userData } from "../stores/userData.js";
+import { fileData } from "../stores/fileData.js";
 
 export const events = defineStore("eventListState", () => {
   const eventList = ref([]);
@@ -11,7 +12,8 @@ export const events = defineStore("eventListState", () => {
   const tempOverLabCheck = ref([]);
   const boolOverlap = ref(true);
   const myCookie = cookieData();
-  
+  const myFileData = fileData();
+
   const myUserData = userData();
   const filterList = ref({
     eventCategoryId: 0,
@@ -315,6 +317,8 @@ export const events = defineStore("eventListState", () => {
     } else console.log("error, cannot delete data");
   };
 
+
+  ///////อัพเดต
   //PUT
   const updateEvent = async (startTime, notes, id, duration) => {
     try {
@@ -331,6 +335,8 @@ export const events = defineStore("eventListState", () => {
         return { error: "Future time only $$", status: -1 };
       }
 
+
+      
       console.log("startTime: " + startTime);
       console.log("Notes: " + notes);
       console.log("id: " + id);

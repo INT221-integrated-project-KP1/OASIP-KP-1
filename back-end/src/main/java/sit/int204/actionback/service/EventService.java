@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.config.JwtTokenUtil;
+import sit.int204.actionback.controller.FileController;
 import sit.int204.actionback.dtos.*;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
@@ -41,6 +42,9 @@ public class EventService {
 
     @Autowired
     private EventCategoryRepository eventCategoryRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -319,6 +323,22 @@ public class EventService {
         event.setEventStartTime(editEvent.getEventStartTime());
         event.setEventNotes(editEvent.getEventNotes());
 
+        ///
+//        fileStorageService.deleteFile(editEvent.getAttachment());
+//        if(editEvent.getAttachment() != null){}
+
+//        if(editEvent.getAttachment() == event.getAttachment()){
+//            eventRepository.saveAndFlush(event);
+//
+//        }
+//        else if(editEvent.getAttachment() == null){
+//            fileStorageService.deleteFile(editEvent.getAttachment());
+//            event.setAttachment(null);
+//        }
+//        else if(editEvent.getAttachment() != event.getAttachment()){
+//            fileStorageService.deleteFile(editEvent.getAttachment());
+//
+//        }
         eventRepository.saveAndFlush(event);
 
 

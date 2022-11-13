@@ -68,7 +68,7 @@ const createNewEvent = async () => {
   console.log("filename === "+newEvent.value.file)
   if(newEvent.value.file.length > 0){
     alert('Test')
-    file.uploadFile(newEvent)
+    file.uploadFile(newEvent.value)
   }
 
 
@@ -78,9 +78,12 @@ const createNewEvent = async () => {
   if (status.status == 1) {
     myEvents.getEventsFilteredMorePageThatLoaded();
     newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" },file: "" };
+    document.getElementById("fileupload").value = null;
+  document.getElementById("fileupload").disabled = false;
   }
   statusError.value = status.status
   error.value = status.error
+
 
   topFunction();
   setTimeout(() => (statusError.value = 0), 2000);
@@ -118,9 +121,15 @@ const checkFile = () => {
   let time = new Date(new Date().toISOString()).getTime();
   newEvent.value.file = time + "_" + document.getElementById("fileupload").files[0].name
   alert(newEvent.value.file)
+  document.getElementById("fileupload").disabled = true;
 }
 
+const clearFile = () =>{
+  newEvent.value.file = "" 
+  document.getElementById("fileupload").disabled = false;
+  document.getElementById("fileupload").value = null;
 
+}
 
 
 const check = async () => {
@@ -313,9 +322,10 @@ error.value = er
                 <input type="file"
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                   id="fileupload" @change="checkFile" />
-                  
+               
               </div>
-
+              <button class=" flex justify-center btn hover:btn text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+               @click="clearFile">Clear File</button>  
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"

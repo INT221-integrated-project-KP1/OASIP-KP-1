@@ -20,4 +20,6 @@ public class SimpleEventDTO {
     private String bookingName;
     private String bookingEmail;
     private String eventNotes;
+    private String attachment;
+
 }

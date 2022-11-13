@@ -5,9 +5,12 @@ import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
 import { events } from "../stores/eventData.js"
 import { cookieData } from "../stores/cookieData.js"
+import { fileData } from "../stores/fileData.js"
+
 const myEvents = events()
 const myCookie = cookieData()
 const myRouter = useRouter()
+const myFile = fileData()
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
@@ -57,6 +60,9 @@ const getEventById = async (id) => {
 };
 
 
+
+
+
 defineEmits(["deleteEvent", "updateEvent"]);
 
 const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '' });
@@ -103,6 +109,10 @@ if (com) {
   } 
 }
 myEvents.getEvents();
+
+const downloadFile = (name) =>{
+  myFile.getFile(name);
+}
 
 </script>
 
@@ -161,6 +171,13 @@ myEvents.getEvents();
                       <p v-if="event.eventDetails !== undefined">
                         Event Details: {{ event.eventDetails }}
                       </p>
+                  
+
+                      <p >Attachment: {{ event.attachment }} 
+                        <button @click="downloadFile(event.attachment)" class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear inline"> 
+                          Download File
+                        </button>
+                      </p> 
                       <div v-if = "myCookie.getCookie('token') !== ''">
                       <div class="card-actions justify-end">
                         <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
@@ -213,7 +230,7 @@ myEvents.getEvents();
                     <p class="py-2">Event Notes : {{ selectedEvent.eventNotes }}</p>
                   </div>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-
+                  
                   <div class="modal-action">
                     <label
                       :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
