@@ -69,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 //        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
 //        httpSecurity.cors().disable();
+        System.out.println("sss");
         //on local ใช้อันนี้แก้ cor
         //บนคอมใช้อันนี้
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -77,7 +78,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "IsRefreshToken"));
         httpSecurity.csrf().disable().cors().configurationSource(request -> corsConfiguration.applyPermitDefaultValues()).and()
         //ถึงอันนี้ //
-
         // We don't need CSRF for this example
                 //onserver ใช้อันเก่า
 //        httpSecurity.csrf().disable() //ถ้าขึ้น server ใช้อันนี้
@@ -92,7 +92,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/api/event/overlapping").hasAnyAuthority("ADMIN", "STUDENT")
                 .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
 
-                .and().authorizeRequests().antMatchers("/api/file").permitAll()
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated().and().

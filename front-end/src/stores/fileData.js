@@ -44,7 +44,7 @@ const uploadFile = async (newEvent) => {
   };
 
   //delete นะ
-const deleteFile = async (newEvent) => {
+const deleteFile = async (name) => {
 
   // if( 
   //     !(document.getElementById("fileupload").files[0].size /1024/1024 > 10) 
@@ -53,17 +53,17 @@ const deleteFile = async (newEvent) => {
   //     data.append(
   //     "file",document.getElementById("fileupload").files[0],newEvent.file
   //     )
-      alert(newEvent.file)
+      alert(name)
     
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/${newEvent.file}`,{
-        method: "PUT", 
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/${name}`,{
+        method: "DELETE", 
         headers: {
             Authorization: "Bearer " + myCookie.getCookie("token"),
           }
       })
       alert(res.status)
       if (res.status === 200) {
-        alert("uploaded");
+        alert("Delete File");
       } else if (res.status === 404) {
         let resText = await res.text();
         if (resText.toUpperCase().match("TOKENEXPIRED")) {
@@ -88,13 +88,22 @@ const getFile = async (name) =>{
       }
   })
   alert(res.status)
+  
   if(res.status === 200 ){
-    const url = window.URL.createObjectURL(new Blob([res.data]))
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', name)
-    document.body.appendChild(link)
-    link.click()
+    const blob = await res.blob();
+    const newBlob = new Blob([blob]);
+
+    const blobUrl = window.URL.createObjectURL(newBlob);
+
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.setAttribute('download', `${name}`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+
+    // clean up Url
+    window.URL.revokeObjectURL(blobUrl);
   }
   else if (res.status === 401) {
     let resText = await res.text();

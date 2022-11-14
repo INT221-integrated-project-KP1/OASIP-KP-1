@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,9 @@ import sit.int204.actionback.repo.EventRepository;
 import sit.int204.actionback.service.FileStorageService;
 
 import java.io.IOException;
-
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +49,7 @@ public class FileController {
     @DeleteMapping("/{filename:.+}")
     public ResponseEntity deleteFile(@PathVariable String filename) {
         Event event = eventRepository.findEventByAttachment(filename);
+        System.out.println(event.getId());
         if(event != null){
             eventRepository.updateAttachment(event.getId(),null);
         }
@@ -68,6 +72,9 @@ public class FileController {
         }
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
     }
+
+
+
 
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

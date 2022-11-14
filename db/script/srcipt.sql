@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`event` (
   `event_start_time` DATETIME NOT NULL,
   `event_category_id` INT NOT NULL,
   `event_duration` INT NOT NULL,
+  `attachment` VARCHAR(100),
+
   PRIMARY KEY (`booking_id`),
   INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
   constraint `event` Check (booking_email like '%@%' and event_duration <= 480),

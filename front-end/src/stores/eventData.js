@@ -287,8 +287,10 @@ export const events = defineStore("eventListState", () => {
   };
 
   //REMOVE
-  const removeEvent = async (deleteId) => {
+  const removeEvent = async (deleteId,attachment) => {
     console.log(deleteId);
+    myFileData.deleteFile(attachment)
+alert("delete event")
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/event/${deleteId}`,
       {
@@ -300,6 +302,7 @@ export const events = defineStore("eventListState", () => {
       }
     );
     if (res.status === 200) {
+      alert("delete")
       eventList.value = eventList.value.filter(
         (event) => event.id !== deleteId
       );

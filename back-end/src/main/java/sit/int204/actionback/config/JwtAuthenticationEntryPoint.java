@@ -18,8 +18,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         String message = (String) request.getAttribute("message");
 
         response.setStatus(401);
-        response.getOutputStream().println(message);
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//        response.getOutputStream().println(message);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 
     }
 }

@@ -11,6 +11,9 @@ const myEvents = events()
 const myCookie = cookieData()
 const myRouter = useRouter()
 const myFile = fileData()
+
+const disNewFile = ref(true)
+const newAttachment = ref("")
 const goBooking = () => {
   myRouter.push({ name: 'Booking' })
 }
@@ -49,8 +52,8 @@ const getEventById = async (id) => {
         refreshToken()
       }
       if (resText.toUpperCase().match("cannot refresh token. need to login again".toUpperCase())) {
-        cookie.setCookie("token", "", -1)
-        cookie.setCookie("name", "", -1)
+        myCookie.setCookie("token", "", -1)
+        myCookie.setCookie("name", "", -1)
       }
     } else { console.log("error, cannot delete data"); };
     console.log(res.status);
@@ -65,7 +68,7 @@ const getEventById = async (id) => {
 
 defineEmits(["deleteEvent", "updateEvent"]);
 
-const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '' });
+const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '', attachment:'' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
@@ -102,10 +105,10 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const deleteFun = (id) =>{
+const deleteFun = (id,attachment) =>{
  let com = confirm("You want to delete a event");
 if (com) {
-  myEvents.removeEvent(id)
+  myEvents.removeEvent(id,attachment)
   } 
 }
 myEvents.getEvents();
@@ -114,6 +117,34 @@ const downloadFile = (name) =>{
   myFile.getFile(name);
 }
 
+const checkFile = () => {
+  let time = new Date(new Date().toISOString()).getTime();
+  newAttachment.value = time + "_" + document.getElementById("fileChange").files[0].name
+  document.getElementById("fileChange").disabled = true;
+}
+
+const closeUpnewFile = () => {
+  disNewFile.value = !disNewFile.value ; 
+  newAttachment.value = ''; 
+  document.getElementById("fileChange").disabled = false;
+  document.getElementById("fileChange").value = null;
+}
+
+const updateMyEvent = (selectedEvent) => {
+  let file1 = selectedEvent.attachment.split("_")[1]
+  let file2 = newAttachment.value.split("_")[1]
+  alert(file1)
+  alert(file2)
+  if(file1 !== file2){
+    alert("change file but dont update file")
+
+  }
+  else {
+    alert("กำลังทำ")
+  }
+
+  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration)
+}
 </script>
 
 <template>
@@ -173,11 +204,8 @@ const downloadFile = (name) =>{
                       </p>
                   
 
-                      <p >Attachment: {{ event.attachment }} 
-                        <button @click="downloadFile(event.attachment)" class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear inline"> 
-                          Download File
-                        </button>
-                      </p> 
+                      <p >Attachment: {{ event.attachment }}  </p>
+                      <button @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i class="fa fa-download"></i>  Download </button> 
                       <div v-if = "myCookie.getCookie('token') !== ''">
                       <div class="card-actions justify-end">
                         <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
@@ -185,7 +213,7 @@ const downloadFile = (name) =>{
                         ">Show
                           more... </label>
                         <label for="my-modal"
-                          class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline" @click="deleteFun(event.id)" >Delete</label>
+                          class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline" @click="deleteFun(event.id,event.attachment)" >Delete</label>
                         </div>
                       </div>
                     </div>
@@ -230,12 +258,22 @@ const downloadFile = (name) =>{
                     <p class="py-2">Event Notes : {{ selectedEvent.eventNotes }}</p>
                   </div>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
+                  <p class="py-2"> Attachment : {{ selectedEvent.attachment }}</p>
+                  <button v-show="disNewFile" @click="disNewFile = !disNewFile"> Open Upload New File </button>
+                  <button v-show="!disNewFile" @click="closeUpnewFile" > Close Upload New File </button>
                   
+                  <input v-show="!disNewFile" type="file"
+                  :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
+                  id="fileChange" @change="checkFile" />
+
+{{ newAttachment }}
+                  <!-- <button> Delete File </button> -->
+
                   <div class="modal-action">
                     <label
                       :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
                       for="my-modal-6"
-                      @click="EditEvent(editNotes, editStartTime, selectedEvent.id, selectedEvent.eventDuration)">Update</label>
+                      @click="updateMyEvent(selectedEvent)">Update</label>
                     <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
