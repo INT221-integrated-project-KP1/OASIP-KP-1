@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "insert into myuser (name, email, role, password , updatedOn , createOn) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()}, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP )", nativeQuery = true)
+    @Query(value = "insert into myuser (name, email, role, password , updatedOn , createdOn) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()}, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP )", nativeQuery = true)
     @Modifying
     @Transactional
     public void saveUser(@Param("user") User user);
