@@ -48,6 +48,7 @@ public class FileController {
 
     @DeleteMapping("/{filename:.+}")
     public ResponseEntity deleteFile(@PathVariable String filename) {
+        System.out.println(filename);
         Event event = eventRepository.findEventByAttachment(filename);
         System.out.println(event.getId());
         if(event != null){
