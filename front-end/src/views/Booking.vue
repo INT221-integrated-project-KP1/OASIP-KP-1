@@ -246,7 +246,7 @@ error.value = er
                 <input  v-else maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newEvent.name" :value="newEvent.name"/><br>
+                " placeholder="Enter your name" v-model="newEvent.name" :value="cookie.getCookie('name')"/><br>
                 <span>{{ 100-newEvent.name.length}}/100</span>
               </div>
 
@@ -259,7 +259,7 @@ error.value = er
                  <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="newEvent.email" :value="newEvent.email" />
+                " placeholder="mail@gmail.com" v-model="newEvent.email" :value="cookie.getCookie('email')" />
               </div>
 
 
