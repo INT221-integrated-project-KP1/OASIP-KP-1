@@ -241,7 +241,7 @@ error.value = er
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
+                <div v-if = "cookie.getCookie('role') === 'STUDENT'|| cookie.getCookie('role') === 'ADMIN'"> {{ newEvent.name }}</div>
 
                 <input  v-else maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
@@ -255,7 +255,7 @@ error.value = er
                     style="color: red;">*Invalid Email</span>
                 </label>
 <!-- else student -->
-              <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
+              <div v-if = "cookie.getCookie('role') === 'STUDENT'|| cookie.getCookie('role') === 'ADMIN'"> {{ newEvent.email }}</div>
                  <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
