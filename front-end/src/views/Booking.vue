@@ -241,12 +241,12 @@ error.value = er
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <div v-if = "cookie.getCookie('role') === 'STUDENT'|| cookie.getCookie('role') === 'ADMIN'"> {{ newEvent.name }}</div>
+                <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
 
                 <input  v-else maxlength="100" :class="validateEventName ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newEvent.name" /><br>
+                " placeholder="Enter your name" v-model="newEvent.name" :value="newEvent.name"/><br>
                 <span>{{ 100-newEvent.name.length}}/100</span>
               </div>
 
@@ -255,11 +255,11 @@ error.value = er
                     style="color: red;">*Invalid Email</span>
                 </label>
 <!-- else student -->
-              <div v-if = "cookie.getCookie('role') === 'STUDENT'|| cookie.getCookie('role') === 'ADMIN'"> {{ newEvent.email }}</div>
+              <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
                  <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="newEvent.email" />
+                " placeholder="mail@gmail.com" v-model="newEvent.email" :value="newEvent.email" />
               </div>
 
 
