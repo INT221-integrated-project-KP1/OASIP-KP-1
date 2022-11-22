@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router'
 import { cookieData } from "../stores/cookieData.js"
 export const categorys = defineStore('categoryListState',() => {
     const categoryList = ref([])
+    const { params } = useRouter()
+    const myRouter = useRouter()
+
     const myCookie = cookieData()
     //GET ทำเเล้ว
     const getEventCategory = async () => {
@@ -34,7 +37,8 @@ export const categorys = defineStore('categoryListState',() => {
             }
         } catch (err) {
             console.log(err);
-        }
+            myRouter.push({ name: 'SignIn' })
+          }
     };
 
     //PUT ทำเเล้ว
@@ -68,6 +72,8 @@ export const categorys = defineStore('categoryListState',() => {
               console.log("real");
               myUserData.refreshToken()
           }
+          else {  myRouter.push({ name: 'SignIn' })
+        }
       }
         else {
           console.log('error, cannot edit')

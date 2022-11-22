@@ -1,12 +1,16 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref} from 'vue'
 import { cookieData } from "../stores/cookieData.js"
+import { useRouter } from "vue-router";
 
 export const fileData = defineStore("fileState", () => {
     const myCookie = cookieData();
 
 //upfile นะ
 const uploadFile = async (newEvent) => {
+
+  const { params } = useRouter();
+  const myRouter = useRouter();
 
     if( 
         !(document.getElementById("fileupload").files[0].size /1024/1024 > 10) 
@@ -35,10 +39,12 @@ const uploadFile = async (newEvent) => {
             myUserData.refreshToken();
           } else {
           console.log("cant upload");
+          myRouter.push({ name: "SignIn" });
         }
         }   
       } else {
           alert("File is too big!");
+          
         }
         document.getElementById("fileupload").value = null;
   };
@@ -71,7 +77,9 @@ const deleteFile = async (name) => {
           console.log("real");
           myUserData.refreshToken();
         } else {
-        console.log("cant upload");
+        console.log("cant delete");
+        myRouter.push({ name: "SignIn" });
+
       }
       }   
      else {
@@ -114,9 +122,12 @@ const getFile = async (name) =>{
     }
   } else {
     console.log("error, cannot get data");
+
   }
 } catch (err) {
   console.log("ERROR: " + err);
+  myRouter.push({ name: "SignIn" });
+
 }
 }
 

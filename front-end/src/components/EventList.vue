@@ -88,9 +88,9 @@ const numberFormat = function (number, width) {
 // const updateEvent = async (startTime, notes, id, duration) => {
 const statusError = ref(0)
 const statusErrorText = ref("")
-const EditEvent = async (notes, startTime, id, duration) => {
+const EditEvent = async (notes, startTime, id, duration,file) => {
 
-  const status = await myEvents.updateEvent(startTime, notes, id, duration);
+  const status = await myEvents.updateEvent(startTime, notes, id, duration,file);
   statusErrorText.value = status.error
   statusError.value = status.status
   if (statusError == -1) {
@@ -119,32 +119,40 @@ const downloadFile = (name) =>{
 
 const checkFile = () => {
   let time = new Date(new Date().toISOString()).getTime();
-  newAttachment.value = time + "_" + document.getElementById("fileChange").files[0].name
-  document.getElementById("fileChange").disabled = true;
+  newAttachment.value = time + "_" + document.getElementById("fileupload").files[0].name
+  alert(newAttachment.value)
+  document.getElementById("fileupload").disabled = true;
 }
 
 const closeUpnewFile = () => {
   disNewFile.value = !disNewFile.value ; 
   newAttachment.value = ''; 
-  document.getElementById("fileChange").disabled = false;
-  document.getElementById("fileChange").value = null;
+  document.getElementById("fileupload").disabled = false;
+  document.getElementById("fileupload").value = null;
 }
 
 const updateMyEvent = (selectedEvent) => {
-  let file1 = selectedEvent.attachment.split("_")[1]
-  let file2 = newAttachment.value.split("_")[1]
+  let file1 = selectedEvent.attachment.split("_")[4]
+  let file2 = newAttachment.value.split("_")[4]
+  let file = ""
   alert(file1)
   alert(file2)
-  if(file1 !== file2){
-    alert("change file but dont update file")
-
+  if(file1 != file2 ){
+    myFile.deleteFile(selectedEvent.attachment)
+    myFile.uploadFile(newAttachment.value)
+    file = newAttachment.value
   }
-  else {
-    alert("กำลังทำ")
-  }
-
-  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration)
+alert("file" + file)
+  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration , file)
 }
+
+// const deleteFile = () => {
+//   if (confirm("You confirm that you want to delete this file") == true) {
+
+//   } else {
+//     closeUpnewFile();
+//   }
+// }
 </script>
 
 <template>
@@ -205,7 +213,7 @@ const updateMyEvent = (selectedEvent) => {
                   
 
                       <p >Attachment: {{ event.attachment }}  </p>
-                      <button @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i class="fa fa-download"></i>  Download </button> 
+                      <button v-show=" event.attachment !== ''" @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i class="fa fa-download"></i>  Download </button> 
                       <div v-if = "myCookie.getCookie('token') !== ''">
                       <div class="card-actions justify-end">
                         <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
@@ -264,7 +272,8 @@ const updateMyEvent = (selectedEvent) => {
                   
                   <input v-show="!disNewFile" type="file"
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
-                  id="fileChange" @change="checkFile" />
+                  id="fileupload" @change="checkFile" />
+                  <!-- <button v-show="!disNewFile" @click="deleteFile" > Delete File </button> -->
 
 {{ newAttachment }}
                   <!-- <button> Delete File </button> -->

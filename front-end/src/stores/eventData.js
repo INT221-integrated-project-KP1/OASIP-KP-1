@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { cookieData } from "../stores/cookieData.js";
 import { userData } from "../stores/userData.js";
 import { fileData } from "../stores/fileData.js";
+import { useRouter } from "vue-router";
 
 export const events = defineStore("eventListState", () => {
   const eventList = ref([]);
@@ -13,6 +14,9 @@ export const events = defineStore("eventListState", () => {
   const boolOverlap = ref(true);
   const myCookie = cookieData();
   const myFileData = fileData();
+
+  const { params } = useRouter();
+  const myRouter = useRouter();
 
   const myUserData = userData();
   const filterList = ref({
@@ -52,18 +56,15 @@ export const events = defineStore("eventListState", () => {
   // GET ทำเเล้ว
   const getEvents = async () => {
     try {
-      eventList.value = []
-      const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/all`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization: "Bearer " + myCookie.getCookie("token"),
-          },
-        }
-      );
-      console.log(res.status)
+      eventList.value = [];
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + myCookie.getCookie("token"),
+        },
+      });
+      console.log(res.status);
       if (res.status === 200) {
         const eventsToAdd = await res.json();
         // events << eventToAdd
@@ -75,16 +76,17 @@ export const events = defineStore("eventListState", () => {
       } else if (res.status === 401) {
         let resText = await res.text();
         // if (resText.toUpperCase().match("TOKENEXPIRED")) {
-          //ได้ละ
-          console.log("real");
-          myUserData.refreshToken();
+        //ได้ละ
+        console.log("real");
+        myUserData.refreshToken();
         // }
-         
       } else {
         console.log("error, cannot get data");
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
@@ -132,6 +134,8 @@ export const events = defineStore("eventListState", () => {
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
@@ -163,20 +167,33 @@ export const events = defineStore("eventListState", () => {
       );
       if (res.status === 200) {
         let eventsToAdd = await res.json();
-          //filter in front
-          if(filterPastOrFutureOrAll == "future"){
-            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime) > new Date())
-          }
-          if(filterPastOrFutureOrAll == "past"){
-            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime) < new Date())
-          }
-          if(date != ""){
-            eventsToAdd = eventsToAdd.filter((a)=> new Date(a.eventStartTime).getDate() == new Date(date).getDate() && new Date(a.eventStartTime).getMonth() == new Date(date).getMonth() && new Date(a.eventStartTime).getFullYear() == new Date(date).getFullYear())
-          }
-          if(filterList.value.eventCategoryId != 0){
-            eventsToAdd = eventsToAdd.filter((a)=> a.eventCategory.id == filterList.value.eventCategoryId)
-          }
-        
+        //filter in front
+        if (filterPastOrFutureOrAll == "future") {
+          eventsToAdd = eventsToAdd.filter(
+            (a) => new Date(a.eventStartTime) > new Date()
+          );
+        }
+        if (filterPastOrFutureOrAll == "past") {
+          eventsToAdd = eventsToAdd.filter(
+            (a) => new Date(a.eventStartTime) < new Date()
+          );
+        }
+        if (date != "") {
+          eventsToAdd = eventsToAdd.filter(
+            (a) =>
+              new Date(a.eventStartTime).getDate() ==
+                new Date(date).getDate() &&
+              new Date(a.eventStartTime).getMonth() ==
+                new Date(date).getMonth() &&
+              new Date(a.eventStartTime).getFullYear() ==
+                new Date(date).getFullYear()
+          );
+        }
+        if (filterList.value.eventCategoryId != 0) {
+          eventsToAdd = eventsToAdd.filter(
+            (a) => a.eventCategory.id == filterList.value.eventCategoryId
+          );
+        }
 
         update(eventsToAdd);
       } else if (res.status === 401) {
@@ -191,6 +208,8 @@ export const events = defineStore("eventListState", () => {
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
@@ -227,8 +246,6 @@ export const events = defineStore("eventListState", () => {
         }
         console.log("asdadasdasd");
 
-
-
         update(eventsToAdd);
       } else if (res.status === 401) {
         let resText = await res.text();
@@ -242,13 +259,15 @@ export const events = defineStore("eventListState", () => {
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
   // POST
   const createNewEvent = async (event) => {
     try {
-      alert("Post add" + event.file)
+      alert("Post add" + event.file);
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/adding`, {
         method: "POST",
         headers: {
@@ -263,7 +282,7 @@ export const events = defineStore("eventListState", () => {
             .toISOString()
             .replace(".000Z", "Z"),
           eventCategory: { id: event.eventCategory.id },
-          attachment: event.file
+          attachment: event.file,
         }),
       });
       if (res.status === 201) {
@@ -282,15 +301,16 @@ export const events = defineStore("eventListState", () => {
       }
     } catch (err) {
       console.log(err);
+      myRouter.push({ name: "SignIn" });
       return { error: err, status: 2 };
     }
   };
 
   //REMOVE
-  const removeEvent = async (deleteId,attachment) => {
+  const removeEvent = async (deleteId, attachment) => {
     console.log(deleteId);
-    myFileData.deleteFile(attachment)
-alert("delete event")
+    myFileData.deleteFile(attachment);
+    alert("delete event");
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/event/${deleteId}`,
       {
@@ -302,7 +322,7 @@ alert("delete event")
       }
     );
     if (res.status === 200) {
-      alert("delete")
+      alert("delete");
       eventList.value = eventList.value.filter(
         (event) => event.id !== deleteId
       );
@@ -317,13 +337,15 @@ alert("delete event")
         console.log("real");
         myUserData.refreshToken();
       }
-    } else console.log("error, cannot delete data");
+    } else {
+      console.log("error, cannot delete data");
+      myRouter.push({ name: "SignIn" });
+    }
   };
-
 
   ///////อัพเดต
   //PUT
-  const updateEvent = async (startTime, notes, id, duration) => {
+  const updateEvent = async (startTime, notes, id, duration,file) => {
     try {
       console.log("startTimeUpdate: " + startTime);
       if (
@@ -338,8 +360,6 @@ alert("delete event")
         return { error: "Future time only $$", status: -1 };
       }
 
-
-      
       console.log("startTime: " + startTime);
       console.log("Notes: " + notes);
       console.log("id: " + id);
@@ -354,6 +374,7 @@ alert("delete event")
             .toISOString()
             .replace(".000Z", "Z"),
           eventNotes: notes,
+          attachment: file,
         }),
       });
       if (res.status === 201) {
@@ -380,12 +401,12 @@ alert("delete event")
         }
       } else {
         console.log("error, cannot edit");
-
         return { error: await res.text(), status: -1 };
       }
     } catch (err) {
       console.log("catchhhhh");
       console.log(err);
+      myRouter.push({ name: "SignIn" });
       return { error: err, status: -1 };
     }
   };
@@ -426,6 +447,8 @@ alert("delete event")
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: 'SignIn' })
+
     }
   };
 
@@ -510,7 +533,6 @@ alert("delete event")
     "bg-secondary-focus",
     "bg-accent-focus",
   ];
-
 
   return {
     eventList,

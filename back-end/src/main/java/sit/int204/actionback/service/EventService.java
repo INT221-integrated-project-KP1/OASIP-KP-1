@@ -304,6 +304,8 @@ public class EventService {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        String myRole = userRepository.findByEmail(email).getRole();
+
         if(!event.getBookingEmail().equals(email)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
         }

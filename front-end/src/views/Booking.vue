@@ -16,7 +16,7 @@ const cookie = cookieData()
 const file = fileData()
 const error = ref();
 const errorWarning = ref();
-const newEvent = ref({ name: '', notes: '', email: '', eventCategory: { id: "", duration: "" } ,file:"" });
+const newEvent = ref({ name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, file: "" });
 
 
 
@@ -65,8 +65,8 @@ const validateEventEmail = computed(() => {
 const createNewEvent = async () => {
   newEvent.value.notes = newEvent.value.notes.trimStart().trimEnd();
   newEvent.value.name = newEvent.value.name.trimEnd();
-  console.log("filename === "+newEvent.value.file)
-  if(newEvent.value.file.length > 0){
+  console.log("filename === " + newEvent.value.file)
+  if (newEvent.value.file.length > 0) {
     alert('Test')
     file.uploadFile(newEvent.value)
   }
@@ -74,12 +74,12 @@ const createNewEvent = async () => {
 
   const status = await myEvents.createNewEvent(newEvent.value);
   console.log(status, 'tusCheckStauts');
-    errorWarning.value = status.error
+  errorWarning.value = status.error
   if (status.status == 1) {
     myEvents.getEventsFilteredMorePageThatLoaded();
-    newEvent.value = { name: '', notes: '', email: '', eventCategory: { id: "", duration: "" },file: "" };
+    newEvent.value = { name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, file: "" };
     document.getElementById("fileupload").value = null;
-  document.getElementById("fileupload").disabled = false;
+    document.getElementById("fileupload").disabled = false;
   }
   statusError.value = status.status
   error.value = status.error
@@ -115,7 +115,7 @@ const errorInsert = () => {
 //             //    data.append('avatars['+k+']', v);
 //            // });
 
-           
+
 // }
 const checkFile = () => {
   let time = new Date(new Date().toISOString()).getTime();
@@ -124,8 +124,8 @@ const checkFile = () => {
   document.getElementById("fileupload").disabled = true;
 }
 
-const clearFile = () =>{
-  newEvent.value.file = "" 
+const clearFile = () => {
+  newEvent.value.file = ""
   document.getElementById("fileupload").disabled = false;
   document.getElementById("fileupload").value = null;
 
@@ -140,37 +140,37 @@ const check = async () => {
   const bool5 = myEvents.validateFutureDate(newEvent.value.startTime)
   const bool6 = myEvents.boolOverlap
 
-let er=""
-if(!bool1){
-er += "Value has null\n"
+  let er = ""
+  if (!bool1) {
+    er += "Value has null\n"
   }
-if(!bool2){
-      er += "Email invaild\n"
-    }
-    if(!bool3){
-      er += "Name > 100\n"
-    }
-    if(!bool4){
-      er += "Notes > 500\n"
-    }
-    if(!bool5){
-      er += "Time is not Future\n"
-    }
-    if(!bool6){
-      er += "Time is OverLap\n"
-    }
-    
+  if (!bool2) {
+    er += "Email invaild\n"
+  }
+  if (!bool3) {
+    er += "Name > 100\n"
+  }
+  if (!bool4) {
+    er += "Notes > 500\n"
+  }
+  if (!bool5) {
+    er += "Time is not Future\n"
+  }
+  if (!bool6) {
+    er += "Time is OverLap\n"
+  }
+
 
 
   //0 คือ eventId เราไม่เช็ค เพราะเรา create ไม่มี eventId
-  if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6 ){
+  if (bool1 && bool2 && bool3 && bool4 && bool5 && bool6) {
     createNewEvent();
-  }else{
-error.value = er    
+  } else {
+    error.value = er
     errorInsert();
   }
 
-  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6 
+  return bool1 && bool2 && bool3 && bool4 && bool5 && bool6
 
 }
 </script>
@@ -213,21 +213,21 @@ error.value = er
       </div>
     </div>
 
-    <dIV class ="grid lg:grid-cols-2 gap-2">
-      <div class ="hidden lg:flex">
-          <ul class="grid grid-rows-3 gap-2 p-4">
-            <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
-              class="card w-50 bg-base-100 shadow-xl space-x-5 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
-              <div class="card-body bg-white">
-                <p class="card-title rounded-md p-3" :class="myEvents.color[eventCategory.id-1]" > Event Category Name : {{
-                    eventCategory.eventCategoryName
-                }} </p>
-                <p>Event Category Description:{{ eventCategory.eventCategoryDescription }}
-                </p>
-                <p class="bg-base-300"> Event Duration: {{ eventCategory.eventDuration }} Minutes</p>
-                </div>
-            </li>
-          </ul>
+    <dIV class="grid lg:grid-cols-2 gap-2">
+      <div class="hidden lg:flex">
+        <ul class="grid grid-rows-3 gap-2 p-4">
+          <li v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
+            class="card w-50 bg-base-100 shadow-xl space-x-5 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+            <div class="card-body bg-white">
+              <p class="card-title rounded-md p-3" :class="myEvents.color[eventCategory.id - 1]"> Event Category Name : {{
+                  eventCategory.eventCategoryName
+              }} </p>
+              <p>Event Category Description:{{ eventCategory.eventCategoryDescription }}
+              </p>
+              <p class="bg-base-300"> Event Duration: {{ eventCategory.eventDuration }} Minutes</p>
+            </div>
+          </li>
+        </ul>
       </div>
       <div class="grid gap-5 p-5 ">
         <!-- FORM INPUT -->
@@ -241,25 +241,27 @@ error.value = er
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                 </label>
-                <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
+                <div v-if="cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
+                <div v-else>
+                  <input maxlength="100" :class="validateEventName ?
+                    ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
+                    : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
+                  " placeholder="Enter your name" v-model="newEvent.name" /><br>
+                  <span>{{ 100 - newEvent.name.length }}/100</span>
+                </div>
 
-                <input  v-else maxlength="100" :class="validateEventName ?
-                  ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
-                  : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="Enter your name" v-model="newEvent.name" :value="cookie.getCookie('name')"/><br>
-                <span>{{ 100-newEvent.name.length}}/100</span>
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span v-show="!validateEventEmail && newEvent.email.length > 0"
-                    style="color: red;">*Invalid Email</span>
+                <label class="text-sm font-medium text-gray-700 tracking-wide">Email :<span
+                    v-show="!validateEventEmail && newEvent.email.length > 0" style="color: red;">*Invalid Email</span>
                 </label>
-<!-- else student -->
-              <div v-if = "cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
-                 <input v-else :class="validateEventEmail ?
+                <!-- else student -->
+                <div v-if="cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.email }}</div>
+                <input v-else :class="validateEventEmail ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " placeholder="mail@gmail.com" v-model="newEvent.email" :value="cookie.getCookie('email')" />
+                " placeholder="mail@gmail.com" v-model="newEvent.email" />
               </div>
 
 
@@ -273,11 +275,11 @@ error.value = er
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
                 " placeholder="Enter your note" v-model="newEvent.notes"></textarea>
                 <!-- มาร์คเเก้ -->
-                <br><span>{{ 500-newEvent.notes.length
+                <br><span>{{ 500 - newEvent.notes.length
                 }}/500</span>
               </div>
 
-               <div class="space-y-2">
+              <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   Event Category:
                 </label>
@@ -293,18 +295,20 @@ error.value = er
 
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent.startTime)" style="color: red;">*Future Time
+                  Start Time:<span v-show="!myEvents.validateFutureDate(newEvent.startTime)" style="color: red;">*Future
+                    Time
                     Only</span><span v-show="!newEvent.eventCategory.id > 0" style="color: red;">*Select Category First
-                    </span><span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time
-                    </span>
+                  </span><span v-show="!myEvents.boolOverlap" style="color: red;">*OverLap Time
+                  </span>
                 </label>
-                
+
                 <input input type="datetime-local" :disabled="!newEvent.eventCategory.id > 0" :class="myEvents.validateFutureDate(newEvent.startTime) ?
                   ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                   : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
-                " v-model="newEvent.startTime" @change="myEvents.validateOverlab(0, newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)"/>
+                " v-model="newEvent.startTime"
+                  @change="myEvents.validateOverlab(0, newEvent.eventCategory.id, newEvent.startTime, newEvent.eventCategory.duration)" />
               </div>
-             
+
 
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
@@ -314,7 +318,7 @@ error.value = er
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                   disabled v-model="newEvent.eventCategory.duration" />
               </div>
-              
+
               <div class="space-y-2">
                 <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                   File:
@@ -322,10 +326,11 @@ error.value = er
                 <input type="file"
                   :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                   id="fileupload" @change="checkFile" />
-               
+
               </div>
-              <button class=" flex justify-center btn hover:btn text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
-               @click="clearFile">Clear File</button>  
+              <button
+                class=" flex justify-center btn hover:btn text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+                @click="clearFile">Clear File</button>
               <div>
                 <button type="submit"
                   class="w-full flex justify-center btn-success hover:btn-accent text-gray-100 p-3 hover:text-gray-100 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
@@ -339,7 +344,7 @@ error.value = er
             </div>
           </div>
         </div>
-    
+
       </div>
     </div>
   </div>

@@ -5,7 +5,9 @@ import { useRouter } from 'vue-router'
 import router from "../router/index.js"; 
 
 export const userData = defineStore("userDataState", () => {
+  const { params } = useRouter();
   const myRouter = router;
+
   const userList = ref([]);
   const cookie = cookieData();
   const validateUniqueName = (id, name) => {
@@ -52,6 +54,7 @@ export const userData = defineStore("userDataState", () => {
       }
     } catch (err) {
       console.log(err);
+      myRouter.push({ name: "SignIn" });
       return { error: err, status: 2 };
     }
   };
@@ -70,7 +73,7 @@ export const userData = defineStore("userDataState", () => {
         });
         if (res.status === 200) {
           userList.value = await res.json();
-        } else if (res.status === 401) {
+        } else if (res.status == 401) {
           let resText = await res.text();
           if (
             resText
@@ -89,15 +92,20 @@ export const userData = defineStore("userDataState", () => {
           ) {
             cookie.setCookie("token", "", -1);
             cookie.setCookie("name", "", -1);
-          }
+          } 
+          else {            myRouter.push({ name: "SignIn" });
+        }
         } else if (res.status === 403) {
           console.log("only admin wtf dog");
         } else {
           console.log("error, cannot get data");
+
         }
       }
     } catch (err) {
       console.log("ERROR: " + err);
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
@@ -137,6 +145,8 @@ export const userData = defineStore("userDataState", () => {
       }
     } else {
       console.log("error, cannot delete data");
+      myRouter.push({ name: "SignIn" });
+
     }
   };
 
@@ -198,6 +208,8 @@ export const userData = defineStore("userDataState", () => {
     } catch (err) {
       console.log("catchhhhh");
       console.log(err);
+      myRouter.push({ name: "SignIn" });
+
       return -1;
     }
   };
@@ -237,10 +249,12 @@ export const userData = defineStore("userDataState", () => {
         return false;
       } else {
         console.log("error, cannot get data");
+        myRouter.push({ name: "SignIn" });
+
       }
     } catch (err) {
       console.log("ERROR: " + err);
-
+      myRouter.push({ name: "SignIn" });
     }
   };
 
