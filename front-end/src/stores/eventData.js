@@ -41,7 +41,8 @@ export const events = defineStore("eventListState", () => {
       if (eventList.value.every((e1) => e.id != e1.id)) {
         eventList.value.push(e);
       }
-    });
+    }
+    );
   };
 
   console.log(eventList.value + "eventList");
@@ -267,7 +268,7 @@ export const events = defineStore("eventListState", () => {
   // POST
   const createNewEvent = async (event) => {
     try {
-      alert("Post add" + event.file);
+      alert("Post add" + event.attachment);
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/adding`, {
         method: "POST",
         headers: {
@@ -282,7 +283,7 @@ export const events = defineStore("eventListState", () => {
             .toISOString()
             .replace(".000Z", "Z"),
           eventCategory: { id: event.eventCategory.id },
-          attachment: event.file,
+          attachment: event.attachment,
         }),
       });
       if (res.status === 201) {
@@ -477,7 +478,7 @@ export const events = defineStore("eventListState", () => {
         //overlab 1+4
         console.log("Overlab 1+4");
         boolOverlap.value = false;
-
+        
         return false; //overlab
       }
       if (newMilli >= milli && newMilli < milli + durationMilli) {
@@ -492,6 +493,7 @@ export const events = defineStore("eventListState", () => {
       ) {
         console.log("Overlab3");
         boolOverlap.value = false;
+
         return false;
       }
     });

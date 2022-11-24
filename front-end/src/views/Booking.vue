@@ -16,7 +16,7 @@ const cookie = cookieData()
 const file = fileData()
 const error = ref();
 const errorWarning = ref();
-const newEvent = ref({ name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, file: "" });
+const newEvent = ref({ name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, attachment: "" });
 
 
 
@@ -65,8 +65,8 @@ const validateEventEmail = computed(() => {
 const createNewEvent = async () => {
   newEvent.value.notes = newEvent.value.notes.trimStart().trimEnd();
   newEvent.value.name = newEvent.value.name.trimEnd();
-  console.log("filename === " + newEvent.value.file)
-  if (newEvent.value.file.length > 0) {
+  console.log("filename === " + newEvent.value.attachment)
+  if (newEvent.value.attachment.length > 0) {
     alert('Test')
     file.uploadFile(newEvent.value)
   }
@@ -77,7 +77,7 @@ const createNewEvent = async () => {
   errorWarning.value = status.error
   if (status.status == 1) {
     myEvents.getEventsFilteredMorePageThatLoaded();
-    newEvent.value = { name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, file: "" };
+    newEvent.value = { name: cookie.getCookie('name') , notes: '', email: cookie.getCookie('email'), eventCategory: { id: "", duration: "" }, attachment: "" };
     document.getElementById("fileupload").value = null;
     document.getElementById("fileupload").disabled = false;
   }
@@ -119,13 +119,13 @@ const errorInsert = () => {
 // }
 const checkFile = () => {
   let time = new Date(new Date().toISOString()).getTime();
-  newEvent.value.file = time + "_" + document.getElementById("fileupload").files[0].name
-  alert(newEvent.value.file)
+  newEvent.value.attachment = time + "_" + document.getElementById("fileupload").files[0].name
+  alert(newEvent.value.attachment)
   document.getElementById("fileupload").disabled = true;
 }
 
 const clearFile = () => {
-  newEvent.value.file = ""
+  newEvent.value.attachment = ""
   document.getElementById("fileupload").disabled = false;
   document.getElementById("fileupload").value = null;
 

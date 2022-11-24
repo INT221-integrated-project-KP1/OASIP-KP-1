@@ -9,7 +9,6 @@ export const fileData = defineStore("fileState", () => {
 //upfile นะ
 const uploadFile = async (newEvent) => {
 
-  const { params } = useRouter();
   const myRouter = useRouter();
 
     if( 
@@ -17,9 +16,9 @@ const uploadFile = async (newEvent) => {
         ){
         let data = new FormData();
         data.append(
-        "file",document.getElementById("fileupload").files[0],newEvent.file
+        "file",document.getElementById("fileupload").files[0],newEvent.attachment
         )
-        alert(newEvent.file)
+        alert(newEvent.attachment)
       
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/upload`,{
           method: "POST", 

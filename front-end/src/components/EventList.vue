@@ -68,7 +68,7 @@ const getEventById = async (id) => {
 
 defineEmits(["deleteEvent", "updateEvent"]);
 
-const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '', attachment:'' });
+const selectedEvent = ref({ id: '', bookingName: '', bookingEmail: '', eventCategory: { eventCategoryName: '', eventCategoryDescription: '' }, eventStartTime: '', eventDuration: '', eventNotes: '', attachment: '' });
 
 let editStartTime = ref('')
 let editNotes = ref('')
@@ -88,9 +88,9 @@ const numberFormat = function (number, width) {
 // const updateEvent = async (startTime, notes, id, duration) => {
 const statusError = ref(0)
 const statusErrorText = ref("")
-const EditEvent = async (notes, startTime, id, duration,file) => {
+const EditEvent = async (notes, startTime, id, duration, file) => {
 
-  const status = await myEvents.updateEvent(startTime, notes, id, duration,file);
+  const status = await myEvents.updateEvent(startTime, notes, id, duration, file);
   statusErrorText.value = status.error
   statusError.value = status.status
   if (statusError == -1) {
@@ -98,6 +98,7 @@ const EditEvent = async (notes, startTime, id, duration,file) => {
   }
   topFunction()
   setTimeout(() => (statusError.value = 0), 2000);
+  myEvents.getEvents();
 }
 
 const errorInsert = () => {
@@ -105,54 +106,67 @@ const errorInsert = () => {
   setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const deleteFun = (id,attachment) =>{
- let com = confirm("You want to delete a event");
-if (com) {
-  myEvents.removeEvent(id,attachment)
-  } 
+const deleteFun = (id, attachment) => {
+  let com = confirm("You want to delete a event");
+  if (com) {
+    myEvents.removeEvent(id, attachment)
+  }
 }
 myEvents.getEvents();
 
-const downloadFile = (name) =>{
+const downloadFile = (name) => {
   myFile.getFile(name);
 }
 
 const checkFile = () => {
   let time = new Date(new Date().toISOString()).getTime();
   newAttachment.value = time + "_" + document.getElementById("fileupload").files[0].name
-  alert(newAttachment.value)
+  alert("newfile is " + newAttachment.value)
   document.getElementById("fileupload").disabled = true;
 }
 
 const closeUpnewFile = () => {
-  disNewFile.value = !disNewFile.value ; 
-  newAttachment.value = ''; 
+  disNewFile.value = !disNewFile.value;
+  newAttachment.value = '';
   document.getElementById("fileupload").disabled = false;
   document.getElementById("fileupload").value = null;
 }
 
 const updateMyEvent = (selectedEvent) => {
-  let file1 = selectedEvent.attachment.split("_")[4]
-  let file2 = newAttachment.value.split("_")[4]
+  let file1 = selectedEvent.attachment
+  let file2 = newAttachment.value
   let file = ""
   alert(file1)
   alert(file2)
-  if(file1 != file2 ){
-    myFile.deleteFile(selectedEvent.attachment)
-    myFile.uploadFile(newAttachment.value)
-    file = newAttachment.value
+  if (file1 == "") {
+    if (file1 != file2) {
+      selectedEvent.attachment = newAttachment.value
+      myFile.uploadFile(selectedEvent)
+      file = newAttachment.value
+    }
   }
-alert("file" + file)
-  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration , file)
+  else if (file1 != file2 && file2 != "") {
+    myFile.deleteFile(selectedEvent.attachment)
+    selectedEvent.attachment = newAttachment.value
+    myFile.uploadFile(selectedEvent)
+    file = newAttachment.value
+  } else {
+    file = selectedEvent.attachment
+  }
+  alert("file" + file)
+  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, file)
 }
 
-// const deleteFile = () => {
-//   if (confirm("You confirm that you want to delete this file") == true) {
-
-//   } else {
-//     closeUpnewFile();
-//   }
-// }
+const deleteFile = (selectedEvent) => {
+  if (confirm("You confirm that you want to delete this file") == true) {
+    myFile.deleteFile(selectedEvent.attachment)
+    selectedEvent.attachment = ""
+    EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, file)
+    myEvents.getEvents();
+  } else {
+    closeUpnewFile();
+  }
+}
 </script>
 
 <template>
@@ -210,26 +224,29 @@ alert("file" + file)
                       <p v-if="event.eventDetails !== undefined">
                         Event Details: {{ event.eventDetails }}
                       </p>
-                  
 
-                      <p >Attachment: {{ event.attachment }}  </p>
-                      <button v-show=" event.attachment !== ''" @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i class="fa fa-download"></i>  Download </button> 
-                      <div v-if = "myCookie.getCookie('token') !== ''">
-                      <div class="card-actions justify-end">
-                        <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
-                          ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
-                        ">Show
-                          more... </label>
-                        <label for="my-modal"
-                          class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline" @click="deleteFun(event.id,event.attachment)" >Delete</label>
+                        <p>Attachment: {{ event.attachment }} </p>
+                        <button  v-show="event.attachment !== null" @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i
+                            class="fa fa-download"></i> Download </button>
+                     
+                      
+                      <div v-if="myCookie.getCookie('token') !== ''">
+                        <div class="card-actions justify-end">
+                          <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
+                            ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline']
+                          ">Show
+                            more... </label>
+                          <label for="my-modal"
+                            class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline"
+                            @click="deleteFun(event.id, event.attachment)">Delete</label>
                         </div>
                       </div>
                     </div>
                   </li>
                   <!-- //ทำเงา ๆๆๆ -->
-                  
-                  <ShadowEventVue v-show="myEvents.checkLoaded"/>
-                  
+
+                  <ShadowEventVue v-show="myEvents.checkLoaded" />
+
                 </div>
               </ol>
 
@@ -241,7 +258,8 @@ alert("file" + file)
                   <h3 class="font-bold text-lg">Booking Name: {{ selectedEvent.bookingName }}</h3>
                   <p class="py-2">Booking Email: {{ selectedEvent.bookingEmail }}</p>
                   <p class="py-2">Event Category Name: {{ selectedEvent.eventCategory.eventCategoryName }}</p>
-                  <p class="py-2">Event Category Description: {{ selectedEvent.eventCategory.eventCategoryDescription }}</p>
+                  <p class="py-2">Event Category Description: {{ selectedEvent.eventCategory.eventCategoryDescription }}
+                  </p>
                   <div v-if="myEvents.validateFutureDate(selectedEvent.eventStartTime)">
                     <span v-show="!myEvents.validateFutureDate(editStartTime)" style="color: red;">*Future Time
                       Only</span>
@@ -268,21 +286,21 @@ alert("file" + file)
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
                   <p class="py-2"> Attachment : {{ selectedEvent.attachment }}</p>
                   <button v-show="disNewFile" @click="disNewFile = !disNewFile"> Open Upload New File </button>
-                  <button v-show="!disNewFile" @click="closeUpnewFile" > Close Upload New File </button>
-                  
-                  <input v-show="!disNewFile" type="file"
-                  :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
-                  id="fileupload" @change="checkFile" />
-                  <!-- <button v-show="!disNewFile" @click="deleteFile" > Delete File </button> -->
+                  <button v-show="!disNewFile" @click="closeUpnewFile"> Close Upload New File </button>
 
-{{ newAttachment }}
-                  <!-- <button> Delete File </button> -->
+                  <input v-show="!disNewFile" type="file"
+                    :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
+                    id="fileupload" @change="checkFile" />
+                  <div>
+                    <button v-show="selectedEvent.attachment != null " @click="deleteFile(selectedEvent)"> Delete File </button>
+                  </div>
+
+                  <!-- <button v-show="!disNewFile" @click="deleteFile"> Delete File </button> -->
 
                   <div class="modal-action">
                     <label
                       :class="myEvents.validateFutureDate(selectedEvent.eventStartTime) ? ['duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn-primary', 'px-6', 'py-3.5', 'm-4', 'inline'] : 'hidden'"
-                      for="my-modal-6"
-                      @click="updateMyEvent(selectedEvent)">Update</label>
+                      for="my-modal-6" @click="updateMyEvent(selectedEvent)">Update</label>
                     <!-- @click="$emit('updateEvent', editStartTime, editNotes, selectedEvent.id, selectedEvent.eventDuration)">Update</label> -->
                     <label for="my-modal-6"
                       class="duration-150 transform hover:scale-125 transition ease-linear btn px-6 py-3.5  m-4 inline">Close</label>
@@ -317,4 +335,5 @@ alert("file" + file)
 </template>
 
 <style>
+
 </style>

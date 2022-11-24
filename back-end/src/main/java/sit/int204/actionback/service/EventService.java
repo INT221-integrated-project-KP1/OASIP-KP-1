@@ -306,7 +306,7 @@ public class EventService {
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
         String myRole = userRepository.findByEmail(email).getRole();
 
-        if(!event.getBookingEmail().equals(email)){
+        if(!event.getBookingEmail().equals(email) || !myRole.equals((Role.ADMIN).toString()) ){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
         }
 
@@ -324,6 +324,8 @@ public class EventService {
 
         event.setEventStartTime(editEvent.getEventStartTime());
         event.setEventNotes(editEvent.getEventNotes());
+        System.out.println(editEvent.getAttachment());
+        event.setAttachment(editEvent.getAttachment());
 
         ///
 //        fileStorageService.deleteFile(editEvent.getAttachment());
