@@ -19,7 +19,8 @@ const uploadFile = async (newEvent) => {
         "file",document.getElementById("fileupload").files[0],newEvent.attachment
         )
         alert(newEvent.attachment)
-      
+        alert("document.getElementById = "+document.getElementById("fileupload").files[0].name)
+
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/file/upload`,{
           method: "POST", 
           headers: {
@@ -30,6 +31,9 @@ const uploadFile = async (newEvent) => {
         alert(res.status)
         if (res.status === 200) {
           alert("uploaded");
+          document.getElementById("fileupload").value = null;
+
+          return true ;
         } else if (res.status === 404) {
           let resText = await res.text();
           if (resText.toUpperCase().match("TOKENEXPIRED")) {
@@ -43,9 +47,9 @@ const uploadFile = async (newEvent) => {
         }   
       } else {
           alert("File is too big!");
-          
+          document.getElementById("fileupload").value = null;
+          return false;
         }
-        document.getElementById("fileupload").value = null;
   };
 
   //delete นะ

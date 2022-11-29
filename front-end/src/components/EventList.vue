@@ -138,23 +138,30 @@ const updateMyEvent = (selectedEvent) => {
   let file = ""
   alert(file1)
   alert(file2)
-  if (file1 == "") {
-    if (file1 != file2) {
-      selectedEvent.attachment = newAttachment.value
-      myFile.uploadFile(selectedEvent)
-      file = newAttachment.value
+  if (file2 !== null) {
+    if (!(document.getElementById("fileupload").files[0].size / 1024 / 1024 > 10)
+    ) {
+      if (file1 == "") {
+        if (file1 != file2) {
+          selectedEvent.attachment = newAttachment.value
+          myFile.uploadFile(selectedEvent)
+        }
+      } else if (file1 == null) {
+        if (file1 != file2) {
+          selectedEvent.attachment = newAttachment.value
+          myFile.uploadFile(selectedEvent)
+        }
+      }
+      else if (file1 != file2 && file2 != "") {
+        myFile.deleteFile(selectedEvent.attachment)
+        selectedEvent.attachment = newAttachment.value
+        myFile.uploadFile(selectedEvent)
+      }
     }
-  }
-  else if (file1 != file2 && file2 != "") {
-    myFile.deleteFile(selectedEvent.attachment)
-    selectedEvent.attachment = newAttachment.value
-    myFile.uploadFile(selectedEvent)
-    file = newAttachment.value
-  } else {
-    file = selectedEvent.attachment
-  }
+  } 
+
   alert("file" + file)
-  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, file)
+  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, selectedEvent.attachment)
 }
 
 const deleteFile = (selectedEvent) => {
@@ -225,11 +232,11 @@ const deleteFile = (selectedEvent) => {
                         Event Details: {{ event.eventDetails }}
                       </p>
 
-                        <p>Attachment: {{ event.attachment }} </p>
-                        <button  v-show="event.attachment !== null" @click="downloadFile(event.attachment)" class="btn" style="width:100%"><i
-                            class="fa fa-download"></i> Download </button>
-                     
-                      
+                      <p>Attachment: {{ event.attachment }} </p>
+                      <button v-show="event.attachment !== null" @click="downloadFile(event.attachment)" class="btn"
+                        style="width:100%"><i class="fa fa-download"></i> Download </button>
+
+
                       <div v-if="myCookie.getCookie('token') !== ''">
                         <div class="card-actions justify-end">
                           <label @click="getEventById(event.id); myEvents.boolOverlap = true;" for="my-modal-6" :class="
@@ -292,7 +299,8 @@ const deleteFile = (selectedEvent) => {
                     :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                     id="fileupload" @change="checkFile" />
                   <div>
-                    <button v-show="selectedEvent.attachment != null " @click="deleteFile(selectedEvent)"> Delete File </button>
+                    <button v-show="selectedEvent.attachment != null" @click="deleteFile(selectedEvent)"> Delete File
+                    </button>
                   </div>
 
                   <!-- <button v-show="!disNewFile" @click="deleteFile"> Delete File </button> -->

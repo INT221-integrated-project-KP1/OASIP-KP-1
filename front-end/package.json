@@ -10,8 +10,10 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
+    "@microsoft/microsoft-graph-client": "^3.0.4",
     "cypress": "^10.6.0",
     "daisyui": "^2.14.3",
+    "msal": "^1.4.17",
     "pinia": "^2.0.14",
     "router": "^1.3.6",
     "utf8": "^3.0.0",
