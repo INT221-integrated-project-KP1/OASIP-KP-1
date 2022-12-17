@@ -37,6 +37,11 @@ public class EventController {
         System.out.println("Test 2 ");
         return eventService.getAllEvent(request);
     }
+    @GetMapping("/blinded")
+    public List<BlindedEventDto> getAllBlindedEvent() {
+        System.out.println("Test 2 ");
+        return eventService.getAllBlindedEvent();
+    }
 
     @GetMapping("/overlapping")
     public List<EventCheckOverDTO> getAllEventForOverLabCheck(@RequestParam(defaultValue = "0") Integer eventId,

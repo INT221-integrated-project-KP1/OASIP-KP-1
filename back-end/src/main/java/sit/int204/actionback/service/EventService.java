@@ -98,6 +98,10 @@ public class EventService {
           return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
     }
 
+    public List<BlindedEventDto> getAllBlindedEvent(){
+        return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), BlindedEventDto.class, modelMapper);
+    }
+
 
     public List<SimpleEventDTO> getAllEventFilterByEventCategoryAndPassOrFutureOrAll(HttpServletRequest request, Integer eventCategoryId, String pastOrFutureOrAll, String date, int offsetMin, int page, int pageSize){
         String requestTokenHeader = request.getHeader("Authorization");
