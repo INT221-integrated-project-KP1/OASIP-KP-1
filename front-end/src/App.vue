@@ -40,8 +40,7 @@ const checkToken = () => {
 
 
   <div>
-    <div class="navbar bg-white"
-      v-show="!($route.name === 'Welcome' || $route.name === 'SignIn' ) ">
+    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' || $route.name === 'SignIn')">
       <div class="navbar-start">
 
 
@@ -57,10 +56,12 @@ const checkToken = () => {
               <router-link :to="{ name: 'Home' }">Home </router-link>
             </li>
             <li>
-              <router-link v-show="cookie.getCookie('token') !== ''" :to="{ name: 'List' }"> List Event All </router-link>
+              <router-link v-show="cookie.getCookie('token') !== ''" :to="{ name: 'List' }"> List Event All
+              </router-link>
             </li>
             <li>
-              <router-link  v-show="cookie.getCookie('role') == 'ADMIN' || cookie.getCookie('role') == 'STUDENT' " :to="{ name: 'Booking' }"> Add event </router-link>
+              <router-link v-show="cookie.getCookie('role') == 'ADMIN' || cookie.getCookie('role') == 'STUDENT'"
+                :to="{ name: 'Booking' }"> Add event </router-link>
             </li>
             <li>
               <router-link :to="{ name: 'ListCategory' }"> List Category </router-link>
@@ -71,7 +72,7 @@ const checkToken = () => {
             <li>
               <router-link :to="{ name: 'SignIn' }"> Sign In </router-link>
             </li> -->
-            <li v-show="cookie.getCookie('role') === 'ADMIN' ">
+            <li v-show="cookie.getCookie('role') === 'ADMIN'">
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
               <!-- <p @click="signIn"> List User </p> -->
             </li>
@@ -95,12 +96,14 @@ const checkToken = () => {
           <div class="tabs tabs-boxed">
             <router-link :to="{ name: 'Home' }" :class="[$route.name == 'Home' ? 'tab-active' : '', 'tab']">Home
             </router-link>
-              <router-link v-show="cookie.getCookie('token') !== ''" :to="{ name: 'List' }" :class="[$route.name == 'List' ? 'tab-active' : '', 'tab']">List All
+            <router-link v-show="cookie.getCookie('token') !== ''" :to="{ name: 'List' }"
+              :class="[$route.name == 'List' ? 'tab-active' : '', 'tab']">List All
             </router-link>
-       
-           
-                <router-link  v-show="cookie.getCookie('role') == 'ADMIN' || cookie.getCookie('role') == 'STUDENT' " :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
-                Add event </router-link>
+
+
+            <router-link v-show="cookie.getCookie('role') == 'ADMIN' || cookie.getCookie('role') == 'STUDENT'"
+              :to="{ name: 'Booking' }" :class="[$route.name == 'Booking' ? 'tab-active' : '', 'tab']">
+              Add event </router-link>
 
             <router-link :to="{ name: 'ListCategory' }"
               :class="[$route.name == 'ListCategory' ? 'tab-active' : '', 'tab']">
@@ -114,15 +117,17 @@ const checkToken = () => {
   <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link> -->
 
-            <div v-show="cookie.getCookie('role') === 'ADMIN' || cookie.getCookie('token') == ''" >
+            <div v-show="cookie.getCookie('role') === 'ADMIN' || cookie.getCookie('token') == ''">
               <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
                 Sign Up </router-link>
             </div>
 
-            <router-link  v-show="cookie.getCookie('role') === 'ADMIN' "
-              :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User
+            <router-link v-show="cookie.getCookie('role') === 'ADMIN'" :to="{ name: 'ListUser' }"
+              :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User
             </router-link>
 
+            <router-link :to="{ name: 'BlindedEvent' }" :class="[$route.name == 'BlindedEvent' ? 'tab-active' : '', 'tab']">
+              Blinded Event </router-link>
 
             <router-link :to="{ name: 'AboutUs' }" :class="[$route.name == 'AboutUs' ? 'tab-active' : '', 'tab']">
               About US </router-link>
