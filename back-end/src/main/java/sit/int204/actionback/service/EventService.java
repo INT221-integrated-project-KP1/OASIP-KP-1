@@ -231,13 +231,19 @@ public class EventService {
                             "Does Not Exist !!!"
                     ));
             System.out.println("getSimpleEventById2");
-            if(myRole.equals((Role.STUDENT).toString()) && !email.equals(event.getBookingEmail())){
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
-            }
-            List<Event> eventAllOfThisLecturer = eventRepository.findAllEventByLecturerEmail(email);
-            for (int i = 0; i < eventAllOfThisLecturer.size(); i++) {
-                if(event.getEventCategory().getId().equals(eventAllOfThisLecturer.get(i).getEventCategory().getId())){
+            if(myRole.equals((Role.STUDENT).toString())){
+                if(email.equals(event.getBookingEmail())){
                     return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+                } else{
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
+                }
+            }
+            if(myRole.equals((Role.LECTURER).toString())){
+                List<Event> eventAllOfThisLecturer = eventRepository.findAllEventByLecturerEmail(email);
+                for (int i = 0; i < eventAllOfThisLecturer.size(); i++) {
+                    if(event.getEventCategory().getId().equals(eventAllOfThisLecturer.get(i).getEventCategory().getId())){
+                        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+                    }
                 }
             }
             if(myRole.equals((Role.ADMIN).toString())){
