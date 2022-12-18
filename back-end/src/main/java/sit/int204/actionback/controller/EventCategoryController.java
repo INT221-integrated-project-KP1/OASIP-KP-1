@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.service.EventCategoryService;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -21,8 +23,8 @@ public class EventCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody EventCategory updateEventCategory, @PathVariable Integer id) {
-        return eventCategoryService.updateEventCategory(updateEventCategory,id);
+    public ResponseEntity update(@Valid @RequestBody EventCategory updateEventCategory, @PathVariable Integer id, HttpServletRequest request) {
+        return eventCategoryService.updateEventCategory(updateEventCategory,id, request);
     }
 
 }

@@ -139,7 +139,7 @@ const updateMyEvent = (selectedEvent) => {
   alert(file1)
   alert(file2)
   if (file2 !== null) {
-    if (!(document.getElementById("fileupload").files[0].size / 1024 / 1024 > 10)
+    if (!(document.getElementById("fileupload").files[0].size / 1024 / 1024 > 10) //admin edit event บอก err
     ) {
       if (file1 == "") {
         if (file1 != file2) {

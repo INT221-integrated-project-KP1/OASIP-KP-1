@@ -1,9 +1,14 @@
 package sit.int204.actionback.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "myuser")
 public class User {
     @Id
@@ -29,6 +34,7 @@ public class User {
 
     @Column(name = "updatedOn")
     private Instant updatedOn;
+
 
     public String getPassword() {
         return password;
