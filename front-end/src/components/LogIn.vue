@@ -3,10 +3,11 @@ import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 import { cookieData } from "../stores/cookieData.js"
 import { userData } from "../stores/userData.js"
+import { msData } from "../stores/loginMS.js"
 
 const cookie = cookieData()
 const userStore = userData()
-
+const ms = msData()
 
 const { params } = useRoute()
 const myRouter = useRouter()
@@ -126,6 +127,10 @@ const loaderEnd = () => {
     isProgress.value = false;
 }
 
+
+const loginMS = () => {
+    ms.loginMS()
+}
 </script>
 
 <template class="antialiased bg-gradient-to-br from-green-100 to-white">
@@ -235,6 +240,8 @@ const loaderEnd = () => {
                                                 </svg>
                                             </div>
                                             <div class="font-bold" @click="MatchingCheck(loginuser);">Sign in</div>
+
+
                                         </div>
                                     </button>
                                     <div class="flex justify-evenly mt-5">
@@ -249,7 +256,16 @@ const loaderEnd = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div><button @click="loginMS"
+            class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" height="20">
+                <path fill="#f3f3f3" d="M0 0h23v23H0z" />
+                <path fill="#f35325" d="M1 1h10v10H1z" />
+                <path fill="#81bc06" d="M12 1h10v10H12z" />
+                <path fill="#05a6f0" d="M1 12h10v10H1z" />
+                <path fill="#ffba08" d="M12 12h10v10H12z" />
+            </svg> Login with Microsoft
+        </button>
     </div>
 </template>
  

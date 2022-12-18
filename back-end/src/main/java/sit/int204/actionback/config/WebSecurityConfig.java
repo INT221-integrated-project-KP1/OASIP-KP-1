@@ -83,6 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        httpSecurity.csrf().disable() //ถ้าขึ้น server ใช้อันนี้
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
+                .and().authorizeRequests().antMatchers("/api/jwt/loginms").permitAll()
                 .and().authorizeRequests().antMatchers("/api/jwt/refresh").permitAll()
                 .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
 

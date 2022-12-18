@@ -2,29 +2,38 @@ package sit.int204.actionback.config;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.DefaultClaims;
+
+import lombok.SneakyThrows;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.UrlJwkProvider;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+
+import java.net.URL;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
 
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.service.JwtUserDetailsService;
@@ -89,15 +98,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } else {
                 logger.warn("JWT Token does not begin with Bearer String");
             }
-            // Once we get the token validate it.
+
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(email);
-                System.out.println("adsasdad not sdadsadasd");
-//            UserDetails userDetails = new org.springframework.security.core.userdetails.User(username, "", new ArrayList<>());
-
-                // if token is valid configure Spring Security to manually set
-                // authentication
                 if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -110,7 +114,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
-            System.out.println("Test");
+            System.out.println("chain.doFilter(request, response);");
             chain.doFilter(request, response);
 //        }
    }
@@ -140,5 +144,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             claims = null;
         }
         return claims;
+    }
+
+    @SneakyThrows
+    public JSONObject extractMSJwt(String token) {
+        String[] chunks = token.split("\\.");
+
+        JSONObject header = new JSONObject(decode(chunks[0]));
+        JSONObject payload = new JSONObject(decode(chunks[1]));
+        String signature = decode(chunks[2]);
+        if (payload.getString("iss").equals("https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d/v2.0")) {
+            System.out.println("BEFORE CONFIG");
+
+            DecodedJWT jwt = JWT.decode(token);
+            JwkProvider provider = new UrlJwkProvider(new URL("https://login.microsoftonline.com/common/discovery/keys"));
+            Jwk jwk = provider.get(jwt.getKeyId());
+            Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+            algorithm.verify(jwt);
+
+            System.out.println("AFTER CONFIG");
+        }
+        System.out.println("PAYLOAD : " + payload);
+        return payload;
+    }
+
+    private static String decode(String encodedString) {
+        return new String(Base64.getUrlDecoder().decode(encodedString));
     }
 }

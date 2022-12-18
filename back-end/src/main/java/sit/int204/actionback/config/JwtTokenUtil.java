@@ -69,22 +69,47 @@ public class JwtTokenUtil implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> roles, String name, long time) {
+    public String doGenerateToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> roles, String name, long time) {
         if(time == 1){
             time = JWT_TOKEN_ONEDAY;
         } else {
 //            time = 30 * 60 * 1000;
             time = JWT_TOKEN_30MINS;
         }
+        System.out.println("doGenerateToken");
+        System.out.println(claims);
+        System.out.println("Collection<? extends GrantedAuthority>");
+        System.out.println(roles);
         claims.put("name", name);
         claims.put("role", ((GrantedAuthority)roles.stream().findFirst().get()).toString());
-
+        System.out.println(claims);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 //                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)) // 5 ชั่วโมง
                 .setExpiration(new Date(System.currentTimeMillis() + time)) // 30 นาที or 1 day
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
+
+    public String doGenerateTokenForMs(Map<String, Object> claims, String email, String role, String name, long time) {
+        if(time == 1){
+            time = JWT_TOKEN_ONEDAY;
+        } else {
+//            time = 30 * 60 * 1000;
+            time = JWT_TOKEN_30MINS;
+        }
+
+        claims.put("name", name);
+        claims.put("role", role);
+        System.out.println(claims);
+        return Jwts.builder().setClaims(claims).setSubject(email).setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)) // 5 ชั่วโมง
+                .setExpiration(new Date(System.currentTimeMillis() + time)) // 30 นาที or 1 day
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+
+    }
+
+
+
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);

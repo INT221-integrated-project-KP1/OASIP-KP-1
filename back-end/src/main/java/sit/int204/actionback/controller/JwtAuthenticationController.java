@@ -2,7 +2,10 @@ package sit.int204.actionback.controller;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sit.int204.actionback.config.JwtRequestFilter;
 import sit.int204.actionback.dtos.UserMatchingDTO;
 import sit.int204.actionback.entities.User;
 
@@ -28,10 +33,7 @@ import sit.int204.actionback.repo.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -43,6 +45,9 @@ public class JwtAuthenticationController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -68,6 +73,31 @@ public class JwtAuthenticationController {
             return ResponseEntity.ok(objectToResponse);
         }
       else  return ResponseEntity.status(404).body("Password Invaild");
+    }
+
+    @RequestMapping(value = "/loginms", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthenticationTokenMS(@RequestBody String MsJwtToken) throws Exception {
+        System.out.println("loginmsstart :");
+        System.out.println("MsJwtToken: " + MsJwtToken);
+        JSONObject payload = jwtRequestFilter.extractMSJwt(MsJwtToken);
+        System.out.println(payload.get("roles"));
+        String role = "";
+        String email = "";
+        String name = "";
+        HashMap<String, Object> claims = new HashMap<>();
+        try {
+//            role = payload.getString("roles").replaceAll("[^a-zA-Z]+", "");
+            role = payload.getString("roles").replaceAll("[^a-zA-Z]+", "");
+            email = payload.getString("preferred_username");
+            name = payload.getString("name");
+            final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
+            HashMap<String, String> objectToResponse = new HashMap<String, String>();
+            objectToResponse.put("token", token);
+            return ResponseEntity.ok(objectToResponse);
+        } catch (JSONException ex) {
+            role = "GUEST";
+        }
+        return ResponseEntity.ok().body("Test");
     }
 
     private void authenticate(String username, String password) throws Exception {
