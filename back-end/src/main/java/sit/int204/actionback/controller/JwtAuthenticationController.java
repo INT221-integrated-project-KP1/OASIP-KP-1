@@ -88,6 +88,10 @@ public class JwtAuthenticationController {
         try {
 //            role = payload.getString("roles").replaceAll("[^a-zA-Z]+", "");
             role = payload.getString("roles").replaceAll("[^a-zA-Z]+", "");
+
+        } catch (JSONException ex) {
+            role = "GUEST";
+        }
             email = payload.getString("preferred_username");
             name = payload.getString("name");
             final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
@@ -96,10 +100,7 @@ public class JwtAuthenticationController {
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
             return ResponseEntity.ok(objectToResponse);
-        } catch (JSONException ex) {
-            role = "GUEST";
-        }
-        return ResponseEntity.ok().body("Test");
+
     }
 
     private void authenticate(String username, String password) throws Exception {
