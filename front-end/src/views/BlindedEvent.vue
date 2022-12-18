@@ -7,19 +7,6 @@ import { useRouter } from "vue-router";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
 
-// //get จาก /api/blinded
-// return id;
-//     Instant eventStartTime;
-
-//     Integer eventCategoryId;
-//     eventCategoryEventCategoryName;
-
-//     Integer eventDuration;
-// no authorized
-// ได้ id 
-// eventstarttime
-// eventdurationเอามา + กับ eventstarttime เป็นเวลาเริ่ม - จบ เช่น 13.30 + 30 นาที จะได้เป็น 13.30 - 14.00 โชว์ให้ user
-//โชว์เป็นตารางแบ่งตาม eventcategory
 const myCookie = cookieData();
 const myFileData = fileData();
 const { params } = useRouter();
@@ -46,11 +33,9 @@ const getEventBlinded = async () => {
             dateTime();
         } else if (res.status === 401) {
             let resText = await res.text();
-            // if (resText.toUpperCase().match("TOKENEXPIRED")) {
-            //ได้ละ
+ 
             console.log("real");
             myUserData.refreshToken();
-            // }
         } else {
             console.log("error, cannot get data");
         }
