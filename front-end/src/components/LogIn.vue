@@ -88,6 +88,53 @@ const MatchingCheck = async (login) => {
     }
 }
 
+//login
+const getTokenFromOurServer = async () => {
+    console.log("getTokenFromOurServer");
+    const tokenMS = cookie.getCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.idtoken")
+    try {
+        loaderInsert();
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/jwt/loginms`, {
+            method: "POST",
+            headers: {
+                "content-type": "text/plain"
+            },
+            body: tokenMS,
+        });
+        loaderEnd();
+        if (res.status === 200) {
+            const objectJson = await res.json()
+            ////
+            for (let i in Object.keys(objectJson)) {
+                cookie.setCookie(Object.keys(objectJson)[i], Object.values(objectJson)[i], 7)
+            }
+            let jsonFromToken = userStore.parseJwt(cookie.getCookie("token"))
+            cookie.setCookie("name", jsonFromToken.name, 7)
+            cookie.setCookie("role", jsonFromToken.role, 7)
+            cookie.setCookie("email", jsonFromToken.sub, 7)
+
+            ////
+            matchstatus.value = "Sucesss"
+            statusError.value = 1;
+            topFunction();
+            setTimeout(() => (statusError.value = 0), 2000);
+            userStore.userList = []
+            userStore.getUsers()
+            myRouter.push({ name: 'Home' })
+        } else {
+            matchstatus.value = await res.text()
+            statusError.value = 2;
+            topFunction();
+            setTimeout(() => (statusError.value = 0), 2000);
+        }
+    } catch (err) {
+        console.log(err);
+        // errorInsert()
+        alert(err);
+    }
+
+}
+
 const noIsFun = () => {
     alert("This version doesn't have this function.")
 }
@@ -128,8 +175,9 @@ const loaderEnd = () => {
 }
 
 
-const loginMS = () => {
-    ms.loginMS()
+const loginMS = async() => {
+    await ms.loginMS()
+    await getTokenFromOurServer()
 }
 </script>
 
