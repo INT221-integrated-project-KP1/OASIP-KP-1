@@ -24,7 +24,7 @@ const filterList = ref({
 const reset = () => {
     filterList.value.eventCategoryId = -1;
 }
-
+const userLec = ref([])
 const lecOwer = ref([])
 
 const getEventCategoryOwner = async () => {
@@ -53,9 +53,48 @@ const getEventCategoryOwner = async () => {
 
     }
 };
+const getUserLec = async () => {
+    try {
+        lecOwer.value = [];
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/lecturer`, {
 
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+                Authorization: "Bearer " + myCookie.getCookie("token"),
+            },
+        });
+        console.log(res.status);
+        if (res.status === 200) {
+            userLec.value = await res.json();
+        } else if (res.status === 401) {
+            let resText = await res.text();
+
+            console.log("real");
+            myUserData.refreshToken();
+        } else {
+            console.log("error, cannot get data");
+        }
+    } catch (err) {
+        console.log("ERROR: " + err);
+
+    }
+};
+ 
+const checkLec = (id) => {
+    lecOwer.value.forEach((user) => {
+        console.log('check' + id +""+ user.id)
+        console.log(user.id==id)
+
+        if(user.id==id){
+            return true
+        }
+        else return false
+    })
+}
+const arrayUser = ref([20])
 myUserData.getUsers();
-
+getUserLec()
 
 </script>
 
@@ -108,20 +147,27 @@ myUserData.getUsers();
             </tr>
         </table>
 
-    </div>  
+    </div>
 
     <!-- Modal -->
     <input type="checkbox" id="modalUser" class="modal-toggle" />
     <div class="modal modal-bottom sm:modal-middle ">
         <div class="modal-box bg-white">
             checkbox to select lecture to Owner
-            <div v-for="(user, index) in myUserData.userList" :key="index">
-                <input type="checkbox"  checked>
-                <!-- <label> id : {{ lecOwer.id }} name : {{ lecOwer.name }} email : {{ lecOwer.email }} </label> -->
-                <label> id : {{ user.id }} </label>
-                <label> name : {{ user.name }} </label>
-                <div> role : {{ user.role }}  </div>
-                <!-- <label> {{ user }} </label> -->
+            {{ arrayUser }}
+            <div v-for="( userLec ) in userLec" :key="index">
+                <div v-if="checkLec(userLec.id)">
+                    <input type="checkbox" v-model="arrayUser" :value="userLec.id">
+                    <label> id : {{ userLec.id }} </label>
+                    <label> name : {{ userLec.name }} </label>
+                    <div> email : {{ userLec.email }} </div>
+                </div>
+                <div v-else>
+                    <input type="checkbox">
+                    <label> id : {{ userLec.id }} </label>
+                    <label> name : {{ userLec.name }} </label>
+                    <div> email : {{ userLec.email }} </div>
+                </div>
 
             </div>
             <div class="modal-action">
