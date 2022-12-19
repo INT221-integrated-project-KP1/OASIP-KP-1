@@ -159,7 +159,7 @@ getEventBlinded()
         </div>
     </div>
     <div class="card bg-white p-2 m-5">
-        <table>
+        <table class="text-center">
             <tr>
                 <th>Category</th>
                 <th>Start_Time</th>
