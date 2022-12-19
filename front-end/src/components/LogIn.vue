@@ -344,24 +344,7 @@ const loginMS = async () => {
 									/>
 								</div>
 								<div id="button" class="flex flex-col w-full my-5">
-									<div class="grid grid-cols-2 gap-7">
-										<button
-											@click="loginMS"
-											class="bg-base-300 hover:bg-secondary transition-all text-black font-bold py-2 px-4 gap-4 rounded-md flex"
-										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 23 23"
-												height="40"
-											>
-												<path fill="#f3f3f3" d="M0 0h23v23H0z" />
-												<path fill="#f35325" d="M1 1h10v10H1z" />
-												<path fill="#81bc06" d="M12 1h10v10H12z" />
-												<path fill="#05a6f0" d="M1 12h10v10H1z" />
-												<path fill="#ffba08" d="M12 12h10v10H12z" />
-											</svg>
-											Login with Microsoft
-										</button>
+									<div class="gap-7">
 										<button
 											type="button"
 											class="bg-base-300 w-full py-4 bg-green-600 rounded-lg text-green-100 hover:bg-secondary transition-all"
@@ -394,6 +377,28 @@ const loginMS = async () => {
 									</div>
 								</div>
 							</form>
+							<div class="text-center">OR</div>
+							<div class="flex flex-col w-full my-5">
+                                <div class="grid grid-cols-1 gap-7">
+                                    <button @click="loginMS"
+                                        class="bg-base-300 w-full py-4 bg-green-600 rounded-lg text-green-100 hover:bg-secondary transition-all">
+                                        <div class="flex flex-row items-center justify-center">
+                                            <div class="mr-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" height="40">
+                                                    <path fill="#f3f3f3" d="M0 0h23v23H0z" />
+                                                    <path fill="#f35325" d="M1 1h10v10H1z" />
+                                                    <path fill="#81bc06" d="M12 1h10v10H12z" />
+                                                    <path fill="#05a6f0" d="M1 12h10v10H1z" />
+                                                    <path fill="#ffba08" d="M12 12h10v10H12z" />
+                                                </svg>
+                                            </div>
+                                            <div class="font-bold"> Login with Microsoft
+                                            </div>
+                                        </div>
+
+                                    </button>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>
