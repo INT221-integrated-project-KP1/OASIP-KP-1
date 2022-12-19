@@ -15,9 +15,9 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8mb3 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`eventcategory`
+-- Table `mydb`.`eventCategory`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`eventcategory` (
+CREATE TABLE IF NOT EXISTS `mydb`.`eventCategory` (
   `event_category_id` INT NOT NULL AUTO_INCREMENT,
   `event_category_name` VARCHAR(100) NOT NULL,
   `event_category_description` VARCHAR(500) NULL DEFAULT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`event` (
   INDEX `fk_event_eventCategory_idx` (`event_category_id` ASC) VISIBLE,
   CONSTRAINT `fk_event_eventCategory`
     FOREIGN KEY (`event_category_id`)
-    REFERENCES `mydb`.`eventcategory` (`event_category_id`))
+    REFERENCES `mydb`.`eventCategory` (`event_category_id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 8
 DEFAULT CHARACTER SET = utf8mb3;
@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`event_category_owner` (
   `user_id` INT NULL DEFAULT NULL,
   `event_category_id` INT NOT NULL,
   PRIMARY KEY (`event_category_owner_id`),
-  INDEX `fk_myuser_has_eventcategory_eventcategory1_idx` (`event_category_id` ASC) VISIBLE,
-  INDEX `fk_myuser_has_eventcategory_myuser1_idx` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `fk_myuser_has_eventcategory_eventcategory1`
+  INDEX `fk_myuser_has_eventCategory_eventCategory1_idx` (`event_category_id` ASC) VISIBLE,
+  INDEX `fk_myuser_has_eventCategory_myuser1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_myuser_has_eventCategory_eventCategory1`
     FOREIGN KEY (`event_category_id`)
-    REFERENCES `mydb`.`eventcategory` (`event_category_id`),
-  CONSTRAINT `fk_myuser_has_eventcategory_myuser1`
+    REFERENCES `mydb`.`eventCategory` (`event_category_id`),
+  CONSTRAINT `fk_myuser_has_eventCategory_myuser1`
     FOREIGN KEY (`user_id`)
     REFERENCES `mydb`.`myuser` (`id`))
 ENGINE = InnoDB
@@ -112,4 +112,3 @@ insert into eventCategory (event_category_name,event_category_description,event_
 
 insert into event(booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration) values ('Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
-insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);
