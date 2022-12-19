@@ -165,7 +165,7 @@ getEventBlinded()
                 <th>Start_Time</th>
                 <th>End_Time</th>
             </tr>
-            <tr v-for="bookingTime in bookingTime">
+            <tr v-for="bookingTime in bookingTime" >
                 <td>{{ bookingTime.Category }}</td>
                 <td>{{ bookingTime.Start_Time }}</td>
                 <td>{{ bookingTime.End_Time }}</td>
