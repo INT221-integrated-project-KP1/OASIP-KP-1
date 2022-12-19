@@ -92,7 +92,7 @@ const checkLec = (id) => {
         else return false
     })
 }
-const arrayUser = ref([20])
+const arrayUser = ref([])
 myUserData.getUsers();
 getUserLec()
 
@@ -162,13 +162,6 @@ getUserLec()
                     <label> name : {{ userLec.name }} </label>
                     <div> email : {{ userLec.email }} </div>
                 </div>
-                <div v-else>
-                    <input type="checkbox">
-                    <label> id : {{ userLec.id }} </label>
-                    <label> name : {{ userLec.name }} </label>
-                    <div> email : {{ userLec.email }} </div>
-                </div>
-
             </div>
             <div class="modal-action">
                 <label
