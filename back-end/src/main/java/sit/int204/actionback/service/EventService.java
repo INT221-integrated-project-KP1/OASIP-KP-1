@@ -295,7 +295,7 @@ public class EventService {
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("oasipsy1@gmail.com", "zetiuiiqclnkxwfx");
+                return new PasswordAuthentication("tusking8030@gmail.com", "pqxowijwdepcbwna");
             }
         });
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm").withZone(ZoneId.of("UTC"));
