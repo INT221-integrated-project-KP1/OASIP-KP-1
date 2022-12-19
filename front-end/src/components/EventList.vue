@@ -232,8 +232,8 @@ const deleteFile = (selectedEvent) => {
                         Event Details: {{ event.eventDetails }}
                       </p>
 
-                      <p v-show="event.attachment !== null">Attachment: {{ event.attachment }} </p>
-                      <button v-show="event.attachment !== null" @click="downloadFile(event.attachment)" class="btn"
+                      <p v-show="event.attachment != undefined && event.attachment != ''">Attachment: {{ event.attachment }} </p>
+                      <button v-show="event.attachment != undefined && event.attachment != ''" @click="downloadFile(event.attachment)" class="btn"
                         style="width:100%"><i class="fa fa-download"></i> Download </button>
 
 
