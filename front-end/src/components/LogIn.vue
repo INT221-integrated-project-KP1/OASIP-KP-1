@@ -267,7 +267,7 @@ const loginMS = async () => {
 		<div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
 			<div class="container px-6 mx-auto">
 				<div
-					class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center"
+					class="flex flex-col text-center md:text-left md:flex-row  justify-evenly md:items-center"
 				>
 					<div class="flex flex-col w-full">
 						<div>
@@ -394,20 +394,7 @@ const loginMS = async () => {
 										
 									</div>
 
-									<div class="flex justify-evenly mt-5">
-										<a
-											href="#"
-											class="w-full text-center font-medium text-gray-500 hover:text-secondary transition-all"
-											@click="noIsFun"
-											>Recover password!</a
-										>
-										<a
-											href="#"
-											class="w-full text-center font-medium text-gray-500 hover:text-secondary transition-all"
-											@click="goSignUp"
-											>Sign up!</a
-										>
-									</div>
+
 								</div>
 							</form>
 						</div>
