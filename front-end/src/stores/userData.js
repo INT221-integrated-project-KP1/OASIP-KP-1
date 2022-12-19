@@ -1,8 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { computed, ref } from "vue";
 import { cookieData } from "../stores/cookieData.js";
-import { useRouter } from 'vue-router'
-import router from "../router/index.js"; 
+import { useRouter } from "vue-router";
+import router from "../router/index.js";
 
 export const userData = defineStore("userDataState", () => {
   const { params } = useRouter();
@@ -45,8 +45,8 @@ export const userData = defineStore("userDataState", () => {
       if (res.status === 201) {
         console.log("added sucessfully");
         getUsers();
-        alert('Sign up complete')
-        router.push('/Home')
+        alert("Sign up complete");
+        router.push("/Home");
         return { error: "", status: 1 };
       } else {
         console.log("error, cannot be added");
@@ -92,20 +92,18 @@ export const userData = defineStore("userDataState", () => {
           ) {
             cookie.setCookie("token", "", -1);
             cookie.setCookie("name", "", -1);
-          } 
-          else {            myRouter.push({ name: "SignIn" });
-        }
+          } else {
+            myRouter.push({ name: "SignIn" });
+          }
         } else if (res.status === 403) {
           console.log("only admin wtf dog");
         } else {
           console.log("error, cannot get data");
-
         }
       }
     } catch (err) {
       console.log("ERROR: " + err);
       myRouter.push({ name: "SignIn" });
-
     }
   };
 
@@ -146,7 +144,6 @@ export const userData = defineStore("userDataState", () => {
     } else {
       console.log("error, cannot delete data");
       myRouter.push({ name: "SignIn" });
-
     }
   };
 
@@ -238,7 +235,10 @@ export const userData = defineStore("userDataState", () => {
         if (
           resJson.message
             .toUpperCase()
-            .match("cannot refresh token. need to login again".toUpperCase) || resJson.message.toUpperCase().match("Claims == null, Cant't Refresh".toUpperCase())
+            .match("cannot refresh token. need to login again".toUpperCase) ||
+          resJson.message
+            .toUpperCase()
+            .match("Claims == null, Cant't Refresh".toUpperCase())
         ) {
           cookie.setCookie("token", "", -1);
           cookie.setCookie("refreshtoken", "", -1);
@@ -250,7 +250,6 @@ export const userData = defineStore("userDataState", () => {
       } else {
         console.log("error, cannot get data");
         myRouter.push({ name: "SignIn" });
-
       }
     } catch (err) {
       console.log("ERROR: " + err);
@@ -285,6 +284,13 @@ export const userData = defineStore("userDataState", () => {
     }
     return myRouter.push({ name: "Welcome" });
   };
+  const userLecData = ref([]);
+  const userLec = () => {
+    userList.value.forEach((user) => {
+      console.log('add')
+      if (user.role == "LECTURER") userLecData.value.push(user);
+    });
+  };
 
   getUsers();
   return {
@@ -298,6 +304,8 @@ export const userData = defineStore("userDataState", () => {
     refreshToken,
     parseJwt,
     isLogin,
+    userLecData,
+    userLec
   };
 });
 
