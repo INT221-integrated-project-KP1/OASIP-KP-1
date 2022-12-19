@@ -267,7 +267,7 @@ const loginMS = async () => {
 		<div id="content" :style="isProgress ? 'opacity: 0.5;' : 'opacity: 1.0;'">
 			<div class="container px-6 mx-auto">
 				<div
-					class="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center"
+					class="flex flex-col text-center md:text-left md:flex-row justify-evenly md:items-center"
 				>
 					<div class="flex flex-col w-full">
 						<div>
@@ -343,9 +343,9 @@ const loginMS = async () => {
 										v-model="loginuser.password"
 									/>
 								</div>
-								<div id="button" class="flex flex-col w-full my-5 ">
+								<div id="button" class="flex flex-col w-full my-5">
 									<div class="grid grid-cols-2 gap-7">
-                                        <button
+										<button
 											@click="loginMS"
 											class="bg-base-300 hover:bg-secondary transition-all text-black font-bold py-2 px-4 gap-4 rounded-md flex"
 										>
@@ -366,7 +366,7 @@ const loginMS = async () => {
 											type="button"
 											class="bg-base-300 w-full py-4 bg-green-600 rounded-lg text-green-100 hover:bg-secondary transition-all"
 										>
-											<div class="flex flex-row items-center justify-center ">
+											<div class="flex flex-row items-center justify-center">
 												<div class="mr-2">
 													<svg
 														class="w-6 h-6"
@@ -384,29 +384,13 @@ const loginMS = async () => {
 													</svg>
 												</div>
 												<div
-													class="font-bold "
+													class="font-bold"
 													@click="MatchingCheck(loginuser)"
 												>
 													Sign in
 												</div>
 											</div>
 										</button>
-										
-									</div>
-
-									<div class="flex justify-evenly mt-5">
-										<a
-											href="#"
-											class="w-full text-center font-medium text-gray-500 hover:text-secondary transition-all"
-											@click="noIsFun"
-											>Recover password!</a
-										>
-										<a
-											href="#"
-											class="w-full text-center font-medium text-gray-500 hover:text-secondary transition-all"
-											@click="goSignUp"
-											>Sign up!</a
-										>
 									</div>
 								</div>
 							</form>

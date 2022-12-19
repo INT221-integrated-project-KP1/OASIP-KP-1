@@ -85,13 +85,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/jwt/login").permitAll()
                 .and().authorizeRequests().antMatchers("/api/jwt/loginms").permitAll()
                 .and().authorizeRequests().antMatchers("/api/jwt/refresh").permitAll()
-                .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll()
+                .and().authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").hasAnyAuthority("ADMIN")
 
                 //delete put post
                 .and().authorizeRequests().antMatchers("/api/event/all").hasAnyAuthority("ADMIN","STUDENT","LECTURER")
                 .and().authorizeRequests().antMatchers("/api/event/adding").hasAnyAuthority("ADMIN", "STUDENT")
                 .and().authorizeRequests().antMatchers("/api/event/overlapping").hasAnyAuthority("ADMIN", "STUDENT")
                 .and().authorizeRequests().antMatchers("/api/event/filtration").permitAll()
+                .and().authorizeRequests().antMatchers("/api/event/blinded").permitAll()
+//blinded
 
                 .and().authorizeRequests().antMatchers("/api/eventcategory").permitAll()
                 .and().authorizeRequests().antMatchers("/api/user").hasAnyAuthority("ADMIN")

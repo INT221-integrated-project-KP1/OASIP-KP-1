@@ -40,7 +40,7 @@ const checkToken = () => {
 
 
   <div>
-    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' || $route.name === 'SignIn')">
+    <div class="navbar bg-white" v-show="!($route.name === 'Welcome' )">
       <div class="navbar-start">
 
 
@@ -117,7 +117,7 @@ const checkToken = () => {
   <router-link :to="{ name: 'ListUser' }" :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']">
               List User </router-link> -->
 
-            <div v-show="cookie.getCookie('role') === 'ADMIN' || cookie.getCookie('token') == ''">
+            <div v-show="cookie.getCookie('role') === 'ADMIN' ">
               <router-link :to="{ name: 'SignUp' }" :class="[$route.name == 'SignUp' ? 'tab-active' : '', 'tab']">
                 Sign Up </router-link>
             </div>
