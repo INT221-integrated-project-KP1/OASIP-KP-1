@@ -6,8 +6,6 @@ import { fileData } from "../stores/fileData.js";
 import { useRouter } from "vue-router";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
-<<<<<<< HEAD
-=======
 
 const myCookie = cookieData();
 const myFileData = fileData();
@@ -16,7 +14,6 @@ const myRouter = useRouter();
 const myUserData = userData();
 const blinded = ref([])
 const bookingTime = ref([])
->>>>>>> 9d5d8e524c5589e77d0d0b4124b12454753ae48c
 
 const myCategorys = categorys()
 
@@ -45,52 +42,6 @@ const getEventBlinded = async () => {
     } catch (err) {
         console.log("ERROR: " + err);
 
-<<<<<<< HEAD
-//     Integer eventDuration;
-// no authorized
-// ได้ id 
-// eventstarttime
-// eventdurationเอามา + กับ eventstarttime เป็นเวลาเริ่ม - จบ เช่น 13.30 + 30 นาที จะได้เป็น 13.30 - 14.00 โชว์ให้ user
-//โชว์เป็นตารางแบ่งตาม eventcategory
-const myCookie = cookieData();
-const myFileData = fileData();
-const { params } = useRouter();
-const myRouter = useRouter();
-const myUserData = userData();
-const blinded = ref([])
-const bookingTime = ref([])
-
-const myCategorys = categorys()
-
-const getEventBlinded = async () => {
-    try {
-        blinded.value = [];
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/blinded`, {
-            method: "GET",
-            headers: {
-                "content-type": "application/json",
-                Authorization: "Bearer " + myCookie.getCookie("token"),
-            },
-        });
-        console.log(res.status);
-        if (res.status === 200) {
-            blinded.value = await res.json();
-            dateTime();
-        } else if (res.status === 401) {
-            let resText = await res.text();
-            // if (resText.toUpperCase().match("TOKENEXPIRED")) {
-            //ได้ละ
-            console.log("real");
-            myUserData.refreshToken();
-            // }
-        } else {
-            console.log("error, cannot get data");
-        }
-    } catch (err) {
-        console.log("ERROR: " + err);
-
-=======
->>>>>>> 9d5d8e524c5589e77d0d0b4124b12454753ae48c
     }
 };
 
@@ -208,13 +159,13 @@ getEventBlinded()
         </div>
     </div>
     <div class="card bg-white p-2 m-5">
-        <table>
+        <table class="text-center">
             <tr>
                 <th>Category</th>
                 <th>Start_Time</th>
                 <th>End_Time</th>
             </tr>
-            <tr v-for="bookingTime in bookingTime">
+            <tr v-for="bookingTime in bookingTime" >
                 <td>{{ bookingTime.Category }}</td>
                 <td>{{ bookingTime.Start_Time }}</td>
                 <td>{{ bookingTime.End_Time }}</td>
