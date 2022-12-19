@@ -94,7 +94,8 @@ public class EventService {
                 return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
             } else if(myRole.equals(Role.LECTURER.toString())) {
 //                int leuturerId = user.getId();
-
+                System.out.println("asdsddss");
+                System.out.println(eventRepository.findAllEventByLecturerEmail(email).size());
                 return listMapper.mapList(eventRepository.findAllEventByLecturerEmail(email), SimpleEventDTO.class, modelMapper);
             }
         }
