@@ -232,7 +232,7 @@ const deleteFile = (selectedEvent) => {
                         Event Details: {{ event.eventDetails }}
                       </p>
 
-                      <p>Attachment: {{ event.attachment }} </p>
+                      <p v-show="event.attachment !== null">Attachment: {{ event.attachment }} </p>
                       <button v-show="event.attachment !== null" @click="downloadFile(event.attachment)" class="btn"
                         style="width:100%"><i class="fa fa-download"></i> Download </button>
 
@@ -291,15 +291,15 @@ const deleteFile = (selectedEvent) => {
                     <p class="py-2">Event Notes : {{ selectedEvent.eventNotes }}</p>
                   </div>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2" v-show="selectedEvent.attachment==''||selectedEvent.attachment==undefined"> Attachment : {{ selectedEvent.attachment }}</p>
+                  <p class="py-2">Attachment : {{ selectedEvent.attachment }}</p>
                   <button class="btn btn-primary" v-show="disNewFile" @click="disNewFile = !disNewFile"> Open Upload New File </button>
-                  <button class="btn btn-secondary" v-show="!disNewFile" @click="closeUpnewFile"> Close Upload New File </button>
+                  <button class="btn btn-accent" v-show="!disNewFile" @click="closeUpnewFile"> Close Upload New File </button>
 
                   <input v-show="!disNewFile" type="file"
                     :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
                     id="fileupload" @change="checkFile" />
                   <div>
-                    <button v-show="selectedEvent.attachment != null" @click="deleteFile(selectedEvent)"> Delete File
+                    <button class="btn btn-secondary" v-show="selectedEvent.attachment != null" @click="deleteFile(selectedEvent)"> Delete File
                     </button>
                   </div>
 
