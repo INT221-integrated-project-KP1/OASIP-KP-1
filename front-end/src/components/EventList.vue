@@ -291,9 +291,9 @@ const deleteFile = (selectedEvent) => {
                     <p class="py-2">Event Notes : {{ selectedEvent.eventNotes }}</p>
                   </div>
                   <p class="py-2">Event Duration: {{ selectedEvent.eventDuration }} Minutes</p>
-                  <p class="py-2"> Attachment : {{ selectedEvent.attachment }}</p>
-                  <button v-show="disNewFile" @click="disNewFile = !disNewFile"> Open Upload New File </button>
-                  <button v-show="!disNewFile" @click="closeUpnewFile"> Close Upload New File </button>
+                  <p class="py-2" v-show="selectedEvent.attachment==''||selectedEvent.attachment==undefined"> Attachment : {{ selectedEvent.attachment }}</p>
+                  <button class="btn btn-primary" v-show="disNewFile" @click="disNewFile = !disNewFile"> Open Upload New File </button>
+                  <button class="btn btn-secondary" v-show="!disNewFile" @click="closeUpnewFile"> Close Upload New File </button>
 
                   <input v-show="!disNewFile" type="file"
                     :class="['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']"
