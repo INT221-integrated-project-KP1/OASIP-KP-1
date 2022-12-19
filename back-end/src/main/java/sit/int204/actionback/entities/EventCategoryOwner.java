@@ -1,5 +1,6 @@
 package sit.int204.actionback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,17 +11,18 @@ import java.util.Optional;
 @Getter
 @Setter
 @Table(name = "event_category_owner")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class EventCategoryOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_category_owner_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER , optional = false)
     @JoinColumn(name = "event_category_id", nullable = false)
     private EventCategory eventCategory;
 

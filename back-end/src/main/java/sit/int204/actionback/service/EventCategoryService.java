@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.entities.EventCategoryOwner;
 import sit.int204.actionback.enumfile.Role;
+import sit.int204.actionback.repo.EventCategoryOwnerRepository;
 import sit.int204.actionback.repo.EventCategoryRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +24,19 @@ public class EventCategoryService {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    public EventCategoryOwnerRepository eventCategoryOwnerRepository;
 
     public ResponseEntity findCategory(){
-
         List<EventCategory> eventCategory = eventCategoryRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(eventCategory);
     }
 
+    public List<EventCategoryOwner> getEventCategoryOwnerByEventCategoryId(Integer idEventCategory){
+        EventCategory ec = eventCategoryRepository.findAllById(idEventCategory);
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec);
+        return eco;
+    }
 
     public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id, HttpServletRequest request) {
         String requestTokenHeader = request.getHeader("Authorization");

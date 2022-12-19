@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.dtos.EventCategoryOwnerDTO;
+import sit.int204.actionback.dtos.UserShowDTO;
 import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
 import sit.int204.actionback.entities.EventCategoryOwner;
@@ -16,6 +17,7 @@ import sit.int204.actionback.repo.EventCategoryRepository;
 import sit.int204.actionback.repo.UserRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,10 +65,36 @@ public class EventCategoryOwnerService {
         return ResponseEntity.status(201).body("ok");
     }
 
-    public List<EventCategoryOwner> getEventCategoryOwnerByEventCategoryId(Integer idEventCategory){
+    public ResponseEntity getEventCategoryOwnerByEventCategoryId(Integer idEventCategory){
         EventCategory ec = eventCategoryRepository.findAllById(idEventCategory);
-        return eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec);
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec);
+        List<UserShowDTO> userShowDTOList = new ArrayList<>();
+        for (int i = 0; i < eco.size(); i++) {
+            UserShowDTO userShowDTO = new UserShowDTO();
+            userShowDTO.setId(eco.get(i).getUser().getId());
+            userShowDTO.setEmail(eco.get(i).getUser().getEmail());
+            userShowDTO.setName(eco.get(i).getUser().getName());
+            userShowDTOList.add(userShowDTO);
+        }
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(userShowDTOList);
     }
+
+//    public ResponseEntity getAll(){
+//        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.getAll();
+//        List<UserShowDTO> userShowDTOList = new ArrayList<>();
+//        for (int i = 0; i < eco.size(); i++) {
+//            UserShowDTO userShowDTO = new UserShowDTO();
+//            userShowDTO.setId(eco.get(i).getUser().getId());
+//            userShowDTO.setEmail(eco.get(i).getUser().getEmail());
+//            userShowDTO.setName(eco.get(i).getUser().getName());
+//            userShowDTOList.add(userShowDTO);
+//        }
+//
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(userShowDTOList);
+//    }
 
 
     public boolean deleteForOwner(Integer user_id){

@@ -22,6 +22,8 @@ public class EventCategoryController {
             return eventCategoryService.findCategory();
     }
 
+
+
     @PutMapping("/{id}")
     public ResponseEntity update(@Valid @RequestBody EventCategory updateEventCategory, @PathVariable Integer id, HttpServletRequest request) {
         return eventCategoryService.updateEventCategory(updateEventCategory,id, request);
