@@ -15,18 +15,19 @@ const myFileData = fileData();
 const { params } = useRouter();
 const myRouter = useRouter();
 const myUserData = userData();
-
+const clickup = ref(false)
 const myCategorys = categorys()
 const arrayUser = ref([])
 const beforeArrayUser = ref([])
-const filtereventCategoryId= ref(-1);
-const reset = () => {
-    lecOwer.value = []
-    filtereventCategoryId.value = -1;
-}
+const filtereventCategoryId= ref(0);
 const userLec = ref([])
 const lecOwer = ref([])
 
+const reset = () => {
+    lecOwer.value = []
+    filtereventCategoryId.value = 0;
+     clickup.value = false
+}
 const getEventCategoryOwner = async () => {
     try {
         lecOwer.value = [];
@@ -40,6 +41,7 @@ const getEventCategoryOwner = async () => {
         console.log(res.status);
         if (res.status === 200) {
             lecOwer.value = await res.json();
+            clickup.value = true
         } else if (res.status === 401) {
             let resText = await res.text();
 
@@ -148,15 +150,13 @@ getUserLec()
 </script>
 
 <template>
-    {{ lecOwer }}
     <div class="card bg-white p-2 m-5">
         <div class="form-control ">
             <div class="lg:flex lg:justify-center hidden">
                 <div class="m-3"> Select your categorys to see lectures in categorys</div>
                 <div class="px-5">
                     <select class="select select-bordered " v-model="filtereventCategoryId">
-                        <option disabled value=-1>Pick category</option>
-                        <option value=0>none</option>
+                        <option value=0>Pick category</option>
                         <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                             :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
                     </select>
@@ -177,7 +177,8 @@ getUserLec()
 
         </div>
     </div>
-    <label @click="" for="modalUser" :class="
+    <div v-show="clickup">
+        <label @click="" for="modalUser" :class="
         ['modal-button', 'duration-150', 'transform', 'hover:scale-125', 'transition', 'ease-linear', 'btn', 'btn', 'px-6', 'py-3.5', 'm-4', 'inline']
     ">Edit Owenr</label>
     <div class="card bg-white p-2 m-5">
@@ -202,7 +203,6 @@ getUserLec()
     <div class="modal modal-bottom sm:modal-middle ">
         <div class="modal-box bg-white">
             checkbox to select lecture to Owner
-            {{ arrayUser }}
 
             <div v-for="( userLec ) in userLec" :key="index">
                 <input type="checkbox" v-model="arrayUser" :value="userLec.id">
@@ -222,6 +222,8 @@ getUserLec()
             </div>
         </div>
     </div>
+    </div>
+    
 
 
 </template>
