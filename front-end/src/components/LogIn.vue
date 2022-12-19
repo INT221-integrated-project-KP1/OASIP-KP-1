@@ -394,15 +394,7 @@ const loginMS = async () => {
 										
 									</div>
 
-									<div class="flex justify-evenly mt-5">
-										<a
-											href="#"
-											class="w-full text-center font-medium text-gray-500 hover:text-secondary transition-all"
-											@click="noIsFun"
-											>Recover password!</a
-										>
-										
-									</div>
+
 								</div>
 							</form>
 						</div>
