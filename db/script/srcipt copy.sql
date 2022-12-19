@@ -99,17 +99,3 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 CREATE USER IF NOT EXISTS  'dev'@'%' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';
 FLUSH PRIVILEGES;
-
-use mydb;
-ALTER TABLE eventCategory AUTO_INCREMENT=1;
-ALTER TABLE event AUTO_INCREMENT=1;
-set names utf8;
-insert into eventCategory (event_category_name,event_category_description,event_duration) values ('Project Management Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย project management clinic ในวิชา INT221 integrated project I ให้นักศึกษาเตรียมเอกสารที่เกี่ยวข้อง เพื่อแสดงระหว่างขอคำปรึกษา',30);
-insert into eventCategory (event_category_name,event_category_description,event_duration)  values ('DevOps/Infra Clinic','Use this event category for DevOps/Infra clinic.',30);
-insert into eventCategory (event_category_name,event_category_description,event_duration)  values ('Database Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย database clinic ในวิชา INT221 integrated project I',15);
-insert into eventCategory (event_category_name,event_category_description,event_duration)  values ('Client-side Clinic','ตารางนัดหมายนี้ใช้สำหรับนัดหมาย client-side clinic ในวิชา INT221 integrated project I',30);
-insert into eventCategory (event_category_name,event_category_description,event_duration)  values ('Server-side Clinic',null,30);
-
-insert into event(booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration) values ('Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
-insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
-insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);

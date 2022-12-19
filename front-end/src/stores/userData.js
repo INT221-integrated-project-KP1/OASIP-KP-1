@@ -33,6 +33,7 @@ export const userData = defineStore("userDataState", () => {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          Authorization: "Bearer " + cookie.getCookie("token"),
         },
         body: JSON.stringify({
           name: user.name,
