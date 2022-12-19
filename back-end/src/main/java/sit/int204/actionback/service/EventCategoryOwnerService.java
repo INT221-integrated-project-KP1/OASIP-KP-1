@@ -124,11 +124,14 @@ public class EventCategoryOwnerService {
                 return false;
             }
         }
-
-        Optional<EventCategoryOwner> owner = eventCategoryOwnerRepository.findById(user_id);
+        System.out.println("deleteForOwner");
+        List<EventCategoryOwner> owner = eventCategoryOwnerRepository.getOwnerByUserId(user_id);
         if (!owner.isEmpty()) {
+            System.out.println("iasfjiofhjasifhsiohfijoh");
             eventCategoryOwnerRepository.deleteOwner(user_id);
         }
+        System.out.println("deleteForOwner2");
+
         return true;
     }
 }

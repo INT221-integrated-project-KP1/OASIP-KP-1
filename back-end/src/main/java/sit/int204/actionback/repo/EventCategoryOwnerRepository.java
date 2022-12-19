@@ -33,4 +33,7 @@ public interface EventCategoryOwnerRepository extends JpaRepository<EventCategor
     @Query(value = "select eco.* from event_category_owner eco", nativeQuery = true)
     List<EventCategoryOwner> getAll();
 
+    @Query(value = "select eco.* from event_category_owner eco where user_id = :user_id", nativeQuery = true)
+    List<EventCategoryOwner> getOwnerByUserId(@Param("user_id") Integer user_id);
+
 }
