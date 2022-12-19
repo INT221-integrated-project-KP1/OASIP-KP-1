@@ -76,6 +76,12 @@ const checkToken = () => {
               <router-link :to="{ name: 'ListUser' }"> List User </router-link>
               <!-- <p @click="signIn"> List User </p> -->
             </li>
+
+            <li v-show="cookie.getCookie('role') === 'ADMIN'">
+              <router-link :to="{ name: 'listEventCategoryOwner' }"> List Owner </router-link>
+              <!-- <p @click="signIn"> List User </p> -->
+            </li>
+
             <li>
               <router-link :to="{ name: 'AboutUs' }"> About US </router-link>
             </li>
@@ -124,6 +130,10 @@ const checkToken = () => {
 
             <router-link v-show="cookie.getCookie('role') === 'ADMIN'" :to="{ name: 'ListUser' }"
               :class="[$route.name == 'ListUser' ? 'tab-active' : '', 'tab']"> List User
+            </router-link>
+
+            <router-link v-show="cookie.getCookie('role') === 'ADMIN'" :to="{ name: 'listEventCategoryOwner' }"
+              :class="[$route.name == 'listEventCategoryOwner' ? 'tab-active' : '', 'tab']"> List Owner 
             </router-link>
 
             <router-link :to="{ name: 'BlindedEvent' }" :class="[$route.name == 'BlindedEvent' ? 'tab-active' : '', 'tab']">

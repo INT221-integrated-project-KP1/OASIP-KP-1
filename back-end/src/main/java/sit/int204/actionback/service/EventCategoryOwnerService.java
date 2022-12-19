@@ -48,6 +48,8 @@ public class EventCategoryOwnerService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AT LEAST 1");
         }
 
+
+
         for (int i = 0; i < e.getUserId().length; i++) {
             isAdd = true;
             for (int j = 0; j < current_owner.size(); j++) {
@@ -59,7 +61,19 @@ public class EventCategoryOwnerService {
                 new_owner.add(e.getUserId()[i]);
                 //addEventCategoryOwner
                 eventCategoryOwnerRepository.addEventCategoryOwner(e.getEventCategoryId(), e.getUserId()[i]);
-
+            }
+        }
+        boolean match = false;
+        List<Integer> current2_owner = eventCategoryOwnerRepository.getOwnersId(e.getEventCategoryId());
+        for (int i = 0; i < current2_owner.size(); i++) {
+            match = false;
+            for (int j = 0; j < e.getUserId().length; j++) {
+                if(current2_owner.get(i) == e.getUserId()[j]){
+                    match = true;
+                }
+            }
+            if(!match){
+                eventCategoryOwnerRepository.deleteOwner(current2_owner.get(i));
             }
         }
         return ResponseEntity.status(201).body("ok");
@@ -110,11 +124,14 @@ public class EventCategoryOwnerService {
                 return false;
             }
         }
-
-        Optional<EventCategoryOwner> owner = eventCategoryOwnerRepository.findById(user_id);
+        System.out.println("deleteForOwner");
+        List<EventCategoryOwner> owner = eventCategoryOwnerRepository.getOwnerByUserId(user_id);
         if (!owner.isEmpty()) {
+            System.out.println("iasfjiofhjasifhsiohfijoh");
             eventCategoryOwnerRepository.deleteOwner(user_id);
         }
+        System.out.println("deleteForOwner2");
+
         return true;
     }
 }
