@@ -18,6 +18,7 @@ import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,17 @@ public class UserService {
 
     public List<User> getEvent(){
         return userRepository.findAll();
+    }
+
+    public List<User> getUserLecturer(){
+        List<User> u = userRepository.findAll();
+        List<User> u2 = new ArrayList<>();
+        for (int i = 0; i < u.size(); i++) {
+            if(u.get(i).getRole().equals(Role.LECTURER.toString())){
+                u2.add(u.get(i));
+            }
+        }
+        return u2;
     }
 
     public ResponseEntity deleteUser(Integer id , HttpServletRequest request) {

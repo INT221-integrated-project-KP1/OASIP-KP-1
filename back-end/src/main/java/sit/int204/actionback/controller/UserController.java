@@ -34,6 +34,12 @@ public class UserController {
         return userService.getEvent();
     }
 
+    @GetMapping("lecturer")
+    public List<User> getUserLecturer(){
+        return userService.getUserLecturer();
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
