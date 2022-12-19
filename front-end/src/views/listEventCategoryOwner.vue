@@ -156,7 +156,7 @@ getUserLec()
                 <div class="m-3"> Select your categorys to see lectures in categorys</div>
                 <div class="px-5">
                     <select class="select select-bordered " v-model="filtereventCategoryId">
-                        <option value=0>Pick category</option>
+                        <option value=0 disabled>Pick category</option>
                         <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                             :value="eventCategory.id">{{ eventCategory.eventCategoryName }}</option>
                     </select>

@@ -349,7 +349,7 @@ const loginMS = async () => {
 											type="button"
 											class="bg-base-300 w-full py-4 bg-green-600 rounded-lg text-green-100 hover:bg-secondary transition-all"
 										>
-											<div class="flex flex-row items-center justify-center">
+											<div class="flex flex-row items-center justify-center" @click="MatchingCheck(loginuser)">
 												<div class="mr-2">
 													<svg
 														class="w-6 h-6"
@@ -368,7 +368,7 @@ const loginMS = async () => {
 												</div>
 												<div
 													class="font-bold"
-													@click="MatchingCheck(loginuser)"
+													
 												>
 													Sign in
 												</div>
