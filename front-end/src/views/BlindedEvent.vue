@@ -132,7 +132,7 @@ const filtering = () => {
     let hasCategory = filterList.value.eventCategoryId > 0
     blinded.value.forEach((data) => {
         let check = [
-            new Date(filterList.value.date).getDay() == new Date(data.eventStartTime).getDay(),
+            new Date(filterList.value.date).getDate() == new Date(data.eventStartTime).getDate(),
             new Date(filterList.value.date).getMonth() == new Date(data.eventStartTime).getMonth(),
             new Date(filterList.value.date).getFullYear() == new Date(data.eventStartTime).getFullYear()
         ]
