@@ -4,20 +4,25 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
 import sit.int204.actionback.config.JwtTokenUtil;
+import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.dtos.UserAddDTO;
 import sit.int204.actionback.dtos.UserModifyDTO;
+import sit.int204.actionback.dtos.UserShowDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.enumfile.Role;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +44,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> getUserLecturer(){
+    public List<UserShowDTO> getUserLecturer(){
         List<User> u = userRepository.findAll();
         List<User> u2 = new ArrayList<>();
         for (int i = 0; i < u.size(); i++) {
@@ -47,7 +52,7 @@ public class UserService {
                 u2.add(u.get(i));
             }
         }
-        return u2;
+        return listMapper.mapList(u2, UserShowDTO.class, modelMapper);
     }
 
     public ResponseEntity deleteUser(Integer id , HttpServletRequest request) {

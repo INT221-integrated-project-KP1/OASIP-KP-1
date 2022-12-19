@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int204.actionback.dtos.UserAddDTO;
 import sit.int204.actionback.dtos.UserModifyDTO;
+import sit.int204.actionback.dtos.UserShowDTO;
 import sit.int204.actionback.entities.User;
 import sit.int204.actionback.service.UserService;
 import sit.int204.actionback.utils.ListMapper;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("lecturer")
-    public List<User> getUserLecturer(){
+    public List<UserShowDTO> getUserLecturer(){
         return userService.getUserLecturer();
     }
 
@@ -64,8 +65,4 @@ public class UserController {
         return userService.editUser(user, id);
     }
 
-    @GetMapping("/lecturer")
-    public ResponseEntity getGay(){
-        return ResponseEntity.ok().body("Gay");
-    }
 }
