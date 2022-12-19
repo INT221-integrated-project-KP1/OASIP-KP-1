@@ -75,9 +75,6 @@ public class FileController {
     }
 
 
-
-
-
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String fileSizeExceptionHandler(RedirectAttributes ra) {
         return "File size should be less than 10MB!";

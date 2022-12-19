@@ -1,11 +1,18 @@
 package sit.int204.actionback.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "event_category_owner")
 public class EventCategoryOwner {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_category_owner_id", nullable = false)
     private Integer id;
 

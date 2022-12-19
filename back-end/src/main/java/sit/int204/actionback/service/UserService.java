@@ -39,18 +39,29 @@ public class UserService {
     }
 
     public ResponseEntity deleteUser(Integer id , HttpServletRequest request) {
-        userRepository.findById(id)
+        User u = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
+        System.out.println("testtt");
         String requestTokenHeader = request.getHeader("Authorization");
         String header = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(header);
-        String myRole = userRepository.findByEmail(email).getRole();
-        if(myRole.equals(Role.LECTURER.toString())){
-            eventCategoryOwnerService.deleteForOwner(id);
+//        String myRole = userRepository.findByEmail(email).getRole();
+        System.out.println(u.getRole());
+        if(u.getRole().equals(Role.LECTURER.toString())){
+            System.out.println("testtt");
+
+            if(eventCategoryOwnerService.deleteForOwner(id)){
+                userRepository.deleteById(id);
+                return ResponseEntity.status(HttpStatus.OK).body(id);
+            } else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("At least 1 per EventCategory");
+            }
         }
+        System.out.println("test33tt");
+
         userRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
 

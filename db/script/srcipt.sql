@@ -76,7 +76,7 @@ CREATE TABLE `myuser` (
 CREATE TABLE IF NOT EXISTS `mydb`.`event_category_owner` (
   `user_id` INT NULL,
   `event_category_id` INT NOT NULL,
-  `event_category_owner_id` INT NOT NULL,
+  `event_category_owner_id` INT NOT NULL AUTO_INCREMENT,
   INDEX `fk_myuser_has_eventcategory_eventcategory1_idx` (`event_category_id` ASC) VISIBLE,
   INDEX `fk_myuser_has_eventcategory_myuser1_idx` (`user_id` ASC) VISIBLE,
   PRIMARY KEY (`event_category_owner_id`),
