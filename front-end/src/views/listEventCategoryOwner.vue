@@ -17,12 +17,12 @@ const myRouter = useRouter();
 const myUserData = userData();
 
 const myCategorys = categorys()
-
-const filterList = ref({
-    eventCategoryId: -1,
-});
+const arrayUser = ref([])
+const beforeArrayUser = ref([])
+const filtereventCategoryId= ref(-1);
 const reset = () => {
-    filterList.value.eventCategoryId = -1;
+    lecOwer.value = []
+    filtereventCategoryId.value = -1;
 }
 const userLec = ref([])
 const lecOwer = ref([])
@@ -30,7 +30,7 @@ const lecOwer = ref([])
 const getEventCategoryOwner = async () => {
     try {
         lecOwer.value = [];
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategoryowner/${filterList.value.eventCategoryId}`, {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategoryowner/${filtereventCategoryId.value}`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -52,6 +52,8 @@ const getEventCategoryOwner = async () => {
         console.log("ERROR: " + err);
 
     }
+
+    addArrayUser()
 };
 const getUserLec = async () => {
     try {
@@ -80,33 +82,79 @@ const getUserLec = async () => {
 
     }
 };
- 
-const checkLec = (id) => {
-    lecOwer.value.forEach((user) => {
-        console.log('check' + id +""+ user.id)
-        console.log(user.id==id)
 
-        if(user.id==id){
-            return true
-        }
-        else return false
+const addArrayUser = () => {
+    arrayUser.value = []
+    beforeArrayUser.value = []
+
+    lecOwer.value.forEach((user) => {
+        arrayUser.value.push(user.id)
+        beforeArrayUser.value.push(user.id)
     })
 }
-const arrayUser = ref([20])
+
+const updataOwner = async() => {
+    if (beforeArrayUser.value != arrayUser.value) {
+            try {
+                const res = await fetch(
+                    `${import.meta.env.VITE_BASE_URL}/eventcategoryowner`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "content-type": "application/json",
+                            Authorization: "Bearer " + cookie.getCookie("token"),
+                        },
+                        body: JSON.stringify({
+                            eventCategoryId: filtereventCategoryId.value,
+                            userId: arrayUser.value,
+                        }),
+                    }
+                );
+                if (res.status === 201) {
+
+                    getEventCategoryOwner()
+                    console.log("edited successfully");
+                } else if (res.status === 400) { alert('Category should be at least 1 lecture')}
+                else if (res.status === 401) {
+                    let resText = await res.text();
+                    if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                        //ได้ละ
+                        console.log("real");
+                        refreshToken();
+                    }
+                    if (
+                        resText
+                            .toUpperCase()
+                            .match("cannot refresh token. need to login again".toUpperCase())
+                    ) {
+                        cookie.setCookie("token", "", -1);
+                        cookie.setCookie("name", "", -1);
+                    }
+                } else {
+                    console.log("error, cannot edit");
+                }
+            } catch (err) {
+                console.log("catchhhhh");
+                console.log(err);
+                myRouter.push({ name: "SignIn" });
+
+            }
+        };
+    
+}
+
 myUserData.getUsers();
 getUserLec()
-
 </script>
 
 <template>
     {{ lecOwer }}
     <div class="card bg-white p-2 m-5">
-
         <div class="form-control ">
             <div class="lg:flex lg:justify-center hidden">
                 <div class="m-3"> Select your categorys to see lectures in categorys</div>
                 <div class="px-5">
-                    <select class="select select-bordered " v-model="filterList.eventCategoryId">
+                    <select class="select select-bordered " v-model="filtereventCategoryId">
                         <option disabled value=-1>Pick category</option>
                         <option value=0>none</option>
                         <option v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
@@ -155,26 +203,18 @@ getUserLec()
         <div class="modal-box bg-white">
             checkbox to select lecture to Owner
             {{ arrayUser }}
-            <div v-for="( userLec ) in userLec" :key="index">
-                <div v-if="checkLec(userLec.id)">
-                    <input type="checkbox" v-model="arrayUser" :value="userLec.id">
-                    <label> id : {{ userLec.id }} </label>
-                    <label> name : {{ userLec.name }} </label>
-                    <div> email : {{ userLec.email }} </div>
-                </div>
-                <div v-else>
-                    <input type="checkbox">
-                    <label> id : {{ userLec.id }} </label>
-                    <label> name : {{ userLec.name }} </label>
-                    <div> email : {{ userLec.email }} </div>
-                </div>
 
+            <div v-for="( userLec ) in userLec" :key="index">
+                <input type="checkbox" v-model="arrayUser" :value="userLec.id">
+                <label> id : {{ userLec.id }} </label>
+                <label> name : {{ userLec.name }} </label>
+                <div> email : {{ userLec.email }} </div>
             </div>
             <div class="modal-action">
                 <label
                     class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
                     for="modalUser" @click="
-                    editUser(selectedUser)">
+                    updataOwner()">
                     Update
                 </label>
                 <label for="modalUser"
