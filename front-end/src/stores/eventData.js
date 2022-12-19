@@ -45,6 +45,7 @@ export const events = defineStore("eventListState", () => {
     );
   };
 
+
   console.log(eventList.value + "eventList");
 
   //REET FILTER
@@ -68,11 +69,14 @@ export const events = defineStore("eventListState", () => {
       console.log(res.status);
       if (res.status === 200) {
         const eventsToAdd = await res.json();
-        // events << eventToAdd
-        // eventToAdd อันที่โหลดเพิ่ม
-        // events ของที่แสดงอยู่
-        // เอาอันที่โหลดเพิ่มมาใส่
-        //ตัสแก้
+
+        
+
+
+
+
+
+
         addNewEvent(eventsToAdd);
       } else if (res.status === 401) {
         let resText = await res.text();
@@ -151,21 +155,13 @@ export const events = defineStore("eventListState", () => {
         : filterList.value.pastOrFutureOrAll[0];
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${
-          filterList.value.eventCategoryId
-        }&page=${page.value}&pageSize=${
-          pageSize.value
-        }&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
-        `,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization: "Bearer " + myCookie.getCookie("token"),
-          },
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + myCookie.getCookie("token"),
+        },
+      });
       if (res.status === 200) {
         let eventsToAdd = await res.json();
         //filter in front

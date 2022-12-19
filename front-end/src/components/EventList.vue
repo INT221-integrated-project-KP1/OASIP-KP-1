@@ -98,7 +98,7 @@ const EditEvent = async (notes, startTime, id, duration, file) => {
   }
   topFunction()
   setTimeout(() => (statusError.value = 0), 2000);
-  myEvents.getEvents();
+  myEvents.getFilteredEvents();
 }
 
 const errorInsert = () => {
@@ -112,7 +112,7 @@ const deleteFun = (id, attachment) => {
     myEvents.removeEvent(id, attachment)
   }
 }
-myEvents.getEvents();
+myEvents.getFilteredEvents();
 
 const downloadFile = (name) => {
   myFile.getFile(name);
@@ -169,7 +169,7 @@ const deleteFile = (selectedEvent) => {
     myFile.deleteFile(selectedEvent.attachment)
     selectedEvent.attachment = ""
     EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, file)
-    myEvents.getEvents();
+    myEvents.getFilteredEvents();
   } else {
     closeUpnewFile();
   }
