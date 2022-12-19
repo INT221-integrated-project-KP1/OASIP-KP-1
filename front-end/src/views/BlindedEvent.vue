@@ -6,14 +6,46 @@ import { fileData } from "../stores/fileData.js";
 import { useRouter } from "vue-router";
 import { events } from "../stores/eventData.js"
 import { categorys } from "../stores/categoryData.js"
+<<<<<<< HEAD
+=======
 
-// //get จาก /api/blinded
-// return id;
-//     Instant eventStartTime;
+const myCookie = cookieData();
+const myFileData = fileData();
+const { params } = useRouter();
+const myRouter = useRouter();
+const myUserData = userData();
+const blinded = ref([])
+const bookingTime = ref([])
+>>>>>>> 9d5d8e524c5589e77d0d0b4124b12454753ae48c
 
-//     Integer eventCategoryId;
-//     eventCategoryEventCategoryName;
+const myCategorys = categorys()
 
+const getEventBlinded = async () => {
+    try {
+        blinded.value = [];
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/event/blinded`, {
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+                Authorization: "Bearer " + myCookie.getCookie("token"),
+            },
+        });
+        console.log(res.status);
+        if (res.status === 200) {
+            blinded.value = await res.json();
+            dateTime();
+        } else if (res.status === 401) {
+            let resText = await res.text();
+ 
+            console.log("real");
+            myUserData.refreshToken();
+        } else {
+            console.log("error, cannot get data");
+        }
+    } catch (err) {
+        console.log("ERROR: " + err);
+
+<<<<<<< HEAD
 //     Integer eventDuration;
 // no authorized
 // ได้ id 
@@ -57,6 +89,8 @@ const getEventBlinded = async () => {
     } catch (err) {
         console.log("ERROR: " + err);
 
+=======
+>>>>>>> 9d5d8e524c5589e77d0d0b4124b12454753ae48c
     }
 };
 

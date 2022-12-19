@@ -177,7 +177,7 @@ const check = async () => {
   return bool1 && bool2 && bool3 && bool4 && bool5 && bool6
 
 }
-
+const progress = ref(0);
 const loaderInsert = () => {
   isProgress.value = true;
   setTimeout(() => (progress.value = 10), 500);

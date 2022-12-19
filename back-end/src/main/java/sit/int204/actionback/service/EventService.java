@@ -1,5 +1,6 @@
 package sit.int204.actionback.service;
 
+import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.config.JwtRequestFilter;
 import sit.int204.actionback.config.JwtTokenUtil;
 import sit.int204.actionback.controller.FileController;
 import sit.int204.actionback.dtos.*;
@@ -54,6 +56,8 @@ public class EventService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+
     @Autowired
     private UserRepository userRepository;
 
@@ -79,20 +83,19 @@ public class EventService {
     public List<SimpleEventDTO> getAllEvent(HttpServletRequest request){
         String requestTokenHeader = request.getHeader("Authorization");
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
-            String header = requestTokenHeader.substring(7);
-            String email = jwtTokenUtil.getUsernameFromToken(header);
-            User user = userRepository.findByEmail(email);
-            String myRole = user.getRole();
+            String token = requestTokenHeader.substring(7);
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+            String myRole = claims.get("role").toString().split("_")[0];
 
-            System.out.println(myRole.equals((Role.STUDENT).toString()));
-            System.out.println(email);
             if(myRole.equals(Role.STUDENT.toString())){
                 return listMapper.mapList(eventRepository.findAllByBookingEmail(email ,Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
             } else if (myRole.equals(Role.ADMIN.toString())){
                 return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
             } else if(myRole.equals(Role.LECTURER.toString())) {
-                int leuturerId = user.getId();
-                return listMapper.mapList(eventRepository.findAllEventByLecturerCategory(leuturerId), SimpleEventDTO.class, modelMapper);
+//                int leuturerId = user.getId();
+
+                return listMapper.mapList(eventRepository.findAllEventByLecturerEmail(email), SimpleEventDTO.class, modelMapper);
             }
         }
           return listMapper.mapList(eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventStartTime")), SimpleEventDTO.class, modelMapper);
@@ -193,7 +196,8 @@ public class EventService {
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             String header = requestTokenHeader.substring(7);
             String email = jwtTokenUtil.getUsernameFromToken(header);
-            String myRole = userRepository.findByEmail(email).getRole();
+            Claims claims = jwtTokenUtil.getAllClaimsFromToken(header);
+            String myRole = claims.get("role").toString().split("_")[0];
             Event event = eventRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, " id " + id +
@@ -214,23 +218,40 @@ public class EventService {
 
     public ResponseEntity getSimpleEventById(Integer id , HttpServletRequest request) {
         String requestTokenHeader = request.getHeader("Authorization");
+        System.out.println("getSimpleEventById");
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             String header = requestTokenHeader.substring(7);
             String email = jwtTokenUtil.getUsernameFromToken(header);
-            String myRole = userRepository.findByEmail(email).getRole();
+            Claims claims = jwtTokenUtil.getAllClaimsFromToken(header);
+            String myRole = claims.get("role").toString().split("_")[0];
+            System.out.println(myRole);
             Event event = eventRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, " id " + id +
                             "Does Not Exist !!!"
                     ));
-            if(!myRole.equals((Role.ADMIN).toString())){
-                if(!email.equals(event.getBookingEmail())){
+            System.out.println("getSimpleEventById2");
+            if(myRole.equals((Role.STUDENT).toString())){
+                if(email.equals(event.getBookingEmail())){
+                    return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+                } else{
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
                 }
             }
-            return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+            if(myRole.equals((Role.LECTURER).toString())){
+                List<Event> eventAllOfThisLecturer = eventRepository.findAllEventByLecturerEmail(email);
+                for (int i = 0; i < eventAllOfThisLecturer.size(); i++) {
+                    if(event.getEventCategory().getId().equals(eventAllOfThisLecturer.get(i).getEventCategory().getId())){
+                        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+                    }
+                }
+            }
+            if(myRole.equals((Role.ADMIN).toString())){
+                return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(event, EventDetailsBaseDTO.class));
+            }
+
         }
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You dont login pls login");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You dont login pls login");
     }
 
 
@@ -240,7 +261,8 @@ public class EventService {
         if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             String header = requestTokenHeader.substring(7);
             String email = jwtTokenUtil.getUsernameFromToken(header);
-            String myRole = userRepository.findByEmail(email).getRole();
+            Claims claims = jwtTokenUtil.getAllClaimsFromToken(header);
+            String myRole = claims.get("role").toString().split("_")[0];
             if(!myRole.equals((Role.ADMIN).toString())){
                 if(!email.equals(newEvent.getBookingEmail())){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your Booking Email is not match with your account");
@@ -308,7 +330,8 @@ public class EventService {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-        String myRole = userRepository.findByEmail(email).getRole();
+        Claims claims = jwtTokenUtil.getAllClaimsFromToken(jwtToken);
+        String myRole = claims.get("role").toString().split("_")[0];
 
         if(!event.getBookingEmail().equals(email) || !myRole.equals((Role.ADMIN).toString()) ){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");

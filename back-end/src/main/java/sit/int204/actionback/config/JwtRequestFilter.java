@@ -18,10 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
@@ -33,9 +36,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
-import sit.int204.actionback.entities.User;
+import org.springframework.security.core.userdetails.User;
 import sit.int204.actionback.service.JwtUserDetailsService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -73,7 +78,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     String isRefreshToken = request.getHeader("isRefreshToken");
                     String requestURL = request.getRequestURL().toString();
                     // allow for Refresh Token creation if following conditions are true.
-                    Claims claims = getAllClaimsFromToken(jwtToken);
+                    Claims claims = jwtTokenUtil.getAllClaimsFromToken(jwtToken);
                     if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh")) {
                         if (claims.getExpiration().getTime() - claims.getIssuedAt().getTime() == 86400000) {
                             if (claims.getExpiration().getTime() > Instant.now().toEpochMilli()) {
@@ -99,8 +104,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.warn("JWT Token does not begin with Bearer String");
             }
 
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (StringUtils.hasText(jwtToken)) {
+            List<GrantedAuthority> role = new ArrayList<GrantedAuthority>();
+            role.add(new SimpleGrantedAuthority(jwtTokenUtil.getAllClaimsFromToken(jwtToken).get("role").toString().split("_")[0]));
 
+            UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "", role);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        } else {
+            System.out.println("Please log in for get Token again.");
+            request.setAttribute("message", "Please log in for get Token again.");
+        }
+
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(email);
                 if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
@@ -108,9 +124,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                             userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken
                             .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    // After setting the Authentication in the context, we specify
-                    // that the current user is authenticated. So it passes the
-                    // Spring Security Configurations successfully.
+
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
@@ -130,20 +144,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Set the claims so that in controller we will be using it to create
         // new JWT
         request.setAttribute("claims", claims);
-    }
-    @Value("${jwt.secret}")
-    private String secret;
-    private Claims getAllClaimsFromToken(String token) {
-        Claims claims;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            claims = null;
-        }
-        return claims;
     }
 
     @SneakyThrows

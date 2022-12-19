@@ -43,7 +43,7 @@ public class JwtTokenUtil implements Serializable {
         return claimsResolver.apply(claims);
     }
     //for retrieveing any information from token we will need the secret key
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -127,4 +127,5 @@ public class JwtTokenUtil implements Serializable {
     public void setRefreshExpirationDateInMs(int refreshExpirationDateInMs) {
         this.refreshExpirationDateInMs = refreshExpirationDateInMs;
     }
+
 }

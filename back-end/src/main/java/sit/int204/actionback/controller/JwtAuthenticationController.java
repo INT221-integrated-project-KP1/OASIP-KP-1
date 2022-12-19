@@ -92,6 +92,7 @@ public class JwtAuthenticationController {
         } catch (JSONException ex) {
             role = "GUEST";
         }
+
             email = payload.getString("preferred_username");
             name = payload.getString("name");
             final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
