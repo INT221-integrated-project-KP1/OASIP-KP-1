@@ -72,8 +72,7 @@ public class JwtAuthenticationController {
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
             return ResponseEntity.ok(objectToResponse);
-        }
-      else  return ResponseEntity.status(404).body("Password Invaild");
+        } else return ResponseEntity.status(404).body("Password Invaild");
     }
 
     @RequestMapping(value = "/loginms", method = RequestMethod.POST)
@@ -93,13 +92,15 @@ public class JwtAuthenticationController {
         } catch (JSONException ex) {
             role = "GUEST";
         }
-            email = payload.getString("preferred_username");
-            name = payload.getString("name");
-            final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
-            final String token2 = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 1);
-            HashMap<String, String> objectToResponse = new HashMap<String, String>();
-            objectToResponse.put("token", token);
-            objectToResponse.put("refreshtoken", token2);
+        email = payload.getString("preferred_username");
+        name = payload.getString("name");
+        final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
+        final String token2 = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 1);
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+        objectToResponse.put("token", token);
+        objectToResponse.put("refreshtoken", token2);
+
+        if (!role.equalsIgnoreCase("GUEST")) {
 
 
             User u = userRepository.findByEmail(email);
@@ -107,25 +108,25 @@ public class JwtAuthenticationController {
             s.setName(name);
             s.setEmail(email);
             s.setRole(role);
-            if(u == null){
+            if (u == null) {
                 String passwordToHash = randomString(40);
                 s.setPassword(userService.argon2Hashing(passwordToHash));
                 userRepository.saveUser(s);
             } else {
                 userRepository.editUser(s);
             }
+        }
 
-
-            return ResponseEntity.ok(objectToResponse);
+        return ResponseEntity.ok(objectToResponse);
 
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#)!$*(^$%121920_!283123869213/*-+";
     static SecureRandom rnd = new SecureRandom();
 
-    String randomString(int len){
+    String randomString(int len) {
         StringBuilder sb = new StringBuilder(len);
-        for(int i = 0; i < len; i++)
+        for (int i = 0; i < len; i++)
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         return sb.toString();
     }
@@ -145,7 +146,7 @@ public class JwtAuthenticationController {
         HashMap<String, String> objectToResponse = new HashMap<String, String>();
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-        if(claims == null){
+        if (claims == null) {
             return ResponseEntity.status(403).body("Claims == null, Can't Refresh");
         }
 
