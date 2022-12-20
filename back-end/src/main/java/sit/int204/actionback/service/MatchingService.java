@@ -25,15 +25,6 @@ public class MatchingService {
     private ListMapper listMapper;
 
     public ResponseEntity matchPassword(UserMatchingDTO userToMatch) {
-        Optional <User> user = userRepository.findByEmail(userToMatch.getEmail());
-        if(user.isEmpty()){
-            return ResponseEntity.status(404).body("Invalid Email");
-        }
-
-        Argon2 argon2 = Argon2Factory.create();
-        if (argon2.verify(user.get().getPassword(), userToMatch.getPassword())) {
-            return ResponseEntity.status(200).body("Matched");
-        }
         return ResponseEntity.status(401).body("Invalid Password");
     }
 

@@ -4,16 +4,26 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.config.JwtTokenUtil;
+import sit.int204.actionback.dtos.SimpleEventDTO;
 import sit.int204.actionback.dtos.UserAddDTO;
+import sit.int204.actionback.dtos.UserModifyDTO;
+import sit.int204.actionback.dtos.UserShowDTO;
 import sit.int204.actionback.entities.User;
+import sit.int204.actionback.enumfile.Role;
 import sit.int204.actionback.repo.UserRepository;
 import sit.int204.actionback.utils.ListMapper;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +31,12 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private EventCategoryOwnerService eventCategoryOwnerService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private ListMapper listMapper;
 
@@ -32,19 +44,47 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public ResponseEntity deleteUser(Integer id) {
-        userRepository.findById(id)
+    public List<UserShowDTO> getUserLecturer(){
+        List<User> u = userRepository.findAll();
+        List<User> u2 = new ArrayList<>();
+        for (int i = 0; i < u.size(); i++) {
+            if(u.get(i).getRole().equals(Role.LECTURER.toString())){
+                u2.add(u.get(i));
+            }
+        }
+        return listMapper.mapList(u2, UserShowDTO.class, modelMapper);
+    }
+
+    public ResponseEntity deleteUser(Integer id , HttpServletRequest request) {
+        User u = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, " id " + id +
                         "Does Not Exist !!!"
                 ));
-        ;
+        System.out.println("testtt");
+        String requestTokenHeader = request.getHeader("Authorization");
+        String header = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(header);
+//        String myRole = userRepository.findByEmail(email).getRole();
+        System.out.println(u.getRole());
+        if(u.getRole().equals(Role.LECTURER.toString())){
+            System.out.println("testtt");
+
+            if(eventCategoryOwnerService.deleteForOwner(id)){
+                userRepository.deleteById(id);
+                return ResponseEntity.status(HttpStatus.OK).body(id);
+            } else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("At least 1 per EventCategory");
+            }
+        }
+        System.out.println("test33tt");
+
         userRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
 
     }
 
-    public ResponseEntity editUser(UserAddDTO editUser , int id ) {
+    public ResponseEntity editUser(UserModifyDTO editUser , int id ) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(

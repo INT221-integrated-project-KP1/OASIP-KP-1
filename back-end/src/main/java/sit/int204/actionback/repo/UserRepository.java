@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "insert into myuser (name, email, role, password) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()})", nativeQuery = true)
+    @Query(value = "insert into myuser (name, email, role, password , updatedOn , createdOn) values (:#{#user.getName()}, :#{#user.getEmail()}, :#{#user.getRole()}, :#{#user.getPassword()}, CURRENT_TIMESTAMP , CURRENT_TIMESTAMP )", nativeQuery = true)
     @Modifying
     @Transactional
     public void saveUser(@Param("user") User user);
@@ -21,6 +21,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     public void editUser(@Param("user") User user);
 
-    Optional<User> findByEmail(String email);
+    public User findByEmail(String email);
+
+    public <List> User findAllByRole(String role);
+
+    Optional<User> findUserByEmail(String email);
 
 }

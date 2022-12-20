@@ -1,31 +1,68 @@
 package sit.int204.actionback.service;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import sit.int204.actionback.config.JwtTokenUtil;
+import sit.int204.actionback.entities.Event;
 import sit.int204.actionback.entities.EventCategory;
+import sit.int204.actionback.entities.EventCategoryOwner;
+import sit.int204.actionback.enumfile.Role;
+import sit.int204.actionback.repo.EventCategoryOwnerRepository;
 import sit.int204.actionback.repo.EventCategoryRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 @Service
 public class EventCategoryService {
     @Autowired
     public EventCategoryRepository eventCategoryRepository;
 
-    public ResponseEntity findCategory(){
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    public EventCategoryOwnerRepository eventCategoryOwnerRepository;
+
+    public ResponseEntity findCategory(){
         List<EventCategory> eventCategory = eventCategoryRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(eventCategory);
     }
 
+    public List<EventCategoryOwner> getEventCategoryOwnerByEventCategoryId(Integer idEventCategory){
+        EventCategory ec = eventCategoryRepository.findAllById(idEventCategory);
+        List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec);
+        return eco;
+    }
 
-    public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id) {
+    public ResponseEntity updateEventCategory(EventCategory updateEventCategory , Integer id, HttpServletRequest request) {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        Claims claims = jwtTokenUtil.getAllClaimsFromToken(jwtToken);
+        String myRole = claims.get("role").toString().split("_")[0];
+        if(myRole.equals(Role.STUDENT.toString())){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Student Can not Do");
+        }
+
         EventCategory eventCategory = eventCategoryRepository.findEventCategoryById(id);
+
+        boolean isCan = false;
+        if(myRole.equals(Role.LECTURER.toString())){
+            List<EventCategory> ListEventCategoryOfThisEmail = eventCategoryRepository.findAllEventCategoryByLecturerEmail(email);
+            for (int i = 0; i < ListEventCategoryOfThisEmail.size(); i++) {
+                if(eventCategory.getId().equals(ListEventCategoryOfThisEmail.get(i).getId())){
+                    isCan = true;
+                }
+            }
+            if(!isCan){
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Only on ur own");
+            }
+        }
+
 
         if(!checkEventDuration(updateEventCategory.getEventDuration())){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid Duration");
@@ -35,6 +72,8 @@ public class EventCategoryService {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Invalid EventCategoryName");
         }
         System.out.println("3");
+
+
 
         eventCategory.setEventCategoryName(updateEventCategory.getEventCategoryName());
         eventCategory.setEventDuration(updateEventCategory.getEventDuration());

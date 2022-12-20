@@ -36,6 +36,8 @@ services:
     restart: on-failure
     depends_on:
       - db
+    volumes:
+      - "~/files:/files"
     environment:
       SPRING_APPLICATION_JSON: '{
               "spring.datasource.url"  : "jdbc:mysql://db:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?allowPublicKeyRetrieval=true&useSSL=false",

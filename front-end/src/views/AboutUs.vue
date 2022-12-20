@@ -1,7 +1,7 @@
 <script setup>
-import p1 from "../assets/AdminPNG/1.png"
-import p2 from "../assets/AdminPNG/1.png"
-import p3 from "../assets/AdminPNG/1.png"
+import p1 from "../assets/Team/tus.jpg"
+import p2 from "../assets/Team/amorn.jpg"
+import p3 from "../assets/Team/mark.jpg"
 
 
 

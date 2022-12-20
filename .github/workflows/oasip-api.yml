@@ -1,11 +1,11 @@
 name: oasip-kp1 
 on:
   push:
-    branches: [ main,testAction,hotfix ]
+    branches: [ main,dev,hotfix ]
   pull_request:
-    branches: [ main,testAction,hotfix ]
+    branches: [ main,dev,hotfix ]
 jobs: 
-# BACK STATE
+# BACK STATEE
   # install-back-dependencies:
 
   #   runs-on: ubuntu-latest

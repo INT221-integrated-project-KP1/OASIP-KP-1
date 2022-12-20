@@ -19,6 +19,7 @@ window.onscroll = () => {
     }
   }
   }
+
 </script>
 
 <template>

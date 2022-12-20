@@ -1,6 +1,5 @@
 package sit.int204.actionback.dtos;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +32,7 @@ public class EventDTO {
     private Instant eventStartTime;
 
     private EventCategory eventCategory;
+
+    private String attachment;
 
 }

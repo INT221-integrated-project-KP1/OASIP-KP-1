@@ -1,26 +1,47 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref} from 'vue'
+import { useRouter } from 'vue-router'
+import { cookieData } from "../stores/cookieData.js"
 export const categorys = defineStore('categoryListState',() => {
     const categoryList = ref([])
+    const { params } = useRouter()
+    const myRouter = useRouter()
 
-    //GET
+    const myCookie = cookieData()
+    //GET ทำเเล้ว
     const getEventCategory = async () => {
         try {
             console.log(import.meta.env.URL);
-            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategory`);
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategory` , {
+              method: "GET",
+              headers: {
+                'content-type': 'application/json',
+                "Authorization": "Bearer " + myCookie.getCookie("token")
+              }
+            });
             console.log(res.status);
             if (res.status === 200) {
                 categoryList.value = await res.json();
                 console.log(categoryList.value,"cat");
-            } else {
+            }
+            else if (res.status === 401) {
+              let resText = await res.text();
+              if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                  //ได้ละ
+                  console.log("real");
+                  myUserData.refreshToken()
+              }
+          }
+            else {
                 console.log("error, cannot get data");
             }
         } catch (err) {
             console.log(err);
-        }
+            myRouter.push({ name: 'SignIn' })
+          }
     };
 
-    //PUT
+    //PUT ทำเเล้ว
     const updateCategory = async (objectCategory) => {
       objectCategory.eventCategoryName = objectCategory.eventCategoryName.trimStart().trimEnd().replace("  ", " ");
       
@@ -29,7 +50,8 @@ export const categorys = defineStore('categoryListState',() => {
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategory/${objectCategory.id}`, {
           method: 'PUT',
           headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            "Authorization": "Bearer " + myCookie.getCookie("token")
           },
           body: JSON.stringify(objectCategory)
         })
@@ -42,7 +64,18 @@ export const categorys = defineStore('categoryListState',() => {
       )
           console.log('edited successfully')
           return 1
-        } else {
+        }
+        else if (res.status === 401) {
+          let resText = await res.text();
+          if (resText.toUpperCase().match("TOKENEXPIRED")) {
+              //ได้ละ
+              console.log("real");
+              myUserData.refreshToken()
+          }
+          else {  myRouter.push({ name: 'SignIn' })
+        }
+      }
+        else {
           console.log('error, cannot edit')
           return -2
         }

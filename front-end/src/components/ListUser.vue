@@ -5,9 +5,12 @@ import Fillter from "./Fillter.vue";
 import { useRouter } from 'vue-router'
 import { userData } from "../stores/userData.js"
 import { computed } from "@vue/reactivity";
+import { cookieData } from "../stores/cookieData.js"
+import { categorys } from "../stores/categoryData.js"
 
+const cookie = cookieData()
 const myUserData = userData();
-
+const myCategorys = categorys()
 console.log(myUserData.userList);
 const myRouter = useRouter()
 const goSignup = () => {
@@ -17,7 +20,12 @@ const goSignup = () => {
 // GET BY ID
 const getUserById = async (id) => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/${id}`, {
+            headers: {
+                'content-type': 'application/json',
+                "Authorization": "Bearer " + cookie.getCookie("token")
+            }
+        })
         console.log(res.status);
         if (res.status === 200) {
             selectedUser.value = await res.json();
@@ -27,6 +35,13 @@ const getUserById = async (id) => {
 
 
 
+        } else if (res.status === 401) {
+            let resText = await res.text();
+            if (resText.toUpperCase().match("TOKENEXPIRED")) {
+                //ได้ละ
+                console.log("real");
+                myUserData.refreshToken()
+            }
         } else {
             console.log("error, cannot get data");
         }
@@ -54,7 +69,7 @@ const validateNameLength = computed(() => {
     return true
 })
 const validateEmailLength = computed(() => {
-    
+
     if (selectedUser.value.email.length > 50) {
         return false
     }
@@ -103,9 +118,16 @@ const deleteUser = (id) => {
         myUserData.removeUser(id)
     }
 }
+
+myUserData.getUsers();
+
+
+
 </script>
 
 <template>
+
+
     <div class="flex justify-center">
         <div class="m-10">
             <div class="p-5">
@@ -198,6 +220,21 @@ const deleteUser = (id) => {
                                     <p class="py-2">Created On: {{ selectedUser.createdOn }}</p>
                                     <p class="py-2">updatedOn: {{ selectedUser.updatedOn }} </p>
 
+                                    
+                                    <div v-show="selectedUser.role == 'LECTURER'">
+                                        <div v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
+                                            :value="eventCategory.id">
+                                            <input type="checkbox">
+                                            <label> {{ eventCategory.eventCategoryName }}</label>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
                                     <div class="modal-action">
                                         <label
                                             class="duration-150 transform hover:scale-125 transition ease-linear btn btn-primary px-6 py-3.5 m-4 inline"
@@ -214,6 +251,9 @@ const deleteUser = (id) => {
                         </div>
                     </div>
                 </div>
+
+
+
                 <div v-else class="grid justify-items-center">
                     <div class="card w-96 glass">
                         <figure><img src="../assets/gif2.gif" alt="gif2"></figure>
@@ -236,4 +276,5 @@ const deleteUser = (id) => {
 </template>
 
 <style>
+
 </style>
