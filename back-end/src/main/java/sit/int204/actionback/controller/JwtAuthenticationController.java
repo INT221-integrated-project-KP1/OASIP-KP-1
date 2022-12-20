@@ -2,18 +2,15 @@ package sit.int204.actionback.controller;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,13 +24,14 @@ import sit.int204.actionback.entities.User;
 
 
 import sit.int204.actionback.config.JwtTokenUtil;
-import sit.int204.actionback.model.JwtResponse;
 import sit.int204.actionback.repo.UserRepository;
+import sit.int204.actionback.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.Instant;
+import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @CrossOrigin
@@ -53,6 +51,9 @@ public class JwtAuthenticationController {
     private UserDetailsService userDetailsService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserMatchingDTO authenticationRequest) throws Exception {
@@ -92,7 +93,6 @@ public class JwtAuthenticationController {
         } catch (JSONException ex) {
             role = "GUEST";
         }
-
             email = payload.getString("preferred_username");
             name = payload.getString("name");
             final String token = jwtTokenUtil.doGenerateTokenForMs(claims, email, role, name, 0);
@@ -100,8 +100,34 @@ public class JwtAuthenticationController {
             HashMap<String, String> objectToResponse = new HashMap<String, String>();
             objectToResponse.put("token", token);
             objectToResponse.put("refreshtoken", token2);
+
+
+            User u = userRepository.findByEmail(email);
+            User s = new User();
+            s.setName(name);
+            s.setEmail(email);
+            s.setRole(role);
+            if(u == null){
+                String passwordToHash = randomString(40);
+                s.setPassword(userService.argon2Hashing(passwordToHash));
+                userRepository.saveUser(s);
+            } else {
+                userRepository.editUser(s);
+            }
+
+
             return ResponseEntity.ok(objectToResponse);
 
+    }
+
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#)!$*(^$%121920_!283123869213/*-+";
+    static SecureRandom rnd = new SecureRandom();
+
+    String randomString(int len){
+        StringBuilder sb = new StringBuilder(len);
+        for(int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 
     private void authenticate(String username, String password) throws Exception {
