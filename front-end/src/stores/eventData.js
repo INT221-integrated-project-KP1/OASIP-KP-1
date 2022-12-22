@@ -70,7 +70,7 @@ export const events = defineStore("eventListState", () => {
       if (res.status === 200) {
         const eventsToAdd = await res.json();
 
-        
+
 
 
 
@@ -107,10 +107,8 @@ export const events = defineStore("eventListState", () => {
         : filterList.value.pastOrFutureOrAll[0];
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${
-          filterList.value.eventCategoryId
-        }&page=${page.value}&pageSize=${
-          pageSize.value
+        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${filterList.value.eventCategoryId
+        }&page=${page.value}&pageSize=${pageSize.value
         }&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `,
         {
@@ -179,11 +177,11 @@ export const events = defineStore("eventListState", () => {
           eventsToAdd = eventsToAdd.filter(
             (a) =>
               new Date(a.eventStartTime).getDate() ==
-                new Date(date).getDate() &&
+              new Date(date).getDate() &&
               new Date(a.eventStartTime).getMonth() ==
-                new Date(date).getMonth() &&
+              new Date(date).getMonth() &&
               new Date(a.eventStartTime).getFullYear() ==
-                new Date(date).getFullYear()
+              new Date(date).getFullYear()
           );
         }
         if (filterList.value.eventCategoryId != 0) {
@@ -222,10 +220,8 @@ export const events = defineStore("eventListState", () => {
         : filterList.value.pastOrFutureOrAll[0];
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${
-          filterList.value.eventCategoryId
-        }&page=0&pageSize=${
-          pageSize.value * (page.value + 1)
+        `${import.meta.env.VITE_BASE_URL}/event/filtration?eventCategoryId=${filterList.value.eventCategoryId
+        }&page=0&pageSize=${pageSize.value * (page.value + 1)
         }&pastOrFutureOrAll=${filterPastOrFutureOrAll}&date=${date}&offsetMin=${offsetMin}
         `,
         {
@@ -306,10 +302,11 @@ export const events = defineStore("eventListState", () => {
   //REMOVE
   const removeEvent = async (deleteId, attachment) => {
     console.log(deleteId);
-    
-    console.log("attachment");
-    console.log(attachment);
-    myFileData.deleteFile(attachment);
+
+
+    if (attachment != "") {
+      myFileData.deleteFile(attachment);
+    }
     alert("delete event");
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/event/${deleteId}`,
@@ -345,7 +342,7 @@ export const events = defineStore("eventListState", () => {
 
   ///////อัพเดต
   //PUT
-  const updateEvent = async (startTime, notes, id, duration,file) => {
+  const updateEvent = async (startTime, notes, id, duration, file) => {
     try {
       console.log("startTimeUpdate: " + startTime);
       if (
@@ -383,10 +380,10 @@ export const events = defineStore("eventListState", () => {
         eventList.value = eventList.value.map((event) =>
           event.id === modEvent.id
             ? {
-                ...event,
-                eventStartTime: modEvent.eventStartTime,
-                eventNotes: modEvent.eventNotes,
-              }
+              ...event,
+              eventStartTime: modEvent.eventStartTime,
+              eventNotes: modEvent.eventNotes,
+            }
             : event
         );
 
@@ -416,8 +413,7 @@ export const events = defineStore("eventListState", () => {
   const getEventsForOverLab = async (eventId, eventCategoryId, startTime) => {
     try {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_BASE_URL
+        `${import.meta.env.VITE_BASE_URL
         }/event/overlapping?eventId=${eventId}&eventCategoryId=${eventCategoryId}&startTime=${startTime}:00Z`,
         {
           method: "GET",
@@ -477,7 +473,7 @@ export const events = defineStore("eventListState", () => {
         //overlab 1+4
         console.log("Overlab 1+4");
         boolOverlap.value = false;
-        
+
         return false; //overlab
       }
       if (newMilli >= milli && newMilli < milli + durationMilli) {
