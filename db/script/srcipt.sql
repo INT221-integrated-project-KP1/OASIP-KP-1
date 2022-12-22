@@ -123,9 +123,9 @@ insert into myuser (name,email,password,role,createdOn,updatedOn) values ('Somch
 insert into myuser (name,email,password,role,createdOn,updatedOn) values ('Komkrid Rakdee','komkrid.rak@mail.kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0','student','2022-08-08 16:00:00+07:00','2022-08-08 16:00:00+07:00');
 insert into myuser (name,email,password,role,createdOn,updatedOn) values ('สมเกียรติ ขยันเรียน','somkiat.kay@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ','student','2022-08-16 09:00:00+07:00','2022-08-16 09:00:00+07:00');
 
-insert into event_category_owner (user_id,event_category_id) values (1,16)
-insert into event_category_owner (user_id,event_category_id) values (2,19)
-insert into event_category_owner (user_id,event_category_id) values (3,20)
-insert into event_category_owner (user_id,event_category_id) values (4,18)
-insert into event_category_owner (user_id,event_category_id) values (5,17)
-insert into event_category_owner (user_id,event_category_id) values (5,16)
+insert into event_category_owner (event_category_id,user_id) values (1,16);
+insert into event_category_owner (event_category_id,user_id) values (2,19);
+insert into event_category_owner (event_category_id,user_id) values (3,20);
+insert into event_category_owner (event_category_id,user_id) values (4,18);
+insert into event_category_owner (event_category_id,user_id) values (5,17);
+insert into event_category_owner (event_category_id,user_id) values (5,16);
