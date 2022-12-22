@@ -112,3 +112,20 @@ insert into eventCategory (event_category_name,event_category_description,event_
 
 insert into event(booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration) values ('Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
+
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('OASIP ADMIN','oasip.admin@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$sYXzbUOqBoHY1NfhJ8cjnw$H6+adWySiFPgcUogJK3hEhcF6Y4fusy7tcXYEL+f0cQ','admin','2022-08-01 00:00:00+07:00','2022-08-01 00:00:00+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Olarn Rojanapornpun','olarn.roj@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$Sx7y2jxKZSjpWUV4srd8eg$AMH09iFiPQgAZ00cAdN3Gucqfhx2kRo3tQbHeLSR0RE','lecturer','2022-08-08 15:00:00+07:00','2022-08-08 15:00:00+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Pichet Limvachiranan','pichet.limv@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$46EB43gQ46Z1/EmdqxtKNA$7m6cWGO2iDlFl/ETDYuYf+ArnSjRnsNwXLIP18DTYQY','lecturer','2022-08-08 15:00:01+07:00','2022-08-08 15:00:01+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Umaporn Supasitthimethee','umaporn.sup@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$1Z2UK1zC76FIQeLH54GVAQ$qfXcHF31LnuWpt37QAcWyNp8PdbOQ+jjaV1xWXixS0M','lecturer','2022-08-08 15:00:02+07:00','2022-08-08 15:00:02+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Siam Yamsaengsung','siam.yam@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$C4pPaNWKTnZQX2mPs14jlg$rQ5W5NYKqGOu1B4GkUWq8cFbcg2peFWGjpUMr9Nkm8g','lecturer','2022-08-08 15:00:03+07:00','2022-08-08 15:00:03+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Sunisa Sathapornvajana','sunisa.sat@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$29/ffaszvjvi3CZO45bSCg$kKpfq5WEswoqa/LfyIZzQaQ6AFdjhyiYjXRCfMiTnwg','lecturer','2022-08-08 15:00:04+07:00','2022-08-08 15:00:04+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Somchai Jaidee','somchai.jai@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI','student','2022-08-08 16:00:00+07:00','2022-08-08 16:00:00+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('Komkrid Rakdee','komkrid.rak@mail.kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0','student','2022-08-08 16:00:00+07:00','2022-08-08 16:00:00+07:00');
+insert into myuser (name,email,role,password,createdOn,updatedOn) values ('สมเกียรติ ขยันเรียน','somkiat.kay@kmutt.ac.th','$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ','student','2022-08-16 09:00:00+07:00','2022-08-16 09:00:00+07:00');
+
+insert into event_category_owner (user_id,event_category_id) values (1,16)
+insert into event_category_owner (user_id,event_category_id) values (2,19)
+insert into event_category_owner (user_id,event_category_id) values (3,20)
+insert into event_category_owner (user_id,event_category_id) values (4,18)
+insert into event_category_owner (user_id,event_category_id) values (5,17)
+insert into event_category_owner (user_id,event_category_id) values (5,16)
