@@ -306,6 +306,9 @@ export const events = defineStore("eventListState", () => {
   //REMOVE
   const removeEvent = async (deleteId, attachment) => {
     console.log(deleteId);
+    
+    console.log("attachment");
+    console.log(attachment);
     myFileData.deleteFile(attachment);
     alert("delete event");
     const res = await fetch(
