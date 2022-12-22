@@ -112,6 +112,7 @@ insert into eventCategory (event_category_name,event_category_description,event_
 
 insert into event(booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration) values ('Somchai Jaidee (OR-7)','somchai.jai@mail.kmutt.ac.th',null,'2022-05-23 13:30:00',2,30);
 insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('Somsri Rakdee (SJ-3)','somsri.rak@mail.kmutt.ac.th','ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน','2022-04-27 09:30:00',1,30);
+insert into event (booking_name,booking_email,event_notes,event_start_time,event_category_id,event_duration)values ('สมเกียรติ ขยันเรียน กลุ่ม TT-4','somkiat.kay@kmutt.ac.th',null,'2022-05-23 16:30:00',3,15);
 
 insert into myuser (name,email,password,role,createdOn,updatedOn) values ('OASIP ADMIN','oasip.admin@kmutt.ac.th','$argon2i$v=19$m=65536,t=22,p=1$dRakyk7K1fc$tUAB70PiBV+UJiDKOqNvew','admin','2022-08-01 00:00:00+07:00','2022-08-01 00:00:00+07:00');
 insert into myuser (name,email,password,role,createdOn,updatedOn) values ('Olarn Rojanapornpun','olarn.roj@kmutt.ac.th','$argon2i$v=19$m=65536,t=22,p=1$lJEbysiLvac$BdfcTPccuJjMnn4HK2TGLA','lecturer','2022-08-08 15:00:00+07:00','2022-08-08 15:00:00+07:00');
