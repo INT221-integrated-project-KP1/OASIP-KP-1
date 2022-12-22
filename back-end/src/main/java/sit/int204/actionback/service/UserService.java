@@ -129,7 +129,7 @@ public class UserService {
         System.out.println("argon2 hasing start");
         Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2i, 8, 16);
         System.out.println("create Object argon2");
-        return argon2.hash(3, 65536, 1, stringToHash); //97 length of string
+        return argon2.hash(3, 4096, 1, stringToHash); //97 length of string
     }
 
 
