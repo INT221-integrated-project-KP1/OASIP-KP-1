@@ -89,7 +89,7 @@ const numberFormat = function (number, width) {
 const statusError = ref(0)
 const statusErrorText = ref("")
 const EditEvent = async (notes, startTime, id, duration, file) => {
-
+  console.log("EditEventstart");
   const status = await myEvents.updateEvent(startTime, notes, id, duration, file);
   statusErrorText.value = status.error
   statusError.value = status.status
@@ -132,11 +132,16 @@ const closeUpnewFile = () => {
   document.getElementById("fileupload").value = null;
 }
 
-const updateMyEvent = (selectedEvent) => {
+const updateMyEvent = async (selectedEvent) => {
   let file1 = selectedEvent.attachment
   let file2 = newAttachment.value
   let file = ""
-  if (file2 !== null) {
+  console.log("updateMyEvent");
+  console.log(file2 == "");
+
+  if (file2 != "") {
+    console.log("taseadasdadasdasddasdasd222");
+
     if (!(document.getElementById("fileupload").files[0].size / 1024 / 1024 > 10) //admin edit event บอก err
     ) {
       if (file1 == "") {
@@ -156,8 +161,13 @@ const updateMyEvent = (selectedEvent) => {
         myFile.uploadFile(selectedEvent)
       }
     }
-  } 
-  EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, selectedEvent.attachment)
+  } else {
+    console.log("taseadasdadasdasddasdasd");
+  }
+
+  console.log("updateMyEven2t");
+  
+  await EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, selectedEvent.attachment)
 }
 
 const deleteFile = (selectedEvent) => {
