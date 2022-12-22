@@ -128,7 +128,8 @@ export const userData = defineStore("userDataState", () => {
         getUsers();
       }
     } else if(res.status === 400){
-      alert(res.text())
+      alert(res.text)
+      getUsers();
     }
     
     else if (res.status === 401) {

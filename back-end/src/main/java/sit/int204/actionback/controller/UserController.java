@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id , HttpServletRequest request) {
-        userService.deleteUser(id,request);
+    public ResponseEntity deleteUser(@PathVariable Integer id , HttpServletRequest request) {
+        return userService.deleteUser(id,request);
     }
 
 

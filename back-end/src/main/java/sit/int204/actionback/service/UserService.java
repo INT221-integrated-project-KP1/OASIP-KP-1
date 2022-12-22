@@ -68,13 +68,16 @@ public class UserService {
 //        String myRole = userRepository.findByEmail(email).getRole();
         System.out.println(u.getRole());
         if(u.getRole().equals(Role.LECTURER.toString())){
-            System.out.println("testtt");
+            System.out.println("if LECTURER");
             String forReturn = eventCategoryOwnerService.deleteForOwner(id);
+            System.out.println(forReturn);
             if(!forReturn.contains("EventCategory ที่อยู่คนเดียว: ")){
                 userRepository.deleteById(id);
                 return ResponseEntity.status(HttpStatus.OK).body(id);
             } else{
+                System.out.println("else");
                 //ลบไม่ได้
+                System.out.println("return: " + forReturn);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(forReturn);
             }
         }

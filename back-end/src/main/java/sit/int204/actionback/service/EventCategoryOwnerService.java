@@ -123,9 +123,9 @@ public class EventCategoryOwnerService {
             List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec.get(i));
             if(eco.size() <= 1){
                 //cant delete
-                nameThatLengthOne = nameThatLengthOne + ", " + eco.get(0).getEventCategory().getEventCategoryName();
+                nameThatLengthOne = nameThatLengthOne + " " + eco.get(0).getEventCategory().getEventCategoryName() + ", ";
             } else{
-                eventcategoryAll = eventcategoryAll + ", " + ec.get(i).getEventCategoryName();
+                eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
             }
         }
         if(!nameThatLengthOne.equals("EventCategory ที่อยู่คนเดียว: ")){
