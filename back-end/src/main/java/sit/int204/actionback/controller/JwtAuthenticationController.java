@@ -100,20 +100,20 @@ public class JwtAuthenticationController {
         objectToResponse.put("token", token);
         objectToResponse.put("refreshtoken", token2);
 
-        if (!role.equalsIgnoreCase("GUEST")) {
-            User u = userRepository.findByEmail(email);
-            User s = new User();
-            s.setName(name);
-            s.setEmail(email);
-            s.setRole(role);
-            if (u == null) {
-                String passwordToHash = randomString(40);
-                s.setPassword(userService.argon2Hashing(passwordToHash));
-                userRepository.saveUser(s);
-            } else {
-                userRepository.editUser(s);
-            }
-        }
+//        if (!role.equalsIgnoreCase("GUEST")) {
+//            User u = userRepository.findByEmail(email);
+//            User s = new User();
+//            s.setName(name);
+//            s.setEmail(email);
+//            s.setRole(role);
+//            if (u == null) {
+//                String passwordToHash = randomString(40);
+//                s.setPassword(userService.argon2Hashing(passwordToHash));
+//                userRepository.saveUser(s);
+//            } else {
+//                userRepository.editUser(s);
+//            }
+//        }
 
         return ResponseEntity.ok(objectToResponse);
 
