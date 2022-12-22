@@ -262,8 +262,7 @@ const loaderEnd = () => {
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700 tracking-wide">Name :
                   </label>
-                  <div v-if="cookie.getCookie('role') === 'STUDENT'"> {{ newEvent.name }}</div>
-                  <div v-else>
+                  <div>
                     <input maxlength="100" :class="validateEventName ?
                       ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'focus:border-green-400']
                       : ['w-full', 'text-base', 'px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:outline-none', 'border-red-400']
