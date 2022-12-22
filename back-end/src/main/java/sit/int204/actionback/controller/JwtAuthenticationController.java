@@ -101,8 +101,6 @@ public class JwtAuthenticationController {
         objectToResponse.put("refreshtoken", token2);
 
         if (!role.equalsIgnoreCase("GUEST")) {
-
-
             User u = userRepository.findByEmail(email);
             User s = new User();
             s.setName(name);

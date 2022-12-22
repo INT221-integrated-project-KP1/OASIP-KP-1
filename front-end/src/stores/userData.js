@@ -127,7 +127,11 @@ export const userData = defineStore("userDataState", () => {
       if (userList.value.length % 9 == 8) {
         getUsers();
       }
-    } else if (res.status === 401) {
+    } else if(res.status === 400){
+      alert(res.text())
+    }
+    
+    else if (res.status === 401) {
       let resText = await res.text();
       if (resText.toUpperCase().match("TOKENEXPIRED")) {
         //ได้ละ

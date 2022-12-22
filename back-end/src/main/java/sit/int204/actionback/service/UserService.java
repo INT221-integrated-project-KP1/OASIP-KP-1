@@ -69,12 +69,13 @@ public class UserService {
         System.out.println(u.getRole());
         if(u.getRole().equals(Role.LECTURER.toString())){
             System.out.println("testtt");
-
-            if(eventCategoryOwnerService.deleteForOwner(id)){
+            String forReturn = eventCategoryOwnerService.deleteForOwner(id);
+            if(!forReturn.contains("EventCategory ที่อยู่คนเดียว: ")){
                 userRepository.deleteById(id);
                 return ResponseEntity.status(HttpStatus.OK).body(id);
             } else{
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("At least 1 per EventCategory");
+                //ลบไม่ได้
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(forReturn);
             }
         }
         System.out.println("test33tt");

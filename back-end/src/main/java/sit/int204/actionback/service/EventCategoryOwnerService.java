@@ -111,19 +111,28 @@ public class EventCategoryOwnerService {
 //    }
 
 
-    public boolean deleteForOwner(Integer user_id){
+    public String deleteForOwner(Integer user_id){
         User u = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, " id " + user_id +
                 "Does Not Exist !!!"
         ));
+        String nameThatLengthOne = "EventCategory ที่อยู่คนเดียว: ";
+        String eventcategoryAll = "EventCategory ทั้งหมด: ";
         List<EventCategory> ec = eventCategoryRepository.findAllEventCategoryByLecturerEmail(u.getEmail());
         for (int i = 0; i < ec.size(); i++) {
             List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec.get(i));
             if(eco.size() <= 1){
                 //cant delete
-                return false;
+                nameThatLengthOne = nameThatLengthOne + ", " + eco.get(0).getEventCategory().getEventCategoryName();
+            } else{
+                eventcategoryAll = eventcategoryAll + ", " + ec.get(i).getEventCategoryName();
             }
         }
+        if(!nameThatLengthOne.equals("EventCategory ที่อยู่คนเดียว: ")){
+            return nameThatLengthOne + eventcategoryAll;
+            //false old
+        }
+
         System.out.println("deleteForOwner");
         List<EventCategoryOwner> owner = eventCategoryOwnerRepository.getOwnerByUserId(user_id);
         if (!owner.isEmpty()) {
@@ -132,7 +141,7 @@ public class EventCategoryOwnerService {
         }
         System.out.println("deleteForOwner2");
 
-        return true;
+        return "success";
     }
 }
 
