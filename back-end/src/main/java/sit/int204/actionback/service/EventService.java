@@ -333,11 +333,15 @@ public class EventService {
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
         Claims claims = jwtTokenUtil.getAllClaimsFromToken(jwtToken);
         String myRole = claims.get("role").toString().split("_")[0];
-
-        if(!event.getBookingEmail().equals(email) || !myRole.equals((Role.ADMIN).toString()) ){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
+        System.out.println("myrole" + myRole);
+        System.out.println("myrole" + email);
+        System.out.println(myRole.equals((Role.ADMIN).toString()));
+        System.out.println(event.getBookingEmail().equals(email));
+        if(!myRole.equals((Role.ADMIN).toString())){
+            if(!event.getBookingEmail().equals(email)){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Deleted Event booking email is not match with your email");
+            }
         }
-
 //    public ResponseEntity editEvent(EventUpdateDTO editEvent , int id ,BindingResult bindingResult)throws BindException {
 
         if(!checkTimeFuture(editEvent.getEventStartTime().toEpochMilli())){
