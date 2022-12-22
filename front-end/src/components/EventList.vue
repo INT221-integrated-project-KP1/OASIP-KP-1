@@ -136,8 +136,6 @@ const updateMyEvent = (selectedEvent) => {
   let file1 = selectedEvent.attachment
   let file2 = newAttachment.value
   let file = ""
-  alert(file1)
-  alert(file2)
   if (file2 !== null) {
     if (!(document.getElementById("fileupload").files[0].size / 1024 / 1024 > 10) //admin edit event บอก err
     ) {
@@ -159,8 +157,6 @@ const updateMyEvent = (selectedEvent) => {
       }
     }
   } 
-
-  alert("file" + file)
   EditEvent(editNotes.value, editStartTime.value, selectedEvent.id, selectedEvent.eventDuration, selectedEvent.attachment)
 }
 
