@@ -130,4 +130,4 @@ insert into event_category_owner (event_category_id,user_id) values (3,20);
 insert into event_category_owner (event_category_id,user_id) values (4,18);
 insert into event_category_owner (event_category_id,user_id) values (5,17);
 insert into event_category_owner (event_category_id,user_id) values (5,16);
-insert into event_category_owner (event_category_id,user_id) values (3,16);
+insert into event_category_owner (event_category_id,user_id) values (2,16);

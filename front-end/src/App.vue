@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import { cookieData } from "./stores/cookieData.js"
 import { userData } from "./stores/userData.js"
-import { msData } from "../stores/loginMS.js"
+import { msData } from "./stores/loginMS.js"
 import { ref, computed } from "vue";
 
 const cookie = cookieData()
