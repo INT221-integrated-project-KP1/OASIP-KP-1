@@ -1,5 +1,6 @@
 package sit.int204.actionback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false, length = 90)
     private String password;
 
