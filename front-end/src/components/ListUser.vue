@@ -119,7 +119,7 @@ const deleteUser = (id, name) => {
     // "Siam Yamsaengsung is the owner of DevOps/Infra Clinic. 
     // Deletion of this user account will also remove this user from the event category(s). 
     //Do you still want to delete this account?"
-    let text1 = name + "is the owner of "
+    let text1 = name + " is the owner of "
     let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
     if (confirm(text1+text2)) {
         myUserData.removeUser(id)

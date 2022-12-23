@@ -138,7 +138,7 @@ public class EventCategoryOwnerService {
             }
         }
         if(!eventcategoryAll.equals(" is the owner of ")){
-            return lecName + eventcategoryAll + " You cannot delete this user account since" + lecName + nameThatLengthOne + " Another owner must be added to the event category(s) before this lecturer can be deleted.";
+            return lecName + eventcategoryAll + " You cannot delete this user account since " + lecName + nameThatLengthOne + " Another owner must be added to the event category(s) before this lecturer can be deleted.";
             //false old
         }
 
