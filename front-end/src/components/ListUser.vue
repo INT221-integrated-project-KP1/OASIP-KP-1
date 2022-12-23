@@ -131,17 +131,36 @@ const deleteUser = async (id, name, role) => {
             });
             console.log(res.status);
             if (res.status === 200) {
-                let resText200 = await res.text()
-                let text1 = name
-                let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
-                if(resText200.slice(17) == ""){
-                    text2 = ""
-                    text1 = "Do you still want to delete this account?"
-                }
-                
-                if (confirm(text1 + resText200 + text2)) {
+                let resJson = await res.json()
+                let show = ""
+            //eventCategorySolo
+            //eventCategoryAll
+                let eventCategoryAll = resJson.eventCategoryAll //devop, project, dog Clinic
+                let eventCategorySolo = resJson.eventCategorySolo // devop, project, doggg, tus
+                if(eventCategorySolo == ""){
+                    show = name + " is the owner of " + eventCategoryAll + ". Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account?" 
+                    if(eventCategoryAll == ""){
+                        show = "Do you still want to delete this account?";
+                    }
+                    //ไม่มีคนเดียวลบได้
+                    //"Siam Yamsaengsung is the owner of DevOps/Infra Clinic. Deletion of this user account will also remove this user from the event category(s). 
+                    //Do you still want to delete this account?"
+                    if (confirm(show)) {
                     myUserData.removeUser(id)
                 }
+                } else {
+                    show = name + " is the owner of " + eventCategorySolo + ", " + eventCategoryAll + ". You cannot delete this user account since " 
+                    show = show + name + " is the only owner of " + eventCategorySolo + "." + " Another owner must be added to the event category(s) before this lecturer can be deleted."
+                    //มีคนเดยวห้ามลบ
+                    //"Olarn Rojanapornpun is the owner of Project Management Clinic, DevOps/Infra Clinic, Server-side Clinic. 
+                    //You cannot delete this user account since Olarn Rojanapornpun is the only owner of Project Management Clinic, DevOps/Infra Clinic. 
+                    //Another owner must be added to the event category(s) before this lecturer can be deleted."
+                    alert(show) 
+                        //but no fetch cause cant delete
+                    
+                }
+     
+                
             } else if (res.status === 401) {
                 let resText = await res.text();
 

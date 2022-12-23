@@ -16,7 +16,9 @@ const goWelcome = () => {
 }
 
 const logoutFun = () => {
-  ms.logoffMS()
+  if(ms.msLogin == true){
+      ms.logoffMS()
+  }
   cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.client.info", "", -1)
   cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.idtoken", "", -1)
   cookie.setCookie("token", "", -1)

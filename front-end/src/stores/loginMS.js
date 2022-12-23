@@ -7,6 +7,7 @@ import { UserAgentApplication } from "msal";
 
 export const msData = defineStore('msDataState', () => {
   const cookie = cookieData()
+  const msLogin = ref(false)
   //copy from azure
   const msalConfig = {
     auth: {
@@ -37,7 +38,7 @@ export const msData = defineStore('msDataState', () => {
     console.log("test");
     console.log(authResult.account);
 
-
+    msLogin.value = true;
     return authResult.account;
   };
 
@@ -48,12 +49,13 @@ export const msData = defineStore('msDataState', () => {
 
   var logoffMS = () => {
     myMSALObj.logout();
+    msLogin.value = false;
   };
 
 
 
 
-  return { loginMS, logoffMS, getAccount }
+  return { loginMS, logoffMS, getAccount, msLogin }
 }
 )
 

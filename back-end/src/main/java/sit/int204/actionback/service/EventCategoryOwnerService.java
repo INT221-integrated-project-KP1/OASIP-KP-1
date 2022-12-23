@@ -137,7 +137,7 @@ public class EventCategoryOwnerService {
                 eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
             }
         }
-        if(!eventcategoryAll.equals(" is the owner of ")){
+        if(!nameThatLengthOne.equals(" is the only owner of ")){
             return lecName + eventcategoryAll + " You cannot delete this user account since " + lecName + nameThatLengthOne + " Another owner must be added to the event category(s) before this lecturer can be deleted.";
             //false old
         }
@@ -157,16 +157,21 @@ public class EventCategoryOwnerService {
                 HttpStatus.NOT_FOUND, " id " + user_id +
                 "Does Not Exist !!!"
         ));
-        String eventcategoryAll = " is the owner of ";
+        String eventcategoryAll = "";
+        String eventCategorySolo = "";
         List<EventCategory> ec = eventCategoryRepository.findAllEventCategoryByLecturerEmail(u.getEmail());
         for (int i = 0; i < ec.size(); i++) {
             List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec.get(i));
             if(eco.size() <= 1){
+                eventCategorySolo = eventCategorySolo + ", " + ec.get(i).getEventCategoryName();
             } else{
                 eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(eventcategoryAll);
+        HashMap<String, String> objectToResponse = new HashMap<String, String>();
+        objectToResponse.put("eventCategoryAll", eventcategoryAll);
+        objectToResponse.put("eventCategorySolo", eventCategorySolo);
+        return ResponseEntity.status(HttpStatus.OK).body(objectToResponse);
     }
 
 
