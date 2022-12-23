@@ -131,7 +131,6 @@ export const userData = defineStore("userDataState", () => {
       alert(await res.text())
       getUsers();
     }
-    
     else if (res.status === 401) {
       let resText = await res.text();
       if (resText.toUpperCase().match("TOKENEXPIRED")) {
