@@ -190,6 +190,8 @@ const loaderEnd = () => {
 const loginMS = async () => {
 	await ms.loginMS()
 	await getTokenFromOurServer()
+	cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.client.info", "", -1)
+  	cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.idtoken", "", -1)
 }
 </script>
 

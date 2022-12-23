@@ -131,10 +131,15 @@ const deleteUser = async (id, name, role) => {
             });
             console.log(res.status);
             if (res.status === 200) {
+                let resText200 = await res.text()
                 let text1 = name
-
                 let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
-                if (confirm(text1 + await res.text() + text2)) {
+                if(resText200.slice(17) == ""){
+                    text2 = ""
+                    text1 = "Do you still want to delete this account?"
+                }
+                
+                if (confirm(text1 + resText200 + text2)) {
                     myUserData.removeUser(id)
                 }
             } else if (res.status === 401) {

@@ -3,11 +3,12 @@ import { useRouter } from 'vue-router'
 import Clock from "./components/Clock.vue"
 import { cookieData } from "./stores/cookieData.js"
 import { userData } from "./stores/userData.js"
-
+import { msData } from "../stores/loginMS.js"
 import { ref, computed } from "vue";
-const myuserData = userData()
 
 const cookie = cookieData()
+const userStore = userData()
+const ms = msData()
 const myRouter = useRouter()
 
 const goWelcome = () => {
@@ -15,6 +16,9 @@ const goWelcome = () => {
 }
 
 const logoutFun = () => {
+  ms.logoffMS()
+  cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.client.info", "", -1)
+  cookie.setCookie("msal.b8588d84-fe40-487c-9948-7b70a676916c.idtoken", "", -1)
   cookie.setCookie("token", "", -1)
   cookie.setCookie("name", "", -1)
   cookie.setCookie("role", "", -1)
