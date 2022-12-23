@@ -125,8 +125,8 @@ public class EventCategoryOwnerService {
 //        Project Management Clinic, DevOps/Infra Clinic. +
 //        " Another owner must be added to the event category(s) before this lecturer can be deleted."
         String lecName = u.getName();
-        String nameThatLengthOne = "is the owner of ";
-        String eventcategoryAll = "is the only owner of ";
+        String nameThatLengthOne =  " is the only owner of ";
+        String eventcategoryAll = " is the owner of ";
         List<EventCategory> ec = eventCategoryRepository.findAllEventCategoryByLecturerEmail(u.getEmail());
         for (int i = 0; i < ec.size(); i++) {
             List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec.get(i));
@@ -137,8 +137,8 @@ public class EventCategoryOwnerService {
                 eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
             }
         }
-        if(!nameThatLengthOne.equals("is the owner of ")){
-            return lecName + nameThatLengthOne + " You cannot delete this user account since" + lecName + eventcategoryAll + " Another owner must be added to the event category(s) before this lecturer can be deleted.";
+        if(!eventcategoryAll.equals(" is the owner of ")){
+            return lecName + eventcategoryAll + " You cannot delete this user account since" + lecName + nameThatLengthOne + " Another owner must be added to the event category(s) before this lecturer can be deleted.";
             //false old
         }
 
@@ -152,5 +152,23 @@ public class EventCategoryOwnerService {
 
         return "success";
     }
+    public String allEventCategoryByLecturerEmail(Integer user_id){
+        User u = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, " id " + user_id +
+                "Does Not Exist !!!"
+        ));
+        String eventcategoryAll = " is the owner of ";
+        List<EventCategory> ec = eventCategoryRepository.findAllEventCategoryByLecturerEmail(u.getEmail());
+        for (int i = 0; i < ec.size(); i++) {
+            List<EventCategoryOwner> eco = eventCategoryOwnerRepository.findEventCategoryOwnerByEventCategory(ec.get(i));
+            if(eco.size() <= 1){
+            } else{
+                eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
+            }
+        }
+        return null;
+    }
+
+
 }
 

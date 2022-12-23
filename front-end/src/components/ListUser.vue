@@ -113,8 +113,15 @@ const errorInsert = () => {
     setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const deleteUser = (id) => {
-    if (confirm("You want to delete a user")) {
+const deleteUser = (id, name) => {
+
+
+    // "Siam Yamsaengsung is the owner of DevOps/Infra Clinic. 
+    // Deletion of this user account will also remove this user from the event category(s). 
+    //Do you still want to delete this account?"
+    let text1 = name + "is the owner of "
+    let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
+    if (confirm(text1+text2)) {
         myUserData.removeUser(id)
     }
 }
@@ -176,7 +183,7 @@ myUserData.getUsers();
                                                 more...</label>
                                             <label for="my-modal"
                                                 class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline"
-                                                @click="deleteUser(user.id)">Delete</label>
+                                                @click="deleteUser(user.id, user.name)">Delete</label>
 
                                         </div>
                                     </li>
@@ -220,7 +227,7 @@ myUserData.getUsers();
                                     <p class="py-2">Created On: {{ selectedUser.createdOn }}</p>
                                     <p class="py-2">updatedOn: {{ selectedUser.updatedOn }} </p>
 
-                                    
+
                                     <div v-show="selectedUser.role == 'LECTURER'">
                                         <div v-for="(eventCategory, index) in myCategorys.categoryList" :key="index"
                                             :value="eventCategory.id">

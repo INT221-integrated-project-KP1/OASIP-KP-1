@@ -71,7 +71,7 @@ public class UserService {
             System.out.println("if LECTURER");
             String forReturn = eventCategoryOwnerService.deleteForOwner(id);
             System.out.println(forReturn);
-            if(!forReturn.contains("is the owner of ")){
+            if(!forReturn.contains(" is the owner of ")){
                 userRepository.deleteById(id);
                 return ResponseEntity.status(HttpStatus.OK).body(id);
             } else{
