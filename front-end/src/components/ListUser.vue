@@ -113,18 +113,56 @@ const errorInsert = () => {
     setTimeout(() => (statusError.value = 0), 2000);
 };
 
-const deleteUser = (id, name) => {
+const deleteUser = async (id, name, role) => {
 
 
     // "Siam Yamsaengsung is the owner of DevOps/Infra Clinic. 
     // Deletion of this user account will also remove this user from the event category(s). 
     //Do you still want to delete this account?"
-    let text1 = name + "is the owner of "
-    let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
-    if (confirm(text1+text2)) {
-        myUserData.removeUser(id)
+    if (role == "LECTURER") {
+        try {
+            textOwner.value = "";
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/eventcategoryowner/getOwner/${id}`, {
+                method: "GET",
+                headers: {
+                    "content-type": "application/json",
+                    Authorization: "Bearer " + cookie.getCookie("token"),
+                },
+            });
+            console.log(res.status);
+            if (res.status === 200) {
+                let text1 = name
+
+                let text2 = " Deletion of this user account will also remove this user from the event category(s). Do you still want to delete this account? "
+                if (confirm(text1 + await res.text() + text2)) {
+                    myUserData.removeUser(id)
+                }
+            } else if (res.status === 401) {
+                let resText = await res.text();
+
+                console.log("real");
+                myUserData.refreshToken();
+            } else {
+                console.log("error, cannot get data");
+            }
+        } catch (err) {
+            console.log("ERROR: " + err);
+
+        }
+
+    } else {
+        if (confirm("Do you still want to delete this account?")) {
+            myUserData.removeUser(id)
+        }
     }
+
 }
+
+const textOwner = ref("")
+const getOwner = async (id) => {
+
+};
+
 
 myUserData.getUsers();
 
@@ -183,7 +221,7 @@ myUserData.getUsers();
                                                 more...</label>
                                             <label for="my-modal"
                                                 class="btn modal-button duration-150 transform hover:scale-125 transition ease-linear px-6 py-3.5 m-4 inline"
-                                                @click="deleteUser(user.id, user.name)">Delete</label>
+                                                @click="deleteUser(user.id, user.name, user.role)">Delete</label>
 
                                         </div>
                                     </li>

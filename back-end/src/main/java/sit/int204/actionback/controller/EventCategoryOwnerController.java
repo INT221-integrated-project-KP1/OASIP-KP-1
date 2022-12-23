@@ -41,4 +41,8 @@ public class EventCategoryOwnerController {
 //        return eventCategoryService.updateEventCategory(updateEventCategory,id, request);
 //    }
 
+    @GetMapping("getOwner/{id}")
+    public ResponseEntity getEventCategoryOwner(@PathVariable Integer id) {
+        return eventCategoryOwnerService.allEventCategoryByLecturerEmail(id);
+    }
 }

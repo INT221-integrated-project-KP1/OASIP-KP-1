@@ -152,7 +152,7 @@ public class EventCategoryOwnerService {
 
         return "success";
     }
-    public String allEventCategoryByLecturerEmail(Integer user_id){
+    public ResponseEntity allEventCategoryByLecturerEmail(Integer user_id){
         User u = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, " id " + user_id +
                 "Does Not Exist !!!"
@@ -166,7 +166,7 @@ public class EventCategoryOwnerService {
                 eventcategoryAll = eventcategoryAll + " " + ec.get(i).getEventCategoryName();
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(eventcategoryAll);
     }
 
 
